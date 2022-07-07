@@ -19,7 +19,7 @@ jobs:
         run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
   test-crate:
     env:
-      CRATE: concision
+      CRATE: disarray
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
