@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  apps:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apps
+    depends_on: [cache, database]
+    volumes:
+      - /data:/data
+
+  cache:
+    container_name: disarray-cache
+    image: redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  database:
+    container_name: database
+    environment:
+        POSTGRES_DB: postgres
+        POSTGRES_PASSWORD: example
+        POSTGRES_USER: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - /data/database:/var/lib/postgresql/data
+
+volumes:
+  data:

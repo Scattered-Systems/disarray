@@ -1,0 +1,28 @@
+[package]
+authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
+categories = []
+description = "Disarray core"
+edition = "2021"
+homepage = "https://github.com/scattered-systems/disarray"
+keywords = []
+license = "MIT"
+name = "disarray-core"
+readme = "README.md"
+repository = "https://github.com/scattered-systems/disarray"
+version = "0.1.4" # TODO - Update the cargo package version
+
+[lib]
+bench = false
+crate-type = ["cdylib", "rlib"]
+test = true
+
+[dependencies]
+bson = { features = ["chrono-0_4", "serde_with"], version = "2.3.0" }
+chrono = "0.4.19"
+config = "0.13.1"
+digest = "0.10.3"
+glob = "0.3.0"
+log = "0.4.17"
+once_cell = "1.12.0"
+serde = { features = ["derive"], version = ">=1.0.137" }
+

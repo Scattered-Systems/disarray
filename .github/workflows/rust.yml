@@ -1,0 +1,54 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "master" ]
+    tags: [ "latest" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  login:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login
+        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
+  test-crate:
+    env:
+      CRATE: concision
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test
+        run: cargo test --package $CRATE --all-features --verbose --color $CARGO_TERM_COLOR
+  derive:
+    env:
+      CRATE: disarray-derive
+    runs-on: ubuntu-latest
+    needs: [ login ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Push
+        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+  macros:
+    env:
+      CRATE: disarray-macros
+    runs-on: ubuntu-latest
+    needs: [ login ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Push
+        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+  crate:
+    env:
+      CRATE: disarray
+    runs-on: ubuntu-latest
+    needs: [ login, test-crate ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build and Push
+        run: cargo publish --all-features --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}

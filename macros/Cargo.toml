@@ -1,0 +1,24 @@
+[package]
+authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
+categories = []
+description = "Disarray macros"
+edition = "2021"
+homepage = "https://github.com/scattered-systems/disarray"
+keywords = ["derive", "macros"]
+license = "MIT"
+name = "disarray-macros"
+readme = "README.md"
+repository = "https://github.com/scattered-systems/disarray"
+version = "0.1.4" # TODO - Update the cargo package version
+
+[lib]
+proc-macro = true
+test = false
+
+[dependencies]
+proc-macro2 = "1.0.40"
+quote = "1.0.20"
+syn = { features = ["full"], version = "1.0.98" }
+
+[dev-dependencies.disarray]
+path = "../disarray"

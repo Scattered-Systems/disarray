@@ -1,0 +1,60 @@
+# Docker
+**/.docker/data/
+
+# Environments
+/**/.idea
+/**/.vscode/
+
+# Files and File Extensions
+**/config.*
+**/*.config.*
+!**/default.config.*
+
+**/*.bk
+**/*.bk.*
+
+**/*.csv
+**/*.csv.*
+
+**/*.db
+**/*.db.*
+
+**/*.db-*.*
+
+**/*.env
+**/*.env.*
+
+**/!*.env.example
+
+**/*.lock
+**/*.lock.*
+
+**/*-lock.*
+
+**/*.log
+**/*.log.*
+
+**/*.whl
+**/*.whl.*
+
+**/*.zip
+**/*.zip.*
+
+
+# Nodejs
+/**/build/
+/**/node_modules/
+
+# Python
+/**/__pycache__/
+/**/dist/
+/**/venv/
+
+# Rust
+/**/debug/
+/**/target/
+
+# Svelte
+/**/.DS_STORE/
+/**/__sapper__/
+/**/.svelte-kit/
