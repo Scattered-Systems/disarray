@@ -5,18 +5,21 @@
    Description:
        ... Summary ...
 */
-
 use crate::Block;
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct Blockchain<Addr = String> {
-    pub address: Addr,
+pub struct Blockchain {
+    pub address: std::net::SocketAddr,
     pub chain: Vec<Block>,
 }
 
-impl<Addr> Blockchain<Addr> {
-    pub fn constructor(address: Addr, chain: Vec<Block>) -> Self {
+impl Blockchain {
+    pub fn constructor(address: std::net::SocketAddr, chain: Vec<Block>) -> Self {
         Self { address, chain }
+    }
+
+    pub fn new(address: std::net::SocketAddr) -> Self {
+        Self::constructor(address.clone(), Vec::new())
     }
 }
 

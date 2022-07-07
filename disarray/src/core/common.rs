@@ -13,11 +13,28 @@ mod constants {
     pub const DIFFICULTY_PREFIX: &str = "00";
 }
 
-mod types {}
+mod types {
+    pub type BlockData = Vec<String>;
+    pub type BlockId = u16;
+    pub type BlockHash = String;
+    pub type BlockNonce = u64;
+    pub type BlockTs = i64;
+    pub type BlockTz = chrono::Utc;
+}
 
 mod variants {
-    pub enum Dates {
-        Standard(i64),
+    use super::*;
+
+    #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
+    pub enum Timestamps {
+        Binary(bson::DateTime),
+        Standard(BlockTs),
+    }
+
+    impl std::fmt::Display for Timestamps {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", self)
+        }
     }
 }
 

@@ -8,11 +8,11 @@
 pub use crate::data::utils::*;
 
 mod utils {
-    pub fn timestamp_local() -> crate::Dates {
-        crate::Dates::Standard(chrono::Local::now().timestamp())
+    pub fn timestamp_local() -> crate::Timestamps {
+        crate::Timestamps::Standard(chrono::Local::now().timestamp())
     }
 
-    pub fn timestamp_utc() -> crate::Dates {
-        crate::Dates::Standard(chrono::Utc::now().timestamp())
+    pub fn timestamp_utc() -> crate::Timestamps {
+        crate::Timestamps::Standard(chrono::Utc::now().timestamp())
     }
 }

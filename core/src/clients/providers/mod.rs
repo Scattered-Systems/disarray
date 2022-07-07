@@ -5,10 +5,8 @@
    Description:
        ... Summary ...
 */
-pub use crate::actors::providers::{
-    provider::*,
-    utils::*,
-};
+pub use provider::*;
+pub use utils::*;
 
 mod provider;
 

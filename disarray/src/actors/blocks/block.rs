@@ -6,24 +6,26 @@
        ... Summary ...
 */
 
+use crate::{BlockId, BlockHash, BlockNonce, BlockData, BlockTs, BlockTz};
+
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct Block<Data = String, Id = u8, Hash = Vec<u8>, Nonce = u8, Ts = i64> {
-    pub id: Id,
-    pub hash: Hash,
-    pub nonce: Nonce,
-    pub previous: Hash,
-    pub timestamp: Ts,
-    pub data: Vec<Data>,
+pub struct Block {
+    pub id: BlockId,
+    pub hash: BlockHash,
+    pub nonce: BlockNonce,
+    pub previous: BlockHash,
+    pub timestamp: BlockTs,
+    pub data: BlockData,
 }
 
-impl<Data, Id, Hash, Nonce, Ts> Block<Data, Id, Hash, Nonce, Ts> {
+impl Block {
     pub fn constructor(
-        id: Id,
-        hash: Hash,
-        nonce: Nonce,
-        previous: Hash,
-        timestamp: Ts,
-        data: Vec<Data>,
+        id: BlockId,
+        hash: BlockHash,
+        nonce: BlockNonce,
+        previous: BlockHash,
+        timestamp: BlockTs,
+        data: BlockData,
     ) -> Self {
         Self {
             id,
@@ -34,13 +36,27 @@ impl<Data, Id, Hash, Nonce, Ts> Block<Data, Id, Hash, Nonce, Ts> {
             data,
         }
     }
+    pub fn new(id: BlockId, previous: BlockHash, data: BlockData) -> Self {
+        let timestamp = BlockTz::now().timestamp();
+        let (nonce, hash) = crate::create_block_by_mining(
+            id.clone(), previous.clone(), timestamp.clone(), data.clone(),
+        );
+        Self::constructor(
+            id.clone(),
+            hash.clone(),
+            nonce.clone(),
+            previous.clone(),
+            timestamp.clone(),
+            data.clone(),
+        )
+    }
 }
 
 impl std::fmt::Display for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "Block(\nid={:#?},\nhash={:#?},\nnonce={:#?},\nprevious={:#?},\ntimestamp={:#?},\ndata={:#?})",
+            "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
             self.id, self.hash, self.nonce, self.previous, self.timestamp, self.data
         )
     }
@@ -48,9 +64,15 @@ impl std::fmt::Display for Block {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test() {
-        let f = |x: usize| x.pow(x.try_into().unwrap());
-        assert_eq!(f(2), 4)
+        let id: BlockId = 1;
+        let data: BlockData = Vec::new();
+        let previous: BlockHash = "genesis_block".to_string();
+        let block = Block::new(id, previous.clone(), data.clone());
+        println!("{:#?}", &block);
+        assert_eq!(&block, &block)
     }
 }
