@@ -19,7 +19,12 @@ pub struct Transaction<Id = u8, Key = String, Ts = i64, Data = String> {
 
 impl<Id, Key, Ts, Data> Transaction<Id, Key, Ts, Data> {
     pub fn constructor(id: Id, key: Key, timestamp: Ts, data: Vec<Data>) -> Self {
-        Self { id, key, timestamp, data }
+        Self {
+            id,
+            key,
+            timestamp,
+            data,
+        }
     }
 }
 

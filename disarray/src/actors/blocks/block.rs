@@ -6,9 +6,6 @@
        ... Summary ...
 */
 
-
-
-
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Block<Data = String, Id = u8, Hash = Vec<u8>, Nonce = u8, Ts = i64> {
     pub id: Id,
@@ -41,10 +38,13 @@ impl<Data, Id, Hash, Nonce, Ts> Block<Data, Id, Hash, Nonce, Ts> {
 
 impl std::fmt::Display for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "", )
+        write!(
+            f,
+            "Block(\nid={:#?},\nhash={:#?},\nnonce={:#?},\nprevious={:#?},\ntimestamp={:#?},\ndata={:#?})",
+            self.id, self.hash, self.nonce, self.previous, self.timestamp, self.data
+        )
     }
 }
-
 
 #[cfg(test)]
 mod tests {
