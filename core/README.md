@@ -1,14 +1,11 @@
-# Concision
+# Disarray
 
-## Overview
-This crate is designed to support a number of robust operations pertaining to data-science, machine-learning, and AI.
+#### Appellation: disarray-core
 
-## Getting Started
+#### Context: core
+
+#### Description
+
+This crate supports efforts within Disarray, a blockchain utility package
 
 ### Examples
-    
-    use consison;
-    
-    fn main() {
-        println!("Welcome")
-    }

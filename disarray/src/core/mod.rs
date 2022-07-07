@@ -5,23 +5,8 @@
    Description:
        ... Summary ...
 */
-pub use crate::core::common::*;
+pub use crate::core::{common::*, configurations::*, interfaces::*};
 
-mod common {
-    pub use constants::*;
-    pub use types::*;
-    pub use variants::*;
-
-    mod constants {
-
-        pub const DIFFICULTY_PREFIX: &str = "00";
-    }
-
-    mod types {}
-
-    mod variants {
-        pub enum Dates {
-            Standard(i64),
-        }
-    }
-}
+mod common;
+mod configurations;
+mod interfaces;

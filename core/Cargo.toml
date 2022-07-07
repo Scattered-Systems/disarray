@@ -9,7 +9,7 @@ license = "MIT"
 name = "disarray-core"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.4" # TODO - Update the cargo package version
+version = "0.1.5" # TODO - Update the cargo package version
 
 [lib]
 bench = false
@@ -22,7 +22,12 @@ chrono = "0.4.19"
 config = "0.13.1"
 digest = "0.10.3"
 glob = "0.3.0"
+hex = "0.4.3"
+http = "0.2.8"
+hyper = { features = ["full"], version = "0.14.19" }
+libp2p = { features = ["dns-tokio"], version = "0.46.1" }
 log = "0.4.17"
 once_cell = "1.12.0"
 serde = { features = ["derive"], version = ">=1.0.137" }
-
+serde_json = "1.0.82"
+tokio = { features = ["full"], version = "1.19.2" }
