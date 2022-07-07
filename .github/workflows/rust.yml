@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Test
-        run: cargo test --package $CRATE --all-features --verbose --color $CARGO_TERM_COLOR
+        run: cargo test --workspace -v --color $CARGO_TERM_COLOR
   core:
     env:
       CRATE: disarray-core
