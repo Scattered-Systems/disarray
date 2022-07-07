@@ -27,6 +27,9 @@ impl Peer {
     pub fn from(key: PeerKP) -> Self {
         Self::constructor(PeerId::from(&key.public()), key)
     }
+    pub fn authenticate(&self) -> crate::AuthNoiseKeys {
+        crate::create_auth_noise_keys(&self.key)
+    }
 }
 
 impl std::fmt::Display for Peer {

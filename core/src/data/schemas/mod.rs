@@ -5,6 +5,9 @@
    Description:
        ... Summary ...
 */
+pub use vaults::*;
+
+mod vaults;
 
 pub trait Schemable<Addr, Conf, Cont, Data> {
     fn constructor(&self, address: Addr, config: Conf, data: Data) -> Cont

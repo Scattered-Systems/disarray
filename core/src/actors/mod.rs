@@ -5,8 +5,20 @@
    Description:
        ... Summary ...
 */
-pub use crate::actors::{nodes::*, peers::*, providers::*};
+pub use crate::actors::{nodes::*, peers::*, utils::*};
 
 mod nodes;
 mod peers;
-mod providers;
+
+mod utils {
+    use crate::BoxedTransport;
+    use libp2p::swarm::NetworkBehaviour;
+    use libp2p::swarm::{Swarm, SwarmBuilder};
+
+    pub type Behaviour = Box<dyn NetworkBehaviour>;
+
+    pub fn create_swarm(transport: BoxedTransport, peer: ) {
+        SwarmBuilder::new(transport, behaviour, peer_id)
+            .executor(Box::new(|fut| { tokio::spawn(fut); })).build()
+    }
+}

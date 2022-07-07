@@ -5,7 +5,7 @@
    Description:
        ... Summary ...
 */
-pub use chain::*;
+pub use crate::actors::chains::{chain::*, utils::*};
 
 mod chain;
 
@@ -20,4 +20,12 @@ pub trait ChainSpec<Addr, Conf, Cont, Data> {
     fn constructor(&self, address: Addr, config: Conf, context: Cont, data: Vec<Data>) -> Self
         where
             Self: Sized;
+}
+
+mod utils {
+    use crate::Blockchain;
+
+    pub fn chain_generator(address: std::net::SocketAddr) -> Blockchain {
+        Blockchain::new(address)
+    }
 }
