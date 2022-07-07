@@ -4,11 +4,12 @@
 
 Checkout the current and supported packages below
 
-| Package | Current | Supported |
-|---------|---------|-----------|
-| algae   | 0.1.2   | <=0.1.0   |
+| Package  | Current | Supported |
+|----------|---------|-----------|
+| disarray | 0.1.4   | +0.1.4    |
 
 ## Reporting a Vulnerability
+
 Email me at j3mccain@gmail.com to report any vulnerabilities.
 
-[Website](https://pzzld.eth.link/)
+[Scattered-Systems](https://scattered-systems.com)

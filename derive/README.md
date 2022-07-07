@@ -1,14 +1,15 @@
-# concision-derive
+# Disarray
 
-## Overview
-This crate is designed to support a number of robust operations pertaining to data-science, machine-learning, and AI.
+### _Appellation:_
 
-## Getting Started
+#### disarray-derive
+
+### _Context:_
+
+#### Feature Flag: derive
+
+### _Description:_
+
+This crate supports efforts within Disarray, a blockchain utility package
 
 ### Examples
-    
-    use consison;
-    
-    fn main() {
-        println!("Welcome")
-    }
