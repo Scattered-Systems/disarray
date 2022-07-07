@@ -7,7 +7,7 @@
 */
 #[doc(inline)]
 #[cfg(feature = "default")]
-pub use crate::{actors::*, consensus::*, core::*, data::*};
+pub use crate::{actors::*, comps::*, core::*, data::*};
 #[doc(inline)]
 #[cfg(feature = "core")]
 pub use disarray_core::*;
@@ -19,6 +19,6 @@ pub use disarray_derive::*;
 pub use disarray_macros::*;
 
 mod actors;
-mod consensus;
+mod comps;
 mod core;
 mod data;
