@@ -9,22 +9,19 @@ pub use crate::core::common::*;
 
 mod common {
     pub use constants::*;
-    pub use variants::*;
     pub use types::*;
+    pub use variants::*;
 
     mod constants {
 
         pub const DIFFICULTY_PREFIX: &str = "00";
-
     }
 
-    mod types {
-
-    }
+    mod types {}
 
     mod variants {
         pub enum Dates {
-            Standard(i64)
+            Standard(i64),
         }
     }
 }
