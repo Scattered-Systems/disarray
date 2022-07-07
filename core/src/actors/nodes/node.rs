@@ -5,24 +5,32 @@
    Description:
        ... Summary ...
 */
+use crate::Peer;
 
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug)]
 pub struct Node<Addr = String> {
     pub address: Addr,
+    pub peers: Vec<Peer>,
 }
 
 impl<Addr> Node<Addr> {
-    pub fn constructor(address: Addr) -> Self {
-        Self { address }
+    pub fn constructor(address: Addr, peers: Vec<Peer>) -> Self {
+        Self { address, peers }
     }
     pub fn from(address: Addr) -> Self {
-        Self::constructor(address)
+        let mut peers = Vec::new();
+        peers.push(Peer::new());
+        Self::constructor(address, peers.clone())
     }
 }
 
 impl std::fmt::Display for Node {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Node(address={})", self.address)
+        write!(
+            f,
+            "Node(\naddress={:#?},\npeers={:#?}\n))",
+            self.address, self.peers
+        )
     }
 }
 
