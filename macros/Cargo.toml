@@ -9,11 +9,10 @@ license = "MIT"
 name = "disarray-macros"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.7" # TODO - Update the cargo package version
+version = "0.1.8" # TODO - Update the cargo package version
 
 [lib]
 proc-macro = true
-test = false
 
 [dependencies]
 proc-macro2 = "1.0.40"
