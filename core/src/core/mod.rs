@@ -5,7 +5,8 @@
    Description:
        ... Summary ...
 */
-pub use crate::core::{clients::*, common::*};
+pub use crate::core::{behaviours::*, clients::*, common::*};
 
+mod behaviours;
 mod clients;
 mod common;
