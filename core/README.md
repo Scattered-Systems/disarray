@@ -1,11 +1,4 @@
-# Disarray
+## disarray-core
 
-#### Appellation: disarray-core
-
-#### Context: core
-
-#### Description
-
-This crate supports efforts within Disarray, a blockchain utility package
-
-### Examples
+This crate was created in support of Disarray, serving a majority of the networking features required for creating EVM
+native blockchains and dApps.
