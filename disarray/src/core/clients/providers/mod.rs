@@ -17,7 +17,12 @@ pub enum ProviderConnectionSatus {
 }
 
 mod utils {
-    use libp2p::{Transport, core::upgrade, mplex, noise, tcp::{GenTcpConfig, TokioTcpTransport}};
+    use libp2p::{
+        core::upgrade,
+        mplex, noise,
+        tcp::{GenTcpConfig, TokioTcpTransport},
+        Transport,
+    };
 
     pub type NoiseKeysSpec = noise::X25519Spec;
     pub type AuthNoiseKeys = noise::AuthenticKeypair<NoiseKeysSpec>;

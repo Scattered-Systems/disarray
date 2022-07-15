@@ -5,15 +5,14 @@
    Description:
        ... Summary ...
 */
-
 pub use behaviours::*;
 pub use clients::*;
 pub use common::*;
 pub use configurations::*;
-pub use interfaces::*;
+pub use consensus::*;
 
 mod behaviours;
 mod clients;
 mod common;
 mod configurations;
-mod interfaces;
+mod consensus;

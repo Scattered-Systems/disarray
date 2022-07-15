@@ -5,7 +5,8 @@
    Description:
        ... Summary ...
 */
-pub use crate::actors::chains::{chain::*, utils::*};
+pub use chain::*;
+pub use utils::*;
 
 mod chain;
 

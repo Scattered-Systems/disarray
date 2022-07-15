@@ -5,13 +5,11 @@
    Description:
        ... Summary ...
 */
-pub use crate::actors::{nodes::*, peers::*, utils::*};
+pub use nodes::*;
+pub use peers::*;
+pub use utils::*;
 
 mod nodes;
 mod peers;
 
-mod utils {
-    use crate::BoxedTransport;
-    use libp2p::swarm::NetworkBehaviour;
-    use libp2p::swarm::{Swarm, SwarmBuilder};
-}
+mod utils {}

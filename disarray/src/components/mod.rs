@@ -4,15 +4,19 @@
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
 */
-pub use crate::actors::{blocks::*, chains::*, consensus::*, utils::*};
+pub use blocks::*;
+pub use chains::*;
+pub use interfaces::*;
+pub use utils::*;
 
 mod blocks;
 mod chains;
-mod consensus;
+mod interfaces;
 
 mod utils {
     use crate::{calculate_block_hash, convert_hash_into_binary, Block, DIFFICULTY_PREFIX};
 
+    /// Determine the validity of a new block by comparing the previous one
     pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {
         if block.previous != pblock.hash {
             log::warn!("block with id: {} has wrong previous hash", block.id);
@@ -31,15 +35,13 @@ mod utils {
                 pblock.id
             );
             return false;
-        } else if hex::encode(
-            calculate_block_hash(
-                block.id,
-                block.nonce,
-                block.previous.clone(),
-                block.timestamp.clone(),
-                block.data.clone(),
-            )
-        ) != block.hash
+        } else if hex::encode(calculate_block_hash(
+            block.id,
+            block.nonce,
+            block.previous.clone(),
+            block.timestamp.clone(),
+            block.data.clone(),
+        )) != block.hash
         {
             log::warn!("block with id: {} has invalid hash", block.id);
             return false;

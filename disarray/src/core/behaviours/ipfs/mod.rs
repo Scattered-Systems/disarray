@@ -13,6 +13,7 @@ mod utils {
 
     use libp2p::{multiaddr::Protocol, Multiaddr};
 
+    /// Get the IPFS path specified at the install of the tool
     pub fn get_ipfs_path() -> Box<Path> {
         env::var("IPFS_PATH")
             .map(|ipfs_path| Path::new(&ipfs_path).into())
@@ -67,8 +68,6 @@ mod utils {
 
     #[cfg(test)]
     mod tests {
-        use super::*;
-
         #[test]
         fn test() {
             let a = 0;
