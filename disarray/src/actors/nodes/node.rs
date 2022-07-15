@@ -7,6 +7,7 @@
 */
 use crate::Peer;
 
+/// Outlines the standard Node structure to be used throughout the ecosystem
 #[derive(Clone, Debug)]
 pub struct Node<Addr = String> {
     pub address: Addr,
@@ -14,7 +15,7 @@ pub struct Node<Addr = String> {
 }
 
 impl<Addr> Node<Addr> {
-    pub fn constructor(address: Addr, peers: Vec<Peer>) -> Self {
+    fn constructor(address: Addr, peers: Vec<Peer>) -> Self {
         Self { address, peers }
     }
     pub fn from(address: Addr) -> Self {
@@ -24,7 +25,7 @@ impl<Addr> Node<Addr> {
     }
 }
 
-impl std::fmt::Display for Node {
+impl<Addr: std::fmt::Debug> std::fmt::Display for Node<Addr> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,

@@ -3,13 +3,14 @@
 [![Clippy Analysis](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml)
 [![Rust](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml)
 
-
 ## Overview
-This crate is designed to support a number of robust operations pertaining to data-science, machine-learning, and AI.
+
+Disarray is a collection of critical components to aid developers in creating blockchains optimized for Ethereum by
+supporting Ethereum Native Side-Chains, zk-SNARK based systems, and Scattered-Systems Tri-Chain Core
 
 ## Getting Started
 
-
 ### Building from the source
-    git clone https://github.com/FL03/concision
-    cargo test --workspace --all-features
+
+    git clone https://github.com/scattered-systems/disarray
+    cargo test --all-features
