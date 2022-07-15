@@ -3,7 +3,7 @@ services:
   apps:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ../Dockerfile
     container_name: apps
     depends_on: [cache, database]
     volumes:
