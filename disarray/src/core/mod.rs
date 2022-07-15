@@ -5,8 +5,15 @@
    Description:
        ... Summary ...
 */
-pub use crate::core::{common::*, configurations::*, interfaces::*};
 
+pub use behaviours::*;
+pub use clients::*;
+pub use common::*;
+pub use configurations::*;
+pub use interfaces::*;
+
+mod behaviours;
+mod clients;
 mod common;
 mod configurations;
 mod interfaces;

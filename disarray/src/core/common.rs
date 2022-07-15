@@ -20,6 +20,7 @@ mod types {
     pub type BlockNonce = u64;
     pub type BlockTs = i64;
     pub type BlockTz = chrono::Utc;
+    pub type KademliaMS = libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>;
 }
 
 mod variants {
