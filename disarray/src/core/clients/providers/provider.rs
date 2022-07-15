@@ -5,7 +5,10 @@
    Description:
        ... Summary ...
 */
-use libp2p::{Transport, PeerId, core::{transport::Boxed, muxing::StreamMuxerBox}};
+use libp2p::{
+    core::{muxing::StreamMuxerBox, transport::Boxed},
+    PeerId, Transport,
+};
 
 pub type BoxedTransport = Boxed<(PeerId, StreamMuxerBox)>;
 
@@ -23,11 +26,7 @@ impl<Addr> Provider<Addr> {
 
 impl std::fmt::Display for Provider {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Provider(\naddress={:#?})",
-            self.address
-        )
+        write!(f, "Provider(\naddress={:#?})", self.address)
     }
 }
 

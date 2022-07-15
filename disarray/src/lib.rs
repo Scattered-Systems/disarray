@@ -1,13 +1,12 @@
 /*
-   Appellation: concision
+   Appellation: disarray
    Context: library
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
-       Concision is a robust framework for creating powerful data-centric applications in Rust.
+       Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks
 */
 #[doc(inline)]
-#[cfg(feature = "default")]
-pub use crate::{actors::*, clients::*, core::*, data::*};
+pub use crate::{actors::*, components::*, core::*, data::*};
 #[doc(inline)]
 #[cfg(feature = "core")]
 pub use disarray_core::*;
@@ -19,6 +18,6 @@ pub use disarray_derive::*;
 pub use disarray_macros::*;
 
 mod actors;
-mod clients;
+mod components;
 mod core;
 mod data;

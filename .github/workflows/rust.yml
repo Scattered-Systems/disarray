@@ -28,15 +28,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Test
         run: cargo test --workspace -v --color $CARGO_TERM_COLOR
-  core:
-    env:
-      CRATE: disarray-core
-    runs-on: ubuntu-latest
-    needs: [ login ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Build and Push
-        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   derive:
     env:
       CRATE: disarray-derive
@@ -60,7 +51,7 @@ jobs:
       CRATE: disarray
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    needs: [ login, test-crate, core, derive, macros ]
+    needs: [ login, test-crate, derive, macros ]
     steps:
       - uses: actions/checkout@v3
       - name: Build and Push

@@ -1,20 +1,27 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
-categories = []
+categories = ["development-tools", "network-programming"]
 description = "Disarray"
 edition = "2021"
-homepage = "https://github.com/scattered-systems/disarray"
-keywords = []
+homepage = "https://scattered-systems.github.io/disarray"
+keywords = ["async", "scsys"]
 license = "MIT"
 name = "disarray"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.9" # TODO - Update the cargo package version
+version = "0.1.10" # TODO - Update the cargo package version
 
 [features]
-core = ["disarray-core"]
-default = ["core", "external"]
-external = ["bson/default", "bson/chrono-0_4", "bson/serde_with", "serde/derive"]
+default = ["external"]
+external = [
+    "bson/default",
+    "bson/chrono-0_4",
+    "bson/serde_with",
+    "chrono/default",
+    "config/default",
+    "libp2p/default",
+    "serde/derive"
+]
 full = ["default", "derive", "macros"]
 derive = ["disarray-derive"]
 macros = ["disarray-macros"]
@@ -29,18 +36,21 @@ bson = { features = ["chrono-0_4", "serde_with"], version = "2.3.0" }
 chrono = "0.4.19"
 config = "0.13.1"
 digest = "0.10.3"
-hex = "0.4.3"
+futures = "0.3.21"
 glob = "0.3.0"
+hex = "0.4.3"
+hyper = { features = ["full"], version = "0.14.20" }
+libp2p = { features = ["dns-tokio", "tcp-tokio"], version = "0.46.1" }
 log = "0.4.17"
 once_cell = "1.12.0"
 serde = { features = ["derive"], version = "1.0.138" }
 serde_json = "1.0.82"
 sha2 = "0.10.2"
-
-[dependencies.disarray-core]
-optional = true
-path = "../core"
-version = ">=0.1.6"
+tokio = { features = ["full"], version = "1.20.0" }
+tower = "0.4.13"
+tower-http = "0.3.4"
+tracing = "0.1.35"
+tracing-subscriber = "0.3.14"
 
 [dependencies.disarray-derive]
 optional = true

@@ -9,10 +9,6 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /core
-    schedule:
-      interval: daily
-  - package-ecosystem: cargo
     directory: /derive
     schedule:
       interval: daily

@@ -6,7 +6,7 @@
        ... Summary ...
 */
 
-use crate::{BlockId, BlockHash, BlockNonce, BlockData, BlockTs, BlockTz};
+use crate::{BlockData, BlockHash, BlockId, BlockNonce, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Block {
@@ -39,7 +39,10 @@ impl Block {
     pub fn new(id: BlockId, previous: BlockHash, data: BlockData) -> Self {
         let timestamp = BlockTz::now().timestamp();
         let (nonce, hash) = crate::create_block_by_mining(
-            id.clone(), previous.clone(), timestamp.clone(), data.clone(),
+            id.clone(),
+            previous.clone(),
+            timestamp.clone(),
+            data.clone(),
         );
         Self::constructor(
             id.clone(),

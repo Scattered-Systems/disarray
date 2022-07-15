@@ -5,7 +5,8 @@
    Description:
        ... Summary ...
 */
-pub use crate::actors::blocks::{block::*, utils::*};
+pub use block::*;
+pub use utils::*;
 
 mod block;
 
@@ -39,7 +40,7 @@ impl std::fmt::Display for Transaction {
 }
 
 mod utils {
-    use crate::{DIFFICULTY_PREFIX, BlockData, BlockId, BlockHash, BlockNonce, BlockTs};
+    use crate::{BlockData, BlockHash, BlockId, BlockNonce, BlockTs, DIFFICULTY_PREFIX};
     use sha2::Digest;
 
     pub fn create_block_by_mining(
@@ -54,9 +55,8 @@ mod utils {
             if nonce % 100000 == 0 {
                 log::info!("nonce: {}", nonce);
             }
-            let hash = calculate_block_hash(
-                id, nonce, previous.clone(), timestamp.clone(), data.clone(),
-            );
+            let hash =
+                calculate_block_hash(id, nonce, previous.clone(), timestamp.clone(), data.clone());
             let binary_hash = convert_hash_into_binary(&hash);
             if binary_hash.starts_with(DIFFICULTY_PREFIX.as_ref()) {
                 log::info!(
@@ -80,7 +80,11 @@ mod utils {
     }
 
     pub fn calculate_block_hash(
-        id: BlockId, nonce: BlockNonce, previous: BlockHash, timestamp: BlockTs, data: BlockData,
+        id: BlockId,
+        nonce: BlockNonce,
+        previous: BlockHash,
+        timestamp: BlockTs,
+        data: BlockData,
     ) -> Vec<u8> {
         let cache = serde_json::json!(
             {
@@ -107,9 +111,7 @@ mod utils {
             let nonce: BlockNonce = 890890;
             let previous = "previous_hash".to_string();
             let timestamp: BlockTs = crate::BlockTz::now().timestamp();
-            let hash = calculate_block_hash(
-                id, nonce, previous.clone(), timestamp, data.clone(),
-            );
+            let hash = calculate_block_hash(id, nonce, previous.clone(), timestamp, data.clone());
             assert_eq!(&hash, &hash)
         }
     }
