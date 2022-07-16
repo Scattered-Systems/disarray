@@ -1,0 +1,3 @@
+tasks:
+  - init: cargo build && cargo build --release
+    command: cargo watch -x test --release --all-features
