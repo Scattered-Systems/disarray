@@ -1,7 +1,7 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
 categories = ["development-tools", "network-programming"]
-description = "Disarray"
+description = "Disarray is an all-in-one toolkit for designing optimized Ethereum Native, zk-SNARK blockchains"
 edition = "2021"
 homepage = "https://scattered-systems.github.io/disarray"
 keywords = ["async", "scsys"]
@@ -9,7 +9,7 @@ license = "MIT"
 name = "disarray"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.13" # TODO - Update the cargo package version
+version = "0.1.14" # TODO - Update the cargo package version
 
 [features]
 core = ["macros", "derive"]
