@@ -1,17 +1,14 @@
 /*
-   Appellation: actors
-   Context:
+   Appellation: actors <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
 */
 pub use blocks::*;
 pub use chains::*;
-pub use interfaces::*;
 pub use utils::*;
 
 mod blocks;
 mod chains;
-mod interfaces;
 
 mod utils {
     use crate::{calculate_block_hash, convert_hash_into_binary, Block, DIFFICULTY_PREFIX};

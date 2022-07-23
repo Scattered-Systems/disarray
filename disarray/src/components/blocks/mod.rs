@@ -40,7 +40,7 @@ impl std::fmt::Display for Transaction {
 }
 
 mod utils {
-    use crate::{BlockData, DIFFICULTY_PREFIX};
+    use crate::DIFFICULTY_PREFIX;
     use scsys::{BlockHs, BlockId, BlockNc, BlockTs};
     use sha2::Digest;
 
@@ -112,13 +112,13 @@ mod utils {
 
         #[test]
         fn test_block_hash() {
-            let id: BlockId = 10;
-            let nonce: BlockNc = 890890;
-            let previous = "previous_hash".to_string();
-            let timestamp: BlockTs = scsys::BlockTz::now().timestamp();
-            let transactions = vec!["test".to_string()];
-            let hash =
-                calculate_block_hash(id, nonce, previous.clone(), timestamp, transactions.clone());
+            let hash = calculate_block_hash(
+                1,
+                890890,
+                "previous_hash".to_string(),
+                scsys::BlockTz::now().timestamp(),
+                vec!["test".to_string()],
+            );
             assert_eq!(&hash, &hash)
         }
     }

@@ -1,6 +1,5 @@
 /*
-   Appellation: chains
-   Context: module
+   Appellation: chains <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...

@@ -1,6 +1,5 @@
 /*
-    Appellation: blockchain
-    Context: module
+    Appellation: blockchain <module>
     Description:
         ... Summary ...
 */

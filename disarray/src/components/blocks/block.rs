@@ -1,12 +1,11 @@
 /*
-   Appellation: block
-   Context:
+   Appellation: block <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...
 */
 use crate::BlockData;
-use scsys::{BlockHs, BlockId, BlockNc, BlockTr, BlockTs, BlockTz};
+use scsys::{BlockHs, BlockId, BlockNc, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Block<Dt: Clone + serde::Serialize = String> {
