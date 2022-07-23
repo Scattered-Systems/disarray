@@ -20,18 +20,20 @@ jobs:
     env:
       CRATE: disarray-derive
     runs-on: ubuntu-latest
-    needs: [ login ]
     steps:
       - uses: actions/checkout@v3
+      - name: Login
+        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
       - name: Build and Push
         run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   macros:
     env:
       CRATE: disarray-macros
     runs-on: ubuntu-latest
-    needs: [ login ]
     steps:
       - uses: actions/checkout@v3
+      - name: Login
+        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
       - name: Build and Push
         run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   crate:
