@@ -10,9 +10,9 @@ pub use utils::*;
 mod peer;
 
 mod utils {
-    use crate::{AuthNoiseKeys, NoiseKeys, PeerKP};
+    use crate::{AuthNoiseKeys, NoiseKeys, PeerKp};
 
-    pub fn create_auth_noise_keys(key: &PeerKP) -> AuthNoiseKeys {
+    pub fn create_auth_noise_keys(key: &PeerKp) -> AuthNoiseKeys {
         match NoiseKeys::new().into_authentic(&key) {
             Ok(v) => v,
             Err(e) => {

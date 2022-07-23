@@ -1,5 +1,8 @@
-pub use distkv::DistKV;
+/*
+   Appellation: storage <module>
+   Creator: FL03 <jo3mccain@icloud.com>
+   Description:
+       ... Summary ...
+*/
 
-mod distkv;
-
-pub mod utils {}
+pub mod distkv;

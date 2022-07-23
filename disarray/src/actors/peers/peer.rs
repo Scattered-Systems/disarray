@@ -4,30 +4,28 @@
    Description:
        ... Summary ...
 */
-
-pub type PeerId = libp2p::PeerId;
-pub type PeerKP = libp2p::identity::Keypair;
+use crate::{PeerId, PeerKp};
 
 #[derive(Clone, Debug)]
 pub struct Peer {
     pub id: PeerId,
-    pub key: PeerKP,
+    pub key: PeerKp,
 }
 
 impl Peer {
-    pub fn constructor(id: PeerId, key: PeerKP) -> Self {
+    pub fn constructor(id: PeerId, key: PeerKp) -> Self {
         Self { id, key }
     }
     pub fn new() -> Self {
-        let key = PeerKP::generate_ed25519();
+        let key = PeerKp::generate_ed25519();
         let id = PeerId::from(&key.public());
         Self::constructor(id.clone(), key.clone())
     }
-    pub fn from(key: PeerKP) -> Self {
+    pub fn from(key: PeerKp) -> Self {
         Self::constructor(PeerId::from(&key.public()), key)
     }
     pub fn authenticate(&self) -> crate::AuthNoiseKeys {
-        crate::create_auth_noise_keys(&self.key)
+        crate::peers::create_auth_noise_keys(&self.key)
     }
 }
 

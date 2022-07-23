@@ -1,3 +1,9 @@
+/*
+   Appellation: distkv <module>
+   Creator: FL03 <jo3mccain@icloud.com>
+   Description:
+       ... Summary ...
+*/
 use libp2p::{
     kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record},
     mdns::{Mdns, MdnsEvent},

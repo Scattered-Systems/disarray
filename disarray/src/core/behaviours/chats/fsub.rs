@@ -1,3 +1,9 @@
+/*
+   Appellation: fsub <module>
+   Creator: FL03 <jo3mccain@icloud.com>
+   Description:
+       ... Summary ...
+*/
 use libp2p::{
     floodsub::{Floodsub, FloodsubEvent},
     mdns::{Mdns, MdnsEvent},

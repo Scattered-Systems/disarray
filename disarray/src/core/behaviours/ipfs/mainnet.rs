@@ -1,9 +1,8 @@
 /*
-    Appellation: mainnet
-    Context: behaviours::ipfs
-    Description:
-        Implement the network behaviours that enables apps to connect to the ipfs mainnet
-
+   Appellation: mainnet <module>
+   Creator: FL03 <jo3mccain@icloud.com>
+   Description:
+       ... Summary ...
 */
 use crate::KademliaMS;
 use libp2p::{

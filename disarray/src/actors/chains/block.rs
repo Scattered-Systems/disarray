@@ -37,7 +37,7 @@ impl<Dt: Clone + serde::Serialize> Block<Dt> {
     }
     pub fn new(id: BlockId, previous: BlockHs, transactions: Vec<Dt>) -> Self {
         let timestamp = BlockTz::now().timestamp();
-        let (nonce, hash) = crate::create_block_by_mining(
+        let (nonce, hash) = crate::chains::create_block_by_mining(
             id.clone(),
             previous.clone(),
             timestamp.clone(),
@@ -61,20 +61,5 @@ impl std::fmt::Display for Block {
             "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
             self.id, self.hash, self.nonce, self.previous, self.timestamp, self.transactions
         )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test() {
-        let id: BlockId = 1;
-        let data: BlockData = vec!["".to_string()];
-        let previous: BlockHs = "genesis_block".to_string();
-        let block = Block::new(id, previous.clone(), data.clone());
-        println!("{:#?}", &block);
-        assert_eq!(&block, &block)
     }
 }

@@ -4,11 +4,6 @@
    Description:
        ... Summary ...
 */
-pub use nodes::*;
-pub use peers::*;
-pub use utils::*;
-
-mod nodes;
-mod peers;
-
-mod utils {}
+pub mod chains;
+pub mod nodes;
+pub mod peers;

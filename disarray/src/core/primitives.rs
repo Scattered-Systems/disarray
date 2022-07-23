@@ -9,13 +9,25 @@ pub use types::*;
 pub use variants::*;
 
 mod constants {
-    ///
+    /// Set the difficulty for mining new blocks
     pub const DIFFICULTY_PREFIX: &str = "00";
 }
 
 mod types {
+    ///
+    pub type AuthNoiseKeys = libp2p::noise::AuthenticKeypair<NoiseSpec>;
+    ///
     pub type BlockData = Vec<String>;
+    ///
     pub type KademliaMS = libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>;
+    ///
+    pub type NetworkAddress = libp2p::Multiaddr;
+    ///
+    pub type NoiseKeys = libp2p::noise::Keypair<NoiseSpec>;
+    ///
+    pub type NoiseSpec = libp2p::noise::X25519Spec;
+    pub type PeerId = libp2p::PeerId;
+    pub type PeerKp = libp2p::identity::Keypair;
 }
 
 mod variants {

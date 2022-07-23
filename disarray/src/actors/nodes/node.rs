@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use crate::Peer;
+use crate::peers::Peer;
 
 /// Outlines the standard Node structure to be used throughout the ecosystem
 #[derive(Clone, Debug)]

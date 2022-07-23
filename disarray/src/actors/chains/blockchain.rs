@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use crate::Block;
+use crate::chains::Block;
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Blockchain {
