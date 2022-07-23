@@ -40,23 +40,29 @@ impl std::fmt::Display for Transaction {
 }
 
 mod utils {
-    use crate::{BlockData, BlockHash, BlockId, BlockNonce, BlockTs, DIFFICULTY_PREFIX};
+    use crate::{BlockData, DIFFICULTY_PREFIX};
+    use scsys::{BlockHs, BlockId, BlockNc, BlockTs};
     use sha2::Digest;
 
-    pub fn create_block_by_mining(
+    pub fn create_block_by_mining<Dt: Clone + serde::Serialize>(
         id: BlockId,
-        previous: BlockHash,
+        previous: BlockHs,
         timestamp: BlockTs,
-        data: BlockData,
-    ) -> (BlockNonce, BlockHash) {
+        transactions: Vec<Dt>,
+    ) -> (BlockNc, BlockHs) {
         log::info!("Mining a new block...");
         let mut nonce = 0;
         loop {
             if nonce % 100000 == 0 {
                 log::info!("nonce: {}", nonce);
             }
-            let hash =
-                calculate_block_hash(id, nonce, previous.clone(), timestamp.clone(), data.clone());
+            let hash = calculate_block_hash(
+                id,
+                nonce,
+                previous.clone(),
+                timestamp.clone(),
+                transactions.clone(),
+            );
             let binary_hash = convert_hash_into_binary(&hash);
             if binary_hash.starts_with(DIFFICULTY_PREFIX.as_ref()) {
                 log::info!(
@@ -79,20 +85,20 @@ mod utils {
         res.into_bytes()
     }
 
-    pub fn calculate_block_hash(
+    pub fn calculate_block_hash<Dt: Clone + serde::Serialize>(
         id: BlockId,
-        nonce: BlockNonce,
-        previous: BlockHash,
+        nonce: BlockNc,
+        previous: BlockHs,
         timestamp: BlockTs,
-        data: BlockData,
+        transactions: Vec<Dt>,
     ) -> Vec<u8> {
         let cache = serde_json::json!(
             {
                 "id": id,
-                "data": data.clone(),
                 "nonce": nonce,
                 "previous": previous,
-                "timestamp": timestamp
+                "timestamp": timestamp,
+                "transactions": transactions.clone()
             }
         );
         let mut hasher = sha2::Sha256::new();
@@ -107,11 +113,12 @@ mod utils {
         #[test]
         fn test_block_hash() {
             let id: BlockId = 10;
-            let data = vec!["test".to_string()];
-            let nonce: BlockNonce = 890890;
+            let nonce: BlockNc = 890890;
             let previous = "previous_hash".to_string();
-            let timestamp: BlockTs = crate::BlockTz::now().timestamp();
-            let hash = calculate_block_hash(id, nonce, previous.clone(), timestamp, data.clone());
+            let timestamp: BlockTs = scsys::BlockTz::now().timestamp();
+            let transactions = vec!["test".to_string()];
+            let hash =
+                calculate_block_hash(id, nonce, previous.clone(), timestamp, transactions.clone());
             assert_eq!(&hash, &hash)
         }
     }

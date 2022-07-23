@@ -40,7 +40,7 @@ mod utils {
             block.nonce,
             block.previous.clone(),
             block.timestamp.clone(),
-            block.data.clone(),
+            block.transactions.clone(),
         )) != block.hash
         {
             log::warn!("block with id: {} has invalid hash", block.id);

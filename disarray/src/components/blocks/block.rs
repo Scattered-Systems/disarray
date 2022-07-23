@@ -5,27 +5,27 @@
    Description:
        ... Summary ...
 */
-
-use crate::{BlockData, BlockHash, BlockId, BlockNonce, BlockTs, BlockTz};
+use crate::BlockData;
+use scsys::{BlockHs, BlockId, BlockNc, BlockTr, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct Block {
+pub struct Block<Dt: Clone + serde::Serialize = String> {
     pub id: BlockId,
-    pub hash: BlockHash,
-    pub nonce: BlockNonce,
-    pub previous: BlockHash,
+    pub hash: BlockHs,
+    pub nonce: BlockNc,
+    pub previous: BlockHs,
     pub timestamp: BlockTs,
-    pub data: BlockData,
+    pub transactions: Vec<Dt>,
 }
 
-impl Block {
+impl<Dt: Clone + serde::Serialize> Block<Dt> {
     pub fn constructor(
         id: BlockId,
-        hash: BlockHash,
-        nonce: BlockNonce,
-        previous: BlockHash,
+        hash: BlockHs,
+        nonce: BlockNc,
+        previous: BlockHs,
         timestamp: BlockTs,
-        data: BlockData,
+        transactions: Vec<Dt>,
     ) -> Self {
         Self {
             id,
@@ -33,16 +33,16 @@ impl Block {
             nonce,
             previous,
             timestamp,
-            data,
+            transactions,
         }
     }
-    pub fn new(id: BlockId, previous: BlockHash, data: BlockData) -> Self {
+    pub fn new(id: BlockId, previous: BlockHs, transactions: Vec<Dt>) -> Self {
         let timestamp = BlockTz::now().timestamp();
         let (nonce, hash) = crate::create_block_by_mining(
             id.clone(),
             previous.clone(),
             timestamp.clone(),
-            data.clone(),
+            transactions.clone(),
         );
         Self::constructor(
             id.clone(),
@@ -50,7 +50,7 @@ impl Block {
             nonce.clone(),
             previous.clone(),
             timestamp.clone(),
-            data.clone(),
+            transactions.clone(),
         )
     }
 }
@@ -60,7 +60,7 @@ impl std::fmt::Display for Block {
         write!(
             f,
             "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
-            self.id, self.hash, self.nonce, self.previous, self.timestamp, self.data
+            self.id, self.hash, self.nonce, self.previous, self.timestamp, self.transactions
         )
     }
 }
@@ -72,8 +72,8 @@ mod tests {
     #[test]
     fn test() {
         let id: BlockId = 1;
-        let data: BlockData = Vec::new();
-        let previous: BlockHash = "genesis_block".to_string();
+        let data: BlockData = vec!["".to_string()];
+        let previous: BlockHs = "genesis_block".to_string();
         let block = Block::new(id, previous.clone(), data.clone());
         println!("{:#?}", &block);
         assert_eq!(&block, &block)

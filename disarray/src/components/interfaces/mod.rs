@@ -10,7 +10,4 @@ pub use utils::*;
 
 mod application;
 
-mod utils {
-
-    
-}
+mod utils {}

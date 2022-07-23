@@ -1,6 +1,5 @@
 /*
-   Appellation: peer
-   Context:
+   Appellation: peer <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...
@@ -35,14 +34,5 @@ impl Peer {
 impl std::fmt::Display for Peer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Peer(\nid={:#?},\nkey={:#?}\n)", self.id, self.key)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test() {
-        let f = |x: usize| x.pow(x.try_into().unwrap());
-        assert_eq!(f(2), 4)
     }
 }

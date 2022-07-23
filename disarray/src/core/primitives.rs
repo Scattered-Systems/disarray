@@ -15,21 +15,7 @@ mod constants {
 }
 
 mod types {
-    ///
     pub type BlockData = Vec<String>;
-    ///
-    pub type BlockId = u16;
-    ///
-    pub type BlockHash = String;
-    ///
-    pub type BlockNonce = u64;
-    ///
-    pub type BlockTs = i64;
-    ///
-    pub type BlockTz = chrono::Utc;
-    ///
-    pub type CommonError = Box<dyn std::error::Error + Send + Sync + 'static>;
-    ///
     pub type KademliaMS = libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>;
 }
 
@@ -39,7 +25,7 @@ mod variants {
     #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
     pub enum Timestamps {
         Binary(bson::DateTime),
-        Standard(BlockTs),
+        Standard(scsys::BlockTs),
     }
 
     impl std::fmt::Display for Timestamps {
