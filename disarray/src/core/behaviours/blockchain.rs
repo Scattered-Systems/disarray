@@ -1,5 +1,6 @@
 /*
     Appellation: blockchain <module>
+    Creator: FL03 <jo3mccain@icloud.com>
     Description:
         ... Summary ...
 */
@@ -12,15 +13,16 @@ use libp2p::{
 
 use crate::KademliaMS;
 
+/// Create the standard behaviour for blockchain networks, building on top of Kademlia and MDNS
 #[derive(NetworkBehaviour)]
 #[behaviour(event_process = true)]
-pub struct ChainBehaviour {
+pub struct ChainTestnet {
     pub kademlia: KademliaMS,
     pub mdns: Mdns,
 }
 
-// Implement a custom process for Kademlia Event's
-impl NetworkBehaviourEventProcess<KademliaEvent> for ChainBehaviour {
+/// Implement the Kademlia network behaviour for blockchain networks
+impl NetworkBehaviourEventProcess<KademliaEvent> for ChainTestnet {
     fn inject_event(&mut self, message: KademliaEvent) {
         match message {
             KademliaEvent::OutboundQueryCompleted { result, .. } => match result {
@@ -77,7 +79,7 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for ChainBehaviour {
     }
 }
 
-impl NetworkBehaviourEventProcess<MdnsEvent> for ChainBehaviour {
+impl NetworkBehaviourEventProcess<MdnsEvent> for ChainTestnet {
     fn inject_event(&mut self, event: MdnsEvent) {
         if let MdnsEvent::Discovered(list) = event {
             for (peer_id, multiaddr) in list {

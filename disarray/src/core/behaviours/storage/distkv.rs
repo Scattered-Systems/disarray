@@ -2,7 +2,7 @@
    Appellation: distkv <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
-       ... Summary ...
+       Defines a simple peer-to-peer storage network capable of storing key value pairs
 */
 use libp2p::{
     kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record},

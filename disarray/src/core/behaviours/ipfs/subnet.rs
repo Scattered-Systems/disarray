@@ -15,14 +15,14 @@ use libp2p::{
 
 #[derive(NetworkBehaviour)]
 #[behaviour(event_process = true)]
-pub struct Subnet {
+pub struct IPFSSubnet {
     pub gossipsub: Gossipsub,
     pub identify: Identify,
     pub ping: ping::Behaviour,
 }
 
 // Define the network's identification behaviour
-impl NetworkBehaviourEventProcess<IdentifyEvent> for Subnet {
+impl NetworkBehaviourEventProcess<IdentifyEvent> for IPFSSubnet {
     // Called when `identify` produces an event.
     fn inject_event(&mut self, event: IdentifyEvent) {
         println!("identify: {:?}", event);
@@ -30,7 +30,7 @@ impl NetworkBehaviourEventProcess<IdentifyEvent> for Subnet {
 }
 
 // Implement the network's Gossipsub Behaviour
-impl NetworkBehaviourEventProcess<GossipsubEvent> for Subnet {
+impl NetworkBehaviourEventProcess<GossipsubEvent> for IPFSSubnet {
     fn inject_event(&mut self, event: GossipsubEvent) {
         match event {
             GossipsubEvent::Message {
@@ -49,7 +49,7 @@ impl NetworkBehaviourEventProcess<GossipsubEvent> for Subnet {
 }
 
 // Define the network's ping behaviour
-impl NetworkBehaviourEventProcess<ping::Event> for Subnet {
+impl NetworkBehaviourEventProcess<ping::Event> for IPFSSubnet {
     // Called when `ping` produces an event.
     fn inject_event(&mut self, event: ping::Event) {
         match event {
