@@ -9,7 +9,7 @@ license = "MIT"
 name = "disarray"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.16" # TODO - Update the cargo package version
+version = "0.1.17" # TODO - Update the cargo package version
 
 [features]
 default = ["core"]
@@ -27,19 +27,19 @@ test = true
 [dependencies.disarray-core]
 optional = true
 path = "../core"
-version = ">=0.1.10"
+version = ">=0.1.11"
 
 [dependencies.disarray-derive]
 optional = true
 path = "../derive"
-version = ">=0.1.10"
+version = ">=0.1.11"
 
 [dependencies.disarray-macros]
 optional = true
 path = "../macros"
-version = ">=0.1.10"
+version = ">=0.1.11"
 
 [dependencies.disarray-network]
 optional = true
 path = "../network"
-version = "0.1.1"
+version = "0.1.2"
