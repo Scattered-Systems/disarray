@@ -5,8 +5,10 @@ default-members = [
 
 members = [
     "disarray",
+    "core",
     "derive",
-    "macros"
+    "macros",
+    "network"
 ]
 
 [profile.dev]
