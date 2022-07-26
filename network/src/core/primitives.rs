@@ -10,8 +10,7 @@ pub use types::*;
 mod constants {}
 
 mod types {
-    use libp2p::core::muxing::StreamMuxerBox;
-    use libp2p::core::transport::Boxed;
+    use libp2p::core::{muxing::StreamMuxerBox, transport::Boxed};
 
     /// Wrapper for libp2p::noise::AuthenticKeypair<libp2p::noise::X25519Spec>
     pub type AuthNoiseKeys = libp2p::noise::AuthenticKeypair<NoiseSpec>;

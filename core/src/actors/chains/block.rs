@@ -4,7 +4,6 @@
    Description:
        ... Summary ...
 */
-use crate::BlockData;
 use scsys::{BlockHs, BlockId, BlockNc, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]

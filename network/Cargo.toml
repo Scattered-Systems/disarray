@@ -8,7 +8,7 @@ keywords = ["async", "scsys"]
 license = "MIT"
 name = "disarray-network"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.0" # TODO - Update the cargo package version
+version = "0.1.1" # TODO - Update the cargo package version
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -35,5 +35,3 @@ tower = "0.4.13"
 tower-http = "0.3.4"
 tracing = "0.1.35"
 tracing-subscriber = "0.3.14"
-
-
