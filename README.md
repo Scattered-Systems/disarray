@@ -5,8 +5,10 @@
 
 ## Overview
 
-Disarray is a collection of critical components to aid developers in creating blockchains optimized for Ethereum by
-supporting Ethereum Native Side-Chains, zk-SNARK based systems, and Scattered-Systems Tri-Chain Core
+Welcome to disarray, a complete toolkit for creating optimized Ethereum native multi-chains powered with your choice of
+consensus philosophies from Proof of Work, Proof of Stake, zk-SNARK, and more. Each chain will automatically be
+compatible with Proton and the Scattered-Systems Ecosystem with the intention of being the most usable blockchain
+platform.
 
 ## Getting Started
 
