@@ -4,12 +4,11 @@
    Description:
        ... Summary ...
 */
+use crate::BoxedTransport;
 use libp2p::{
     core::{muxing::StreamMuxerBox, transport::Boxed},
     PeerId, Transport,
 };
-
-pub type BoxedTransport = Boxed<(PeerId, StreamMuxerBox)>;
 
 #[derive(Debug)]
 pub struct Provider<Addr = String> {

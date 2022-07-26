@@ -6,7 +6,5 @@
        ... Summary ...
 */
 pub use databases::*;
-pub use providers::*;
 
 mod databases;
-mod providers;

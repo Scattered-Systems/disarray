@@ -8,6 +8,7 @@ pub use blockchain::*;
 pub use chats::*;
 pub use ipfs::*;
 pub use storage::*;
+pub use utils::*;
 
 mod blockchain;
 mod chats;
@@ -15,10 +16,8 @@ mod ipfs;
 mod storage;
 
 mod utils {
+    use libp2p::kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record};
     use std::str::from_utf8;
-    use libp2p::{
-        kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record},
-    };
 
     pub fn capture_kademlia_event(message: KademliaEvent) {
         match message {

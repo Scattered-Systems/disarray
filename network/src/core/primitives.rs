@@ -1,28 +1,21 @@
 /*
-   Appellation: primitives <module>
-   Creator: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Appellation: primitives <module>
+    Creator: FL03 <jo3mccain@icloud.com>
+    Description:
+        ... Summary ...
 */
 pub use constants::*;
 pub use types::*;
 
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub enum Timestamps {
-    Binary(bson::DateTime),
-    Standard(scsys::BlockTs),
-}
-
-mod constants {
-    /// Set the difficulty for mining new blocks
-    pub const DIFFICULTY_PREFIX: &str = "00";
-}
+mod constants {}
 
 mod types {
+    use libp2p::core::muxing::StreamMuxerBox;
+    use libp2p::core::transport::Boxed;
+
     /// Wrapper for libp2p::noise::AuthenticKeypair<libp2p::noise::X25519Spec>
     pub type AuthNoiseKeys = libp2p::noise::AuthenticKeypair<NoiseSpec>;
-    /// Simplistic wrapper for implementing transaction data
-    pub type BlockData<Dt = String> = Vec<Dt>;
+    pub type BoxedTransport = Boxed<(PeerId, StreamMuxerBox)>;
     /// Wrapper for libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>
     pub type KademliaMS = libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>;
     /// Wrapper for libp2p::Multiaddr

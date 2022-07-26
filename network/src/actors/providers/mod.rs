@@ -16,16 +16,13 @@ pub enum ProviderConnectionSatus {
 }
 
 mod utils {
+    use crate::AuthNoiseKeys;
     use libp2p::{
         core::upgrade,
         mplex, noise,
         tcp::{GenTcpConfig, TokioTcpTransport},
         Transport,
     };
-
-    pub type NoiseKeysSpec = noise::X25519Spec;
-    pub type AuthNoiseKeys = noise::AuthenticKeypair<NoiseKeysSpec>;
-    pub type NoiseKeys = noise::Keypair<NoiseKeysSpec>;
 
     pub fn create_tokio_transport(noise_keys: AuthNoiseKeys) -> crate::BoxedTransport {
         TokioTcpTransport::new(GenTcpConfig::default().nodelay(true))
