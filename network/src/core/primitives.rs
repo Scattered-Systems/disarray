@@ -7,7 +7,12 @@
 pub use constants::*;
 pub use types::*;
 
-mod constants {}
+mod constants {
+    /// Define the port typically associated with a mainnet
+    pub const MAINNET_PORT: u16 = 9090;
+    /// Define the port typically associated with a testnet
+    pub const TESTNET_PORT: u16 = 9091;
+}
 
 mod types {
     use libp2p::core::{muxing::StreamMuxerBox, transport::Boxed};
