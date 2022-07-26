@@ -6,7 +6,6 @@
 */
 use crate::KademliaMS;
 use libp2p::{kad::KademliaEvent, swarm::NetworkBehaviourEventProcess, NetworkBehaviour};
-use std::str::from_utf8;
 
 #[derive(NetworkBehaviour)]
 #[behaviour(event_process = true)]
