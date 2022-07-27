@@ -15,4 +15,9 @@ pub use disarray_derive::*;
 pub use disarray_macros::*;
 #[doc(inline)]
 #[cfg(feature = "network")]
-pub use disarray_network::*;
+pub use disarray_network as network;
+
+mod prelude {
+    #[cfg(feature = "network")]
+    pub use crate::network::*;
+}

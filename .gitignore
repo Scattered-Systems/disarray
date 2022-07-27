@@ -6,7 +6,6 @@
 /**/.vscode/
 
 # Files and File Extensions
-**/config.*
 **/*.config.*
 !**/default.config.*
 
