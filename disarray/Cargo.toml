@@ -9,7 +9,7 @@ license = "MIT"
 name = "disarray"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.17" # TODO - Update the cargo package version
+version = "0.1.18" # TODO - Update the cargo package version
 
 [features]
 default = ["core"]
