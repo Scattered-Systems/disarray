@@ -2,11 +2,11 @@ name: Clippy Analysis
 
 on:
   push:
-    branches: [ "*" ]
+    tags:
+      - v*.*.*
   pull_request:
-    branches: [ "*" ]
-  schedule:
-    - cron: '43 19 * * 2'
+    tags:
+      - v*.*.*
 
 jobs:
   rust-clippy-analyze:
