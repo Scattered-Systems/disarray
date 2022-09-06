@@ -21,7 +21,7 @@ impl Blockchain {
         }
     }
     pub fn genesis(&mut self) -> Self {
-        let block = Block::new(0u64, "genesis".to_string(), Vec::<String>::new());
+        let block = Block::new(0u64, "genesis".to_string(), Vec::new());
         self.chain.push(block);
         self.clone()
     }
@@ -68,7 +68,7 @@ mod tests {
     #[test]
     fn test_blockchain_update() {
         let mut blockchain = Blockchain::default().genesis();
-        blockchain.add_block(Block::<String>::new(
+        blockchain.add_block(Block::new(
             1u64,
             blockchain.chain.last().unwrap().hash.clone(),
             Vec::new(),

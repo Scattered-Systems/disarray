@@ -12,62 +12,37 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
+  login:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login
+        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
+  testing:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Test
-        run: cargo test --color $CARGO_TERM_COLOR --release --verbose --workspace
-  core:
-    env:
-      CRATE: disarray-core
+        run: cargo test --quiet --release --workspace
+  features:
     runs-on: ubuntu-latest
-    needs: [ test ]
+    needs: [ login, testing ]
     steps:
       - uses: actions/checkout@v3
-      - name: Login
-        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      - name: Build and Push
-        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
-  derive:
-    env:
-      CRATE: disarray-derive
-    runs-on: ubuntu-latest
-    needs: [ test ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login
-        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      - name: Build and Push
-        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
-  macros:
-    env:
-      CRATE: disarray-macros
-    runs-on: ubuntu-latest
-    needs: [ test ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login
-        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      - name: Build and Push
-        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
-  network:
-    env:
-      CRATE: disarray-network
-    runs-on: ubuntu-latest
-    needs: [ test ]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login
-        run: cargo login ${{ secrets.CARGO_REGISTRY_TOKEN }}
-      - name: Build and Push
-        run: cargo publish --package $CRATE --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Build and Push (derive)
+        run: cargo publish --package disarray-core --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Build and Push (derive)
+        run: cargo publish --package disarray-derive --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Build and Push (macros)
+        run: cargo publish --package disarray-macros --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - name: Build and Push (network)
+        run: cargo publish --package disarray-network --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   crate:
     env:
       CRATE: disarray
     if: ${{ always() }}
     runs-on: ubuntu-latest
-    needs: [ core, derive, macros, network, test ]
+    needs: [ features, login, testing ]
     steps:
       - uses: actions/checkout@v3
       - name: Login

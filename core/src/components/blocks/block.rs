@@ -4,38 +4,21 @@
    Description:
        ... Summary ...
 */
-use crate::create_block_by_mining;
+use crate::{transactions::Transactions, create_block_by_mining};
 use scsys::{BlockHs, BlockId, BlockNc, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct Block<Dt: Clone + serde::Serialize = String> {
+pub struct Block {
     pub id: BlockId,
     pub hash: BlockHs,
     pub nonce: BlockNc,
     pub previous: BlockHs,
     pub timestamp: BlockTs,
-    pub transactions: Vec<Dt>,
+    pub transactions: Transactions,
 }
 
-impl<Dt: Clone + serde::Serialize> Block<Dt> {
-    pub fn constructor(
-        id: BlockId,
-        hash: BlockHs,
-        nonce: BlockNc,
-        previous: BlockHs,
-        timestamp: BlockTs,
-        transactions: Vec<Dt>,
-    ) -> Self {
-        Self {
-            id,
-            hash,
-            nonce,
-            previous,
-            timestamp,
-            transactions,
-        }
-    }
-    pub fn new(id: BlockId, previous: BlockHs, transactions: Vec<Dt>) -> Self {
+impl Block {
+    pub fn new(id: BlockId, previous: BlockHs, transactions: Transactions) -> Self {
         let timestamp = BlockTz::now().timestamp();
         let (nonce, hash) = create_block_by_mining(
             id.clone(),
@@ -43,14 +26,7 @@ impl<Dt: Clone + serde::Serialize> Block<Dt> {
             timestamp.clone(),
             transactions.clone(),
         );
-        Self::constructor(
-            id.clone(),
-            hash.clone(),
-            nonce.clone(),
-            previous.clone(),
-            timestamp.clone(),
-            transactions.clone(),
-        )
+        Self { id, hash, nonce, previous, timestamp, transactions }
     }
 }
 
@@ -67,13 +43,12 @@ impl std::fmt::Display for Block {
 #[cfg(test)]
 mod tests {
     use super::Block;
-    use crate::determine_block_validity;
+    use crate::{transactions::Transactions, determine_block_validity};
 
     #[test]
     fn test_block_validity() {
-        let transactions = Vec::<String>::new();
-        let pblock = Block::new(1u64, "genesis_block".to_string(), transactions.clone());
-        let nblock = Block::new(2u64, pblock.hash.clone(), transactions.clone());
+        let pblock = Block::new(0u64, "genesis_block".to_string(),Transactions::new());
+        let nblock = Block::new(1u64, pblock.hash.clone(), Transactions::new());
         assert_eq!(determine_block_validity(&nblock, &pblock), true)
     }
 }
