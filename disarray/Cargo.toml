@@ -27,19 +27,19 @@ test = true
 [dependencies.disarray-core]
 optional = true
 path = "../core"
-version = ">=0.1.11"
+version = "0.1.12"
 
 [dependencies.disarray-derive]
 optional = true
 path = "../derive"
-version = ">=0.1.11"
+version = "0.1.13"
 
 [dependencies.disarray-macros]
 optional = true
 path = "../macros"
-version = ">=0.1.11"
+version = "0.1.13"
 
 [dependencies.disarray-network]
 optional = true
 path = "../network"
-version = "0.1.2"
+version = "0.1.4"
