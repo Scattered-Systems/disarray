@@ -3,7 +3,7 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - init: cargo build
+  - init: sudo apt update -y && sudo apt upgrade -y && sudo apt install -y protobuf-compilers &&rustup default nightly && cargo build
     command: cargo watch -x run
 
 

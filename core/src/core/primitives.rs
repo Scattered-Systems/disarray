@@ -4,14 +4,7 @@
    Description:
        ... Summary ...
 */
-pub use constants::*;
-pub use types::*;
-
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub enum Timestamps {
-    Binary(bson::DateTime),
-    Standard(scsys::BlockTs),
-}
+pub use self::{constants::*, types::*};
 
 mod constants {
     /// Set the difficulty for mining new blocks

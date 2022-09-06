@@ -1,17 +1,22 @@
-FROM jo3mccain/rusty as builder
+FROM jo3mccain/rusty:nightly as builder-base
 
-ENV PORT=8080 \
-    RUST_LOG=info
+RUN yum install -y \
+    protobuf-c
+
+FROM builder-base as builder 
 
 ADD . /project
 WORKDIR /project
 
 COPY . .
 
-RUN cargo build --release --color always && \
-    cargo test --all-features --color always && \
-    cargo package --allow-dirty --quiet --color always
+RUN cargo build --release && \
+    cargo test --all-features -q --release
 
+FROM builder as latest
+
+ENV PORT=8080 \
+    RUST_LOG=info
 
 EXPOSE ${PORT}/tcp
 EXPOSE ${PORT}/udp

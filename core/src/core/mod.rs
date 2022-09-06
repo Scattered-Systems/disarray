@@ -4,23 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use clients::*;
-pub use configurations::*;
-pub use consensus::*;
-pub use primitives::*;
-pub use utils::*;
+pub use self::{clients::*, configs::*, consensus::*, primitives::*, utils::*};
 
 mod clients;
-mod configurations;
+mod configs;
 mod consensus;
 mod primitives;
-
-mod utils {
-    pub fn timestamp_local() -> crate::Timestamps {
-        crate::Timestamps::Standard(chrono::Local::now().timestamp())
-    }
-
-    pub fn timestamp_utc() -> crate::Timestamps {
-        crate::Timestamps::Standard(chrono::Utc::now().timestamp())
-    }
-}
+mod utils;

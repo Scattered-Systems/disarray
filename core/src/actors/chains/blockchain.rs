@@ -4,21 +4,42 @@
    Description:
        ... Summary ...
 */
-use crate::chains::Block;
+use crate::{blocks::Block, determine_block_validity};
+use std::net::SocketAddr;
 
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Blockchain {
     pub address: std::net::SocketAddr,
     pub chain: Vec<Block>,
 }
 
 impl Blockchain {
-    pub fn constructor(address: std::net::SocketAddr, chain: Vec<Block>) -> Self {
-        Self { address, chain }
+    pub fn new(address: SocketAddr) -> Self {
+        Self {
+            address,
+            chain: Vec::new(),
+        }
     }
+    pub fn genesis(&mut self) -> Self {
+        let block = Block::new(0u64, "genesis".to_string(), Vec::<String>::new());
+        self.chain.push(block);
+        self.clone()
+    }
+    pub fn set_address(&mut self, address: SocketAddr) {
+        self.address = address;
+    }
+    pub fn add_block(&mut self, block: Block) {
+        if determine_block_validity(&block, &self.chain.last().unwrap().clone()) == true {
+            self.chain.push(block)
+        } else {
+            panic!("Invalid Block")
+        }
+    }
+}
 
-    pub fn new(address: std::net::SocketAddr) -> Self {
-        Self::constructor(address.clone(), Vec::new())
+impl Default for Blockchain {
+    fn default() -> Self {
+        Self::new(SocketAddr::from(([0, 0, 0, 0], 9090)))
     }
 }
 
@@ -34,9 +55,24 @@ impl std::fmt::Display for Blockchain {
 
 #[cfg(test)]
 mod tests {
+    use super::Blockchain;
+    use crate::blocks::Block;
+
     #[test]
-    fn test() {
-        let f = |x: usize| x.pow(x.try_into().unwrap());
-        assert_eq!(f(2), 4)
+    fn test_blockchain_default() {
+        let a = Blockchain::default();
+        let b = Blockchain::new(std::net::SocketAddr::from(([0, 0, 0, 0], 9090)));
+        assert_eq!(a, b)
+    }
+
+    #[test]
+    fn test_blockchain_update() {
+        let mut blockchain = Blockchain::default().genesis();
+        blockchain.add_block(Block::<String>::new(
+            1u64,
+            blockchain.chain.last().unwrap().hash.clone(),
+            Vec::new(),
+        ));
+        assert!(crate::determine_chain_validity(&blockchain.chain))
     }
 }

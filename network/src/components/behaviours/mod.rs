@@ -5,14 +5,10 @@
        ... Summary ...
 */
 pub use blockchain::*;
-pub use chats::*;
-pub use ipfs::*;
 pub use storage::*;
 pub use utils::*;
 
 mod blockchain;
-mod chats;
-mod ipfs;
 mod storage;
 
 mod utils {

@@ -1,9 +1,10 @@
 /*
    Appellation: block <module>
-   Creator: FL03 <jo3mccain@icloud.com>
+   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
    Description:
        ... Summary ...
 */
+use crate::create_block_by_mining;
 use scsys::{BlockHs, BlockId, BlockNc, BlockTs, BlockTz};
 
 #[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
@@ -36,7 +37,7 @@ impl<Dt: Clone + serde::Serialize> Block<Dt> {
     }
     pub fn new(id: BlockId, previous: BlockHs, transactions: Vec<Dt>) -> Self {
         let timestamp = BlockTz::now().timestamp();
-        let (nonce, hash) = crate::chains::create_block_by_mining(
+        let (nonce, hash) = create_block_by_mining(
             id.clone(),
             previous.clone(),
             timestamp.clone(),
@@ -60,5 +61,19 @@ impl std::fmt::Display for Block {
             "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
             self.id, self.hash, self.nonce, self.previous, self.timestamp, self.transactions
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::Block;
+    use crate::determine_block_validity;
+
+    #[test]
+    fn test_block_validity() {
+        let transactions = Vec::<String>::new();
+        let pblock = Block::new(1u64, "genesis_block".to_string(), transactions.clone());
+        let nblock = Block::new(2u64, pblock.hash.clone(), transactions.clone());
+        assert_eq!(determine_block_validity(&nblock, &pblock), true)
     }
 }
