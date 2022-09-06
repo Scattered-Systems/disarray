@@ -12,25 +12,25 @@ members = [
 ]
 
 [profile.dev]
-opt-level = 0
+codegen-units = 256
 debug = true
-split-debuginfo = 'unpacked'  # Platform-specific.
 debug-assertions = true
-overflow-checks = true
+incremental = true
 lto = false
 panic = 'unwind'
-incremental = true
-codegen-units = 256
 rpath = false
+opt-level = 0
+overflow-checks = true
+split-debuginfo = 'packed' # Platform specific
 
 [profile.release]
-opt-level = "s"
+codegen-units = 16
 debug = false
-split-debuginfo = 'off'  # Platform-specific.
 debug-assertions = false
-overflow-checks = false
+incremental = false
 lto = false
 panic = 'unwind'
-incremental = false
-codegen-units = 16
 rpath = false
+opt-level = 'z'
+overflow-checks = false
+split-debuginfo = 'off' # Platform specific
