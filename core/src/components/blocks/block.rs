@@ -4,10 +4,17 @@
    Description:
        ... Summary ...
 */
-use crate::{transactions::Transactions, create_block_by_mining};
-use scsys::{BlockHs, BlockId, BlockNc, BlockTs, BlockTz};
+use crate::{create_block_by_mining, transactions::Transactions};
+use scsys::prelude::chrono;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
+type BlockId = u64;
+type BlockHs = String;
+type BlockNc = u64;
+type BlockTs = i64;
+type BlockTz = chrono::Utc;
+
+#[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]
 pub struct Block {
     pub id: BlockId,
     pub hash: BlockHs,
@@ -26,7 +33,14 @@ impl Block {
             timestamp.clone(),
             transactions.clone(),
         );
-        Self { id, hash, nonce, previous, timestamp, transactions }
+        Self {
+            id,
+            hash,
+            nonce,
+            previous,
+            timestamp,
+            transactions,
+        }
     }
 }
 
@@ -37,18 +51,5 @@ impl std::fmt::Display for Block {
             "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
             self.id, self.hash, self.nonce, self.previous, self.timestamp, self.transactions
         )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::Block;
-    use crate::{transactions::Transactions, determine_block_validity};
-
-    #[test]
-    fn test_block_validity() {
-        let pblock = Block::new(0u64, "genesis_block".to_string(),Transactions::new());
-        let nblock = Block::new(1u64, pblock.hash.clone(), Transactions::new());
-        assert_eq!(determine_block_validity(&nblock, &pblock), true)
     }
 }

@@ -6,3 +6,4 @@
 */
 
 pub mod chains;
+pub mod consensus;

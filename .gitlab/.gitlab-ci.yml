@@ -1,14 +1,47 @@
-.cargo_test_template: &cargo_test
-  stage: testing
+.cargo_build_template: &cargo_build
+  stage: build
   script:
-    - sudo apt install -y protobuf-compiler && sudo update -y && rustup default nightly
-    - cargo test --all-features --release --verbose --jobs 1
-  
-stages:
-  - testing
+    - cargo build --release --workspace --jobs 1
 
-stable:cargo:
+.cargo_deploy_template: &cargo_publish
+  stage: publish
+  before_script:
+    - cargo login $CARGO_REGISTRY_TOKEN
+    - cargo fmt --all
+  script:
+    - cargo publish -p disarray-core -v
+    - cargo publish -p disarray-derive -v
+    - cargo publish -p disarray-macros -v
+    - cargo publish -p disarray-network
+  after_script:
+    - cargo publish --all-features -p disarray  -v
+
+.cargo_test_template: &cargo_test
+  stage: test
+  script:
+    - cargo test --all-features --release --jobs 1
+
+stages:
+  - build
+  - publish
+  - test
+
+variables:
+  CARGO_REGISTRY_TOKEN: $CARGO_REGISTRY_TOKEN
+
+stable:rust:
   image: rustdocker/rust:stable
   rules:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  <<: *cargo_build
   <<: *cargo_test
+  <<: *cargo_publish
+
+nightly:rust:
+  allow_failure: true
+  image: rustdocker/rust:nightly
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
+  <<: *cargo_build
+  <<: *cargo_test
+  <<: *cargo_publish

@@ -12,6 +12,14 @@ mod constants {
 }
 
 mod types {
+    use scsys::prelude::chrono;
+
+    pub type BlockId = u64;
+    pub type BlockHs = String;
+    pub type BlockNc = u64;
+    pub type BlockTs = i64;
+    pub type BlockTz = chrono::Utc;
+
     /// Simplistic wrapper for implementing transaction data
     pub type BlockData<Dt = String> = Vec<Dt>;
 }

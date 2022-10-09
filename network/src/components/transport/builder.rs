@@ -5,22 +5,13 @@
         ... Summary ...
 */
 use crate::transport::TransportConfig;
-
+use scsys::core::BoxResult;
 ///
 #[derive(Clone)]
 pub struct TransportBuilder;
 
 impl TransportBuilder {
-    pub fn configure(self) -> Result<TransportConfig<'static>, scsys::BoxError> {
+    pub fn configure(self) -> BoxResult<TransportConfig<'static>> {
         Ok(TransportConfig::default())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test() {
-        let f = |x: usize, y: usize| x + y;
-        assert_eq!(f(4, 2), 6)
     }
 }

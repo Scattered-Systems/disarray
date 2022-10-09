@@ -4,40 +4,30 @@
    Description:
        ... Summary ...
 */
-use scsys::BsonOid;
+use scsys::prelude::bson::oid::ObjectId;
+use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub struct Transaction {
-    pub id: BsonOid,
-    pub label: Option<String>,
-    pub data: Vec<String>
+pub enum TransactionState {
+    Signed,
+    Unsigned,
+
 }
-
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct Transaction {
+    pub id: ObjectId,
+    pub label: Option<String>,
+    pub data: Vec<String>,
+}
 
 impl Transaction {
     pub fn new(label: Option<String>, data: Vec<String>) -> Self {
-        Self { id: BsonOid::new(), label, data }
-    }
-    pub fn sign_transaction(&self, sig: String) {
-        todo!()
+        let id = ObjectId::new();
+        Self { id, label, data, }
     }
 }
 
 impl Default for Transaction {
     fn default() -> Self {
         Self::new(None, Vec::new())
-    }
-}
-
-
-#[cfg(test)]
-mod tests {
-    use super::Transaction;
-
-    #[test]
-    fn test_transaction() {
-        let a = Transaction::default();
-        let b = Transaction::new(None, Vec::new());
-        assert_ne!(a, b)
     }
 }

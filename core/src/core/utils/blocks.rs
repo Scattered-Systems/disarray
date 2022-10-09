@@ -6,7 +6,7 @@
 */
 
 use crate::{blocks::Block, DIFFICULTY_PREFIX};
-use scsys::{BlockHs, BlockId, BlockNc, BlockTs};
+use scsys::core::{BlockHs, BlockId, BlockNc, BlockTs};
 use sha2::Digest;
 
 /// Determine the validity of a new block by comparing the previous one
@@ -117,21 +117,4 @@ pub fn calculate_block_hash<Dt: Clone + serde::Serialize>(
     let mut hasher = sha2::Sha256::new();
     hasher.update(cache.to_string().as_bytes());
     hasher.finalize().as_slice().to_owned()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_block_hash() {
-        let hash = calculate_block_hash(
-            1,
-            890890,
-            "previous_hash".to_string(),
-            scsys::BlockTz::now().timestamp(),
-            vec!["test".to_string()],
-        );
-        assert_eq!(&hash, &hash)
-    }
 }

@@ -5,9 +5,10 @@
        ... Summary ...
 */
 use crate::{blocks::Block, determine_block_validity};
+use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
-#[derive(Clone, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct Blockchain {
     pub address: std::net::SocketAddr,
     pub chain: Vec<Block>,
@@ -50,29 +51,5 @@ impl std::fmt::Display for Blockchain {
             "Blockchain(\naddress={:#?},\nchain={:#?}\n)",
             self.address, self.chain
         )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::Blockchain;
-    use crate::blocks::Block;
-
-    #[test]
-    fn test_blockchain_default() {
-        let a = Blockchain::default();
-        let b = Blockchain::new(std::net::SocketAddr::from(([0, 0, 0, 0], 9090)));
-        assert_eq!(a, b)
-    }
-
-    #[test]
-    fn test_blockchain_update() {
-        let mut blockchain = Blockchain::default().genesis();
-        blockchain.add_block(Block::new(
-            1u64,
-            blockchain.chain.last().unwrap().hash.clone(),
-            Vec::new(),
-        ));
-        assert!(crate::determine_chain_validity(&blockchain.chain))
     }
 }

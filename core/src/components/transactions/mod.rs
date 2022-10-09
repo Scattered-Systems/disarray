@@ -4,8 +4,24 @@
    Description:
        ... Summary ...
 */
-pub use self::transaction::Transaction;
+pub use self::{signed::SignedTransaction, transaction::Transaction};
 
+mod signed;
 mod transaction;
 
 pub type Transactions = Vec<Transaction>;
+
+mod traits {
+    pub struct TxId<I64>(I64);
+
+    impl<I64> TxId<I64> {
+        pub fn new(data: I64) -> Self {
+            Self(data)
+        }
+    }
+
+    pub trait TransactionSpec {
+        fn id(&self) -> TxId<i64>;
+    }
+}
+

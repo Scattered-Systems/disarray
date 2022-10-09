@@ -4,10 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{clients::*, configs::*, consensus::*, primitives::*, utils::*};
+pub use self::{clients::*, configs::*, primitives::*, utils::*};
 
 mod clients;
 mod configs;
-mod consensus;
 mod primitives;
 mod utils;

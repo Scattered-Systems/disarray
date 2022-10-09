@@ -1,28 +1,21 @@
 /*
-   Appellation: distkv <module>
+   Appellation: behaviours <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
-       Defines a simple peer-to-peer storage network capable of storing key value pairs
+       ... Summary ...
 */
-use libp2p::{
-    kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record},
-    mdns::{Mdns, MdnsEvent},
-    swarm::NetworkBehaviourEventProcess,
-    NetworkBehaviour,
+pub use self::{
+    blockchain::{BlockchainMainnet, MainnetEvent},
+    utils::*,
 };
 
-use crate::KademliaMS;
+mod blockchain;
 
-#[derive(NetworkBehaviour)]
-#[behaviour(event_process = true)]
-pub struct DistKV {
-    pub kademlia: KademliaMS,
-    pub mdns: Mdns,
-}
+mod utils {
+    use libp2p::kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record};
+    use std::str::from_utf8;
 
-// Implement a custom process for Kademlia Event's
-impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
-    fn inject_event(&mut self, message: KademliaEvent) {
+    pub fn capture_kademlia_event(message: KademliaEvent) {
         match message {
             KademliaEvent::OutboundQueryCompleted { result, .. } => match result {
                 QueryResult::GetProviders(Ok(ok)) => {
@@ -30,7 +23,7 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
                         println!(
                             "Peer {:?} provides key {:?}",
                             peer,
-                            std::str::from_utf8(ok.key.as_ref()).unwrap()
+                            from_utf8(ok.key.as_ref()).unwrap()
                         );
                     }
                 }
@@ -45,8 +38,8 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
                     {
                         println!(
                             "Got record {:?} {:?}",
-                            std::str::from_utf8(key.as_ref()).unwrap(),
-                            std::str::from_utf8(&value).unwrap(),
+                            from_utf8(key.as_ref()).unwrap(),
+                            from_utf8(&value).unwrap()
                         );
                     }
                 }
@@ -56,7 +49,7 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
                 QueryResult::PutRecord(Ok(PutRecordOk { key })) => {
                     println!(
                         "Successfully put record {:?}",
-                        std::str::from_utf8(key.as_ref()).unwrap()
+                        from_utf8(key.as_ref()).unwrap()
                     );
                 }
                 QueryResult::PutRecord(Err(err)) => {
@@ -65,7 +58,7 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
                 QueryResult::StartProviding(Ok(AddProviderOk { key })) => {
                     println!(
                         "Successfully put provider record {:?}",
-                        std::str::from_utf8(key.as_ref()).unwrap()
+                        from_utf8(key.as_ref()).unwrap()
                     );
                 }
                 QueryResult::StartProviding(Err(err)) => {
@@ -74,16 +67,6 @@ impl NetworkBehaviourEventProcess<KademliaEvent> for DistKV {
                 _ => {}
             },
             _ => {}
-        }
-    }
-}
-
-impl NetworkBehaviourEventProcess<MdnsEvent> for DistKV {
-    fn inject_event(&mut self, event: MdnsEvent) {
-        if let MdnsEvent::Discovered(list) = event {
-            for (peer_id, multiaddr) in list {
-                self.kademlia.add_address(&peer_id, multiaddr);
-            }
         }
     }
 }
