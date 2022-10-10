@@ -1,10 +1,10 @@
 /*
-   Appellation: chain <module>
+   Appellation: blockchain <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...
 */
-use crate::{blocks::Block, determine_block_validity};
+use crate::{blocks::Block, validators::determine_block_validity};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 

@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use disarray_core::{
-        blocks::Block, calculate_block_hash, determine_block_validity, transactions::Transactions,
+        blocks::{Block, calculate_block_hash}, validators::determine_block_validity, transactions::Transactions,
     };
     use scsys::core::BlockTz;
 

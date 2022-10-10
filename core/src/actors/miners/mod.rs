@@ -1,10 +1,9 @@
 /*
-   Appellation: actors <module>
+   Appellation: miners <module>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...
 */
+pub use self::mine::*;
 
-pub mod miners;
-pub mod stakers;
-pub mod validators;
+pub(crate) mod mine;

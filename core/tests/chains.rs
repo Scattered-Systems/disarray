@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use disarray_core::{blocks::Block, chains::Blockchain, determine_chain_validity};
+    use disarray_core::{blocks::Block, blockchains::Blockchain, validators::determine_chain_validity};
 
     #[test]
     fn test_blockchain_default() {

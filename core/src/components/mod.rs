@@ -5,5 +5,6 @@
 */
 
 pub mod accounts;
+pub mod blockchains;
 pub mod blocks;
 pub mod transactions;

@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use crate::{create_block_by_mining, transactions::Transactions};
+use crate::{miners::create_block_by_mining, transactions::Transactions};
 use scsys::prelude::chrono;
 use serde::{Deserialize, Serialize};
 
