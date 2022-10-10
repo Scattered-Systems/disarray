@@ -3,9 +3,9 @@ mod tests {
     use disarray_core::transactions::Transaction;
 
     #[test]
-    fn test_transaction() {
+    fn test_transaction_default() {
         let a = Transaction::default();
-        let b = Transaction::new(None, Vec::new());
-        assert_ne!(a, b)
+        let b = a.clone();
+        assert_eq!(a, b)
     }
 }

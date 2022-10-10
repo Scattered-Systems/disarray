@@ -4,30 +4,24 @@
    Description:
        ... Summary ...
 */
-use scsys::prelude::bson::oid::ObjectId;
+use scsys::core::crypto::hash::H160;
 use serde::{Deserialize, Serialize};
 
-pub enum TransactionState {
-    Signed,
-    Unsigned,
-
-}
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Transaction {
-    pub id: ObjectId,
-    pub label: Option<String>,
-    pub data: Vec<String>,
+    pub nonce: usize,
+    pub recv: H160,
+    pub value: usize
 }
 
 impl Transaction {
-    pub fn new(label: Option<String>, data: Vec<String>) -> Self {
-        let id = ObjectId::new();
-        Self { id, label, data, }
+    pub fn new(nonce: usize, recv: H160, value: usize) -> Self {
+        Self { nonce, recv, value }
     }
 }
 
 impl Default for Transaction {
     fn default() -> Self {
-        Self::new(None, Vec::new())
+        Self::new(0, H160::default(), 0)
     }
 }

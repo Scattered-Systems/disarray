@@ -1,5 +1,5 @@
 tasks:
   - init: sudo apt update -y && sudo apt upgrade -y && sudo apt install -y protobuf-compiler && rustup default nightly && rustup uninstall stable && rustup target add wasm32-unknown-unknown --toolchain nightly && rustup install stable && cargo build
-    command: cargo watch -x run
+    command: cargo watch -x test --all
 
 
