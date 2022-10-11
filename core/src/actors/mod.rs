@@ -6,5 +6,6 @@
 */
 
 pub mod miners;
+pub mod runtime;
 pub mod stakers;
 pub mod validators;
