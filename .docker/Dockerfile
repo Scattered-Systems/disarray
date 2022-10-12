@@ -8,7 +8,7 @@ FROM builder-base as builder
 ADD . /project
 WORKDIR /project
 
-COPY . .
+COPY .. .
 
 RUN cargo build --release && \
     cargo test --all-features -q --release
