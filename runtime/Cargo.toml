@@ -1,0 +1,20 @@
+[package]
+authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
+categories = ["development-tools", "network-programming"]
+description = "This crate is reserved for the disarray runtime powered by WebAssembly"
+edition = "2021"
+homepage = "https://scattered-systems.github.io/disarray"
+keywords = ["scsys"]
+license = "MIT"
+name = "disarray-runtime"
+repository = "https://github.com/scattered-systems/disarray"
+version = "0.1.0" # TODO - Update the cargo package version
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+test = true
+
+[dependencies]
+
+[dev-dependencies]
+disarray-core = { path = "../core" }

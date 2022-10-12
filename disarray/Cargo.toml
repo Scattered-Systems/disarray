@@ -19,27 +19,15 @@ core = ["disarray-core"]
 derive = ["disarray-derive"]
 macros = ["disarray-macros"]
 network = ["disarray-network"]
+runtime = ["disarray-runtime"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 test = true
 
-[dependencies.disarray-core]
-optional = true
-path = "../core"
-version = "0.1.13"
-
-[dependencies.disarray-derive]
-optional = true
-path = "../derive"
-version = "0.1.14"
-
-[dependencies.disarray-macros]
-optional = true
-path = "../macros"
-version = "0.1.14"
-
-[dependencies.disarray-network]
-optional = true
-path = "../network"
-version = "0.1.5"
+[dependencies]
+disarray-core = { optional = true, path = "../core", version = "0.1.13" }
+disarray-derive = { optional = true, path = "../derive", version = "0.1.14" }
+disarray-macros = { optional = true, path = "../macros", version = "0.1.14" }
+disarray-network = { optional = true, path = "../network", version = "0.1.5" }
+disarray-runtime = { optional = true, path = "../runtime", version = "0.1.0" }

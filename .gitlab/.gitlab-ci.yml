@@ -12,7 +12,9 @@
     - cargo publish -p disarray-core -v
     - cargo publish -p disarray-derive -v
     - cargo publish -p disarray-macros -v
-    - cargo publish -p disarray-network
+    - cargo publish -p disarray-network -v
+    - cargo publish -p disarray-runtime -v
+    
   after_script:
     - cargo publish --all-features -p disarray  -v
 
