@@ -5,7 +5,7 @@
        ... Summary ...
 */
 use super::Transaction;
-use scsys::core::crypto::hash::{H256, Hashable};
+use scsys::crypto::hashes::{H256, Hashable};
 
 use serde::{Deserialize, Serialize};
 

@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use scsys::core::crypto::hash::H160;
+use scsys::crypto::hashes::H160;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]

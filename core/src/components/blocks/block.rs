@@ -4,15 +4,8 @@
    Description:
        ... Summary ...
 */
-use crate::{miners::create_block_by_mining, transactions::Transactions};
-use scsys::prelude::chrono;
+use crate::{miners::create_block_by_mining, transactions::Transactions, BlockId, BlockHs, BlockNc, BlockTs, BlockTz};
 use serde::{Deserialize, Serialize};
-
-type BlockId = u64;
-type BlockHs = String;
-type BlockNc = u64;
-type BlockTs = i64;
-type BlockTz = chrono::Utc;
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]
 pub struct Block {

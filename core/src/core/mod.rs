@@ -4,11 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{clients::*, configs::*, primitives::*, utils::*};
+pub use self::{crypto::*, misc::*, primitives::*, utils::*};
 
-mod clients;
-mod configs;
-mod primitives;
+pub(crate) mod crypto;
+pub(crate) mod misc;
+pub(crate) mod primitives;
 
 
 pub(crate) mod utils {

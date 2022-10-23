@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use disarray_core::{
+    use disarray::{
         blocks::{Block, calculate_block_hash}, validators::determine_block_validity, transactions::Transactions, BlockTz
     };
 
