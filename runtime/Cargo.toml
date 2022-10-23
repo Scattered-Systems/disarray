@@ -15,6 +15,9 @@ crate-type = ["cdylib", "rlib"]
 test = true
 
 [dependencies]
+scsys = { feaures = ["full"], version = "0.1.21" }
+serde = { features = ["derive"], version = "1.0.147" }
+serde_json = "1.0.87"
 
 [dev-dependencies]
 disarray-core = { path = "../core" }

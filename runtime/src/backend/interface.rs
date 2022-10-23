@@ -5,14 +5,12 @@
        ... Summary ...
 */
 use super::context::RPCContext;
-use scsys::core::{BoxResult, logging::logger_from_env};
+use scsys::{prelude::logger_from_env, BoxResult};
 use serde::{Deserialize, Serialize};
-
-
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct RPCBackend {
-    pub ctx: RPCContext
+    pub ctx: RPCContext,
 }
 
 impl RPCBackend {

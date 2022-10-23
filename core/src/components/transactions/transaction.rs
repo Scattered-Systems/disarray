@@ -11,7 +11,7 @@ use serde::{Deserialize, Serialize};
 pub struct Transaction {
     pub nonce: usize,
     pub recv: H160,
-    pub value: usize
+    pub value: usize,
 }
 
 impl Transaction {

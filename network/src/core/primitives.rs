@@ -16,7 +16,6 @@ mod constants {
 }
 
 mod statics {
-    use crate::transport::TransportConfig;
 
     lazy_static::lazy_static! {
         /// Mainnet config for mina p2p network

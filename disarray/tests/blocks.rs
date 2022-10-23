@@ -1,7 +1,10 @@
 #[cfg(test)]
 mod tests {
     use disarray::{
-        blocks::{Block, calculate_block_hash}, validators::determine_block_validity, transactions::Transactions, BlockTz
+        blocks::{calculate_block_hash, Block},
+        transactions::Transactions,
+        validators::determine_block_validity,
+        BlockTz,
     };
 
     #[test]

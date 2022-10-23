@@ -24,4 +24,3 @@ mod traits {
         fn id(&self) -> TxId<i64>;
     }
 }
-

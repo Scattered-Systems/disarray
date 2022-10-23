@@ -1,5 +1,4 @@
 #[cfg(test)]
-
 #[test]
 fn test_compiles() {
     let f = |x: usize| x + 1;

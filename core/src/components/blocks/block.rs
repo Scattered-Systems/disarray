@@ -4,7 +4,10 @@
    Description:
        ... Summary ...
 */
-use crate::{miners::create_block_by_mining, transactions::Transactions, BlockId, BlockHs, BlockNc, BlockTs, BlockTz};
+use crate::{
+    miners::create_block_by_mining, transactions::Transactions, BlockHs, BlockId, BlockNc, BlockTs,
+    BlockTz,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]

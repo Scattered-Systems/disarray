@@ -4,13 +4,19 @@
    Description:
        ... Summary ...
 */
-use scsys::{core::collect_config_files, prelude::{Logger, Server, config::{Config, ConfigError, Environment}}};
+use scsys::{
+    collect_config_files,
+    prelude::{
+        config::{Config, ConfigError, Environment},
+        Logger, Server,
+    },
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct RPCSettings {
     pub logger: Logger,
-    pub server: Server
+    pub server: Server,
 }
 
 impl RPCSettings {
@@ -25,7 +31,6 @@ impl RPCSettings {
             .build()
             .expect("Failed to build the configuration...")
             .try_deserialize()
-
     }
 }
 
@@ -35,7 +40,6 @@ impl Default for RPCSettings {
             Ok(v) => v,
             Err(e) => panic!("Configuration Error: {}", e),
         }
-
     }
 }
 

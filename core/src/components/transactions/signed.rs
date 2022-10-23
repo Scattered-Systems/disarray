@@ -5,14 +5,14 @@
        ... Summary ...
 */
 use super::Transaction;
-use scsys::crypto::hashes::{H256, Hashable};
+use scsys::crypto::hashes::{Hashable, H256};
 
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Signature {
     pub public_key: Vec<u8>,
-    pub sig: Vec<u8>
+    pub sig: Vec<u8>,
 }
 
 impl Signature {
@@ -29,12 +29,15 @@ impl Default for Signature {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct SignedTransaction {
     pub transaction: Transaction,
-    pub signature: Signature
+    pub signature: Signature,
 }
 
 impl SignedTransaction {
     pub fn new(transaction: Transaction, signature: Signature) -> Self {
-        Self { transaction, signature }
+        Self {
+            transaction,
+            signature,
+        }
     }
 }
 

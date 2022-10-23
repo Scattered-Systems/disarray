@@ -4,8 +4,8 @@
    Description:
        ... Summary ...
 */
-use crate::blocks::Block;
 use super::determine_block_validity;
+use crate::blocks::Block;
 
 pub fn determine_chain_validity(chain: &[Block]) -> bool {
     for i in 0..chain.len() {

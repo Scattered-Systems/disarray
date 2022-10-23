@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-pub use crate::transport::{builder::*, config::*};
+pub use self::{builder::*, transport::*};
 
-mod builder;
-mod config;
+pub(crate) mod builder;
+pub(crate) mod transport;

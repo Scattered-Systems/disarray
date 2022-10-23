@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct RPCContext {
-    pub settings: RPCSettings
+    pub settings: RPCSettings,
 }
 
 impl RPCContext {

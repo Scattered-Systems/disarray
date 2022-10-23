@@ -4,7 +4,10 @@
    Description:
        ... Summary ...
 */
-use crate::{DIFFICULTY_PREFIX, BlockId, BlockHs, BlockNc, BlockTs, blocks::{calculate_block_hash, convert_hash_into_binary}};
+use crate::{
+    blocks::{calculate_block_hash, convert_hash_into_binary},
+    BlockHs, BlockId, BlockNc, BlockTs, DIFFICULTY_PREFIX,
+};
 
 /// Mines a new block<Dt> where Dt represents transaction data
 pub fn create_block_by_mining<Dt: Clone + serde::Serialize>(
@@ -39,4 +42,3 @@ pub fn create_block_by_mining<Dt: Clone + serde::Serialize>(
         nonce += 1;
     }
 }
-

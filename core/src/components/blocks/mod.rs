@@ -9,7 +9,7 @@ pub use self::{block::Block, utils::*};
 mod block;
 
 pub(crate) mod utils {
-    use crate::{BlockId, BlockHs, BlockNc, BlockTs};
+    use crate::{BlockHs, BlockId, BlockNc, BlockTs};
     use serde_json::json;
     use sha2::Digest;
 
@@ -20,7 +20,7 @@ pub(crate) mod utils {
         }
         res.into_bytes()
     }
-    
+
     pub fn calculate_block_hash<Dt: Clone + serde::Serialize>(
         id: BlockId,
         nonce: BlockNc,
@@ -41,5 +41,4 @@ pub(crate) mod utils {
         hasher.update(cache.to_string().as_bytes());
         hasher.finalize().as_slice().to_owned()
     }
-    
 }
