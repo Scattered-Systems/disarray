@@ -41,6 +41,12 @@ impl Block {
     }
 }
 
+impl std::convert::From<&Self> for Block {
+    fn from(data: &Self) -> Self {
+        data.clone()
+    }
+}
+
 impl std::convert::Into<Value> for Block {
     fn into(self) -> Value {
         json!(self)

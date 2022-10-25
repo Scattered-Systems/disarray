@@ -8,26 +8,27 @@ use crate::{blocks::Block, validators::determine_block_validity};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]
 pub struct Blockchain {
-    pub address: std::net::SocketAddr,
     pub chain: Vec<Block>,
+    pub port: u16
 }
 
 impl Blockchain {
-    pub fn new(address: SocketAddr) -> Self {
-        Self {
-            address,
-            chain: Vec::new(),
-        }
+    pub fn new(port: u16) -> Self {
+        let chain = Vec::new();
+        Self { chain, port }
+    }
+    pub fn address(&self) -> SocketAddr {
+        SocketAddr::from(([127, 0, 0, 1], self.port))
     }
     pub fn genesis(&mut self) -> Self {
         let block = Block::new(0u64, "genesis".to_string(), Vec::new());
         self.chain.push(block);
         self.clone()
     }
-    pub fn set_address(&mut self, address: SocketAddr) {
-        self.address = address;
+    pub fn set_port(&mut self, port: u16) {
+        self.port = port;
     }
     pub fn add_block(&mut self, block: Block) {
         if determine_block_validity(&block, &self.chain.last().unwrap().clone()) == true {
@@ -40,7 +41,7 @@ impl Blockchain {
 
 impl Default for Blockchain {
     fn default() -> Self {
-        Self::new(SocketAddr::from(([0, 0, 0, 0], 9090)))
+        Self::new( 9090)
     }
 }
 
@@ -49,7 +50,7 @@ impl std::fmt::Display for Blockchain {
         write!(
             f,
             "Blockchain(\naddress={:#?},\nchain={:#?}\n)",
-            self.address, self.chain
+            self.address(), self.chain
         )
     }
 }

@@ -4,9 +4,7 @@
     Description:
         ... Summary ...
 */
-pub use constants::*;
-pub use statics::*;
-pub use types::*;
+pub use self::{constants::*, statics::*, types::*};
 
 mod constants {
     /// Define the port typically associated with a mainnet
@@ -17,14 +15,14 @@ mod constants {
 
 mod statics {
 
-    lazy_static::lazy_static! {
-        /// Mainnet config for mina p2p network
-        pub static ref MAINNET_CONFIG : TransportConfig<'static> = TransportConfig
-        {
-            rendezvous_string: b"/coda/0.0.1/5f704cc0c82e0ed70e873f0893d7e06f148524e3f0bdae2afb02e7819a0c24d1",
-            ..Default::default()
-        };
-    }
+    // lazy_static::lazy_static! {
+    //     /// Mainnet config for mina p2p network
+    //     pub static ref MAINNET_CONFIG : TransportConfig<'static> = TransportConfig
+    //     {
+    //         rendezvous_string: b"/coda/0.0.1/5f704cc0c82e0ed70e873f0893d7e06f148524e3f0bdae2afb02e7819a0c24d1",
+    //         ..Default::default()
+    //     };
+    // }
 }
 
 mod types {
@@ -33,8 +31,6 @@ mod types {
         dns::{GenDnsConfig, TokioDnsConfig},
         noise::{AuthenticKeypair as AuthenticNoiseKeypair, NoiseError},
         tcp::{GenTcpConfig, GenTcpTransport, TokioTcpTransport},
-        tokio_development_transport,
-        websocket::{BytesConnection, WsConfig},
     };
 
     /// Type alias for [libp2p::noise::AuthenticKeypair<libp2p::noise::X25519Spec>]
