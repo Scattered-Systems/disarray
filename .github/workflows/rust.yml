@@ -37,8 +37,6 @@ jobs:
     - name: Publish
       run: |
         cargo publish -p disarray-core --all-features --job 1
-        cargo publish -p disarray-derive --all-features --job 1
-        cargo publish -p disarray-macros --all-features --job 1
         cargo publish -p disarray-network --all-features --job 1
         cargo publish -p disarray-runtime --all-features --job 1
         cargo publish -p disarray --all-features --job 1

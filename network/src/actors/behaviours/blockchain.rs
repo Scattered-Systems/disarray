@@ -5,7 +5,7 @@
         ... Summary ...
 */
 use libp2p::{
-    mdns::{Mdns, MdnsEvent},
+    mdns::{MdnsEvent, TokioMdns},
     NetworkBehaviour,
 };
 
@@ -15,7 +15,7 @@ use crate::KademliaMS;
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "MainnetEvent")]
 pub struct BlockchainMainnet {
-    pub mdns: Mdns,
+    pub mdns: TokioMdns,
 }
 
 pub enum MainnetEvent {

@@ -1,14 +1,13 @@
 [workspace]
 default-members = [
-    "disarray"
+    "sdk"
 ]
 
 members = [
-    "disarray",
     "core",
-    "derive",
-    "macros",
-    "network"
+    "network",
+    "runtime",
+    "sdk"
 ]
 
 [profile.dev]

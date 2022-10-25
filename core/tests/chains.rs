@@ -7,7 +7,7 @@ mod tests {
     #[test]
     fn test_blockchain_default() {
         let a = Blockchain::default();
-        let b = Blockchain::new(std::net::SocketAddr::from(([0, 0, 0, 0], 9090)));
+        let b = Blockchain::from(a.clone());
         assert_eq!(a, b)
     }
 
