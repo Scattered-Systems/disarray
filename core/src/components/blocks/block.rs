@@ -9,6 +9,7 @@ use crate::{
     BlockTz,
 };
 use serde::{Deserialize, Serialize};
+use serde_json::{Value, json};
 
 #[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]
 pub struct Block {
@@ -37,6 +38,12 @@ impl Block {
             timestamp,
             transactions,
         }
+    }
+}
+
+impl std::convert::Into<Value> for Block {
+    fn into(self) -> Value {
+        json!(self)
     }
 }
 
