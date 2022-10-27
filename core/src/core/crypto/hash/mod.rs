@@ -20,29 +20,14 @@ pub(crate) mod utils {
     use sha2::{Digest, Sha256};
     use std::string::ToString;
 
-    pub struct Hasher<T: Clone + Serialize, H: From<Vec<u8>> = H256> {
-        pub data: T,
-        pub hash: H
-    }
-
-    impl<T: Clone + Serialize, H: From<Vec<u8>>> Hasher<T, H> {
-        pub fn new(data: T) -> Self {
-            let hash: H = hasher(data.clone()).into();
-            Self { data, hash }
-        }
-    }
-
-    pub fn hasher<T: Serialize>(data: T) -> Vec<u8> {
+    pub fn hasher<T: Serialize>(data: &T) -> Vec<u8> {
         let mut hs = Sha256::new();
-        hs.update(serde_json::to_string(&data).unwrap().as_bytes());
+        hs.update(serde_json::to_string(data).unwrap().as_bytes());
         hs.finalize().as_slice().to_owned().into()
     }
 
-    pub fn block_hasher<T: Serialize>(data: T) -> H256 {
-        let tmp = serde_json::to_string(&data).unwrap();
-        let mut hasher = sha2::Sha256::new();
-        hasher.update(tmp.as_bytes());
-        hasher.finalize().as_slice().to_owned().into()
+    pub fn block_hasher<T: Serialize>(data: &T) -> H256 {
+        hasher(data).into()
     }
 
     pub fn shash<T: ToString>(data: T) -> String {

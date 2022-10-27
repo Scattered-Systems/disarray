@@ -15,7 +15,6 @@ use serde::{Deserialize, Serialize};
 pub struct SignedTransaction {
     pub sign: Sign,
     pub transaction: Transaction,
-    
 }
 
 impl SignedTransaction {

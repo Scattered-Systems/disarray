@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: Formal implementation of a hash, with 64 hexadecimals and compose of a generic array sized 32
 */
-use crate::crypto::hash::{Hashable, hasher};
+use crate::crypto::hash::{hasher, Hashable};
 use scsys::prelude::ring;
 use serde::{Deserialize, Serialize};
 

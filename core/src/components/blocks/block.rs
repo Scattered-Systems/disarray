@@ -5,7 +5,7 @@ Description:
     ... Summary ...
 */
 use super::{content::BlockContent, header::BlockHeader};
-use crate::crypto::hash::{Hashable, H256, hasher};
+use crate::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -25,7 +25,11 @@ pub struct Block {
 
 impl Block {
     pub fn new(class: BlockClass, data: BlockContent, header: BlockHeader) -> Self {
-        Self {class, data, header }
+        Self {
+            class,
+            data,
+            header,
+        }
     }
 }
 

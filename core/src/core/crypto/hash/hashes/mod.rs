@@ -9,6 +9,4 @@ pub use self::{h160::*, h256::*, utils::*};
 pub(crate) mod h160;
 pub(crate) mod h256;
 
-pub(crate) mod utils {
-    
-}
+pub(crate) mod utils {}

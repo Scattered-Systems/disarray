@@ -4,10 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use self::{signed::*, misc::*, transaction::*, utils::*};
+pub use self::{misc::*, signed::*, transaction::*, utils::*};
 
-pub(crate) mod signed;
 pub(crate) mod misc;
+pub(crate) mod signed;
 pub(crate) mod transaction;
 
 pub type Transactions = Vec<Transaction>;

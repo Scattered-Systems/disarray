@@ -21,7 +21,6 @@ impl Sign {
     }
 }
 
-
 /// Implements a spad-id for malicious transactions
 #[derive(Eq, Hash, PartialEq, Serialize)]
 pub struct SpamId {

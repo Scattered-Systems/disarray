@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use crate::crypto::hash::{Hashable, H256, hasher};
+use crate::crypto::hash::{hasher, Hashable, H256};
 use scsys::Timestamp;
 use serde::{Deserialize, Serialize};
 

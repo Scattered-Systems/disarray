@@ -11,10 +11,25 @@ pub(crate) mod content;
 pub(crate) mod header;
 
 pub(crate) mod utils {
-    use crate::{crypto::hash::hasher, BlockHs, BlockId, BlockNc, BlockTs};
+    use super::BlockHeader;
+    use crate::{
+        crypto::hash::{generate_random_hash, hasher, H256},
+        BlockHs, BlockId, BlockNc, BlockTs,
+    };
+    use scsys::prelude::rand::{self, Rng};
     use serde::Serialize;
     use serde_json::json;
-    use sha2::Digest;
+
+    pub fn generate_random_block_header() -> BlockHeader {
+        let mut rng = rand::thread_rng();
+        BlockHeader::new(
+            rng.gen(),
+            generate_random_hash(),
+            String::new(),
+            rng.gen(),
+            generate_random_hash(),
+        )
+    }
 
     pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
         let mut res: String = String::default();
@@ -30,7 +45,7 @@ pub(crate) mod utils {
         previous: BlockHs,
         timestamp: BlockTs,
         transactions: Vec<Dt>,
-    ) -> Vec<u8> {
+    ) -> H256 {
         let cache = json!(
             {
                 "id": id,
@@ -40,6 +55,38 @@ pub(crate) mod utils {
                 "transactions": transactions.clone()
             }
         );
-        hasher(cache).into()
+        hasher(&cache).into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::crypto::hash::{generate_random_hash, hasher, H256};
+
+    #[test]
+    fn test_block_default() {
+        let block1 = Block::new(
+            BlockClass::default(),
+            BlockContent::default(),
+            generate_random_block_header(),
+        );
+        let block2 = Block::new(
+            BlockClass::default(),
+            BlockContent::default(),
+            generate_random_block_header(),
+        );
+        assert_ne!(block1, block2)
+    }
+
+    #[test]
+    fn test_block_hash() {
+        let block = Block::new(
+            BlockClass::default(),
+            BlockContent::default(),
+            generate_random_block_header(),
+        );
+        let bhash: H256 = hasher(&block).into();
+        assert_ne!(bhash, generate_random_hash())
     }
 }
