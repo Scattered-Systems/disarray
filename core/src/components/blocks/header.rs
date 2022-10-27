@@ -1,19 +1,27 @@
+use crate::crypto::hash::H256;
 use scsys::Timestamp;
 use serde::{Deserialize, Serialize};
-use crate::{BlockId, BlockHs, BlockNc, BlockTs};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BlockHeader {
-    pub id: BlockId,
+    pub id: i64,
+    pub hash: H256,
     pub key: String,
-    pub nonce: BlockNc,
-    pub previous: BlockHs,
-    pub timestamp: BlockTs,
+    pub nonce: String,
+    pub previous: H256,
+    pub timestamp: i64,
 }
 
 impl BlockHeader {
-    pub fn new(id: BlockId, key: String, nonce: BlockNc, previous: BlockHs) -> Self {
+    pub fn new(id: i64, hash: H256, key: String, nonce: String, previous: H256) -> Self {
         let timestamp = Timestamp::timestamp();
-        Self { id, key, nonce, previous, timestamp }
+        Self {
+            id,
+            hash,
+            key,
+            nonce,
+            previous,
+            timestamp,
+        }
     }
 }

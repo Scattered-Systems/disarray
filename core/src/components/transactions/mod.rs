@@ -26,11 +26,15 @@ mod traits {
     }
 }
 
-
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
-    use crate::crypto::hash::{H160, generate_random_hash};
-    use scsys::prelude::{rand::{self, Rng}, ring::signature::{Ed25519KeyPair, Signature, KeyPair, VerificationAlgorithm, EdDSAParameters}};
+    use crate::crypto::hash::{generate_random_hash, H160};
+    use scsys::prelude::{
+        rand::{self, Rng},
+        ring::signature::{
+            Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
+        },
+    };
 
     /// Create digital signature of a transaction
     pub fn sign(t: &Transaction, key: &Ed25519KeyPair) -> Signature {
@@ -39,10 +43,19 @@ pub(crate) mod utils {
     }
 
     /// Verify digital signature of a transaction, using public key instead of secret key
-    pub fn verify(t: &Transaction, public_key: &<Ed25519KeyPair as KeyPair>::PublicKey, signature: &Signature) -> bool {
+    pub fn verify(
+        t: &Transaction,
+        public_key: &<Ed25519KeyPair as KeyPair>::PublicKey,
+        signature: &Signature,
+    ) -> bool {
         let serialized: Vec<u8> = serde_json::to_vec(t).unwrap();
         let bytes: &[u8] = &serialized;
-        match VerificationAlgorithm::verify(&EdDSAParameters, public_key.as_ref().into(), bytes.into(), signature.as_ref().into()) {
+        match VerificationAlgorithm::verify(
+            &EdDSAParameters,
+            public_key.as_ref().into(),
+            bytes.into(),
+            signature.as_ref().into(),
+        ) {
             Ok(_) => true,
             Err(_e) => false,
         }
@@ -54,7 +67,12 @@ pub(crate) mod utils {
         let sig = t.sign.sig.clone();
         let serialized: Vec<u8> = serde_json::to_vec(&transaction).unwrap();
         let bytes: &[u8] = &serialized;
-        match VerificationAlgorithm::verify(&EdDSAParameters, pubk[..].into(), bytes.into(), sig[..].into()) {
+        match VerificationAlgorithm::verify(
+            &EdDSAParameters,
+            pubk[..].into(),
+            bytes.into(),
+            sig[..].into(),
+        ) {
             Ok(_) => true,
             Err(_e) => false,
         }
@@ -63,9 +81,9 @@ pub(crate) mod utils {
     pub fn generate_random_transaction() -> Transaction {
         let mut rng = rand::thread_rng();
         Transaction {
-        recv:  generate_random_hash().into(),
-        value: rng.gen(),
-        nonce: rng.gen(),
+            recv: generate_random_hash().into(),
+            value: rng.gen(),
+            nonce: rng.gen(),
         }
     }
 
@@ -77,32 +95,31 @@ pub(crate) mod utils {
             pubk: pubk.public_key().as_ref().to_vec(),
             sig: sig.as_ref().to_vec(),
         };
-        SignedTransaction {
-            transaction,
-            sign,
-        }
+        SignedTransaction { transaction, sign }
     }
 
     pub fn generate_valid_transaction(recv: H160, value: usize, nonce: usize) -> Transaction {
         //let mut rng = rand::thread_rng();
         Transaction {
-        recv:  recv,
-        value: value,
-        nonce: nonce,
+            recv: recv,
+            value: value,
+            nonce: nonce,
         }
     }
 
-    pub fn generate_valid_signed_transaction(recv: H160, value: usize, nonce: usize, pubk:&Ed25519KeyPair) -> SignedTransaction {
-        let transaction = generate_valid_transaction(recv,value,nonce);
+    pub fn generate_valid_signed_transaction(
+        recv: H160,
+        value: usize,
+        nonce: usize,
+        pubk: &Ed25519KeyPair,
+    ) -> SignedTransaction {
+        let transaction = generate_valid_transaction(recv, value, nonce);
         //let pubk = key_pair::random();
         let sig = sign(&transaction, &pubk);
         let sign = Sign {
             pubk: pubk.public_key().as_ref().to_vec(),
             sig: sig.as_ref().to_vec(),
         };
-        SignedTransaction {
-            transaction,
-            sign,
-        }
+        SignedTransaction { transaction, sign }
     }
 }

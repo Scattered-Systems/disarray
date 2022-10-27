@@ -4,9 +4,9 @@
    Description:
        ... Summary ...
 */
-use crate::crypto::hash::{H160, H256, Hashable};
+use crate::crypto::hash::{Hashable, H160, H256};
+use scsys::prelude::ring;
 use serde::{Deserialize, Serialize};
-
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Transaction {
@@ -21,8 +21,3 @@ impl Hashable for Transaction {
         ring::digest::digest(&ring::digest::SHA256, &serialized).into()
     }
 }
-
-
-
-
-

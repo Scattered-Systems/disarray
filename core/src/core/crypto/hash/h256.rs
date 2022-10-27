@@ -5,8 +5,8 @@
        ... Summary ...
 */
 use super::Hashable;
+use scsys::prelude::ring;
 use serde::{Deserialize, Serialize};
-
 
 #[derive(Clone, Copy, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct H256(pub [u8; 32]);
@@ -114,4 +114,3 @@ impl PartialOrd for H256 {
         Some(self.cmp(other))
     }
 }
-

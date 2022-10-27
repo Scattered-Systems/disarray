@@ -10,11 +10,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BlockContent {
     pub reference: H256,
-    pub transactions: Vec<String>
+    pub transactions: Vec<String>,
 }
 
 impl BlockContent {
     pub fn new(reference: H256, transactions: Vec<String>) -> Self {
-        Self { reference, transactions }
+        Self {
+            reference,
+            transactions,
+        }
     }
 }

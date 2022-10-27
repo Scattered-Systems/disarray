@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use disarray_core::{
-        blocks::{calculate_block_hash, Block},
+        blocks::{calculate_block_hash, Block, BlockClass, BlockContent, BlockHeader},
         transactions::Transactions,
         validators::determine_block_validity,
         BlockTz,
@@ -9,13 +9,14 @@ mod tests {
 
     #[test]
     fn test_block_validity() {
-        let pblock = Block::new(0u64, "genesis_block".to_string(), Transactions::new());
-        let nblock = Block::new(1u64, pblock.hash.clone(), Transactions::new());
-        assert_eq!(determine_block_validity(&nblock, &pblock), true)
+        let rc = BlockContent::default();
+
+        // assert_eq!(determine_block_validity(&nblock, &pblock), true)
     }
 
     #[test]
     fn test_block_hash() {
+        let header = BlockHeader::new(1, String::new(), 890890, String::new());
         let hash = calculate_block_hash(
             1,
             890890,

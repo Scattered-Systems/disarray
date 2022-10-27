@@ -6,17 +6,16 @@
 */
 use crate::{blocks::Block, validators::determine_block_validity};
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BlockData {
     pub block: Block,
     pub height: u16,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Blockchain {
-    pub blockchain: Vec<BlockData>
+    pub blockchain: Vec<BlockData>,
 }
 
 impl Blockchain {
@@ -24,13 +23,14 @@ impl Blockchain {
         let blockchain = Vec::new();
         Self { blockchain }
     }
-    pub fn add_block(&mut self, block: Block) {
+    pub fn add_block(&mut self, block: Block) -> &Self {
         let pblock = self.blockchain.last().unwrap().clone();
         if determine_block_validity(&block, &pblock.block) == true {
             self.blockchain.push(BlockData { block, height: 0 })
         } else {
             panic!("Invalid Block")
         }
+        self
     }
 }
 

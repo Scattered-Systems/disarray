@@ -11,7 +11,8 @@ pub(crate) mod content;
 pub(crate) mod header;
 
 pub(crate) mod utils {
-    use crate::{BlockHs, BlockId, BlockNc, BlockTs};
+    use crate::{crypto::hash::H256, BlockHs, BlockId, BlockNc, BlockTs};
+    use serde::Serialize;
     use serde_json::json;
     use sha2::Digest;
 

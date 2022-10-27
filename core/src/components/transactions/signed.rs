@@ -5,7 +5,10 @@
        ... Summary ...
 */
 use super::Transaction;
-use scsys::crypto::hashes::{Hashable, H256};
+use scsys::{
+    crypto::hashes::{Hashable, H256},
+    prelude::ring,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -27,4 +30,3 @@ impl Hashable for SignedTransaction {
         ring::digest::digest(&ring::digest::SHA256, &serialized).into()
     }
 }
-

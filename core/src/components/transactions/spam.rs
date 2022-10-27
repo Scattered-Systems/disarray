@@ -4,8 +4,8 @@
    Description:
        ... Summary ...
 */
-use crate::crypto::hash::H256;
 use super::signed::SignedTransaction;
+use crate::crypto::hash::H256;
 use serde::Serialize;
 
 #[derive(Eq, Hash, PartialEq, Serialize)]
