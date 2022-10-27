@@ -14,9 +14,9 @@ mod constants {
 mod types {
     use scsys::prelude::chrono;
 
-    pub type BlockId = u64;
+    pub type BlockId = i64;
     pub type BlockHs = String;
-    pub type BlockNc = u64;
+    pub type BlockNc = i64;
     pub type BlockTs = i64;
     pub type BlockTz = chrono::Utc;
 

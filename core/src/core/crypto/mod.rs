@@ -4,3 +4,7 @@
    Description:
        ... Summary ...
 */
+
+pub mod hash;
+pub mod keys;
+pub mod merkle;

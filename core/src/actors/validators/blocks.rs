@@ -5,39 +5,39 @@
        ... Summary ...
 */
 use crate::{
-    blocks::{calculate_block_hash, convert_hash_into_binary, Block},
+    blocks::{convert_hash_into_binary, Block},
+    crypto::hash::shash,
     DIFFICULTY_PREFIX,
 };
 
 /// Determine the validity of a new block by comparing the previous one
 pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {
-    if block.previous != pblock.hash {
-        log::warn!("block with id: {} has wrong previous hash", block.id);
-        return false;
-    } else if !convert_hash_into_binary(
-        &hex::decode(&block.hash).expect("Decoding Error: failed to decode the BlockHash"),
-    )
-    .starts_with(DIFFICULTY_PREFIX.as_ref())
-    {
-        log::warn!("block with id: {} has invalid difficulty", block.id);
-        return false;
-    } else if block.id != pblock.id + 1 {
-        log::warn!(
-            "block with id: {} is not the next block after the latest: {}",
-            block.id,
-            pblock.id
-        );
-        return false;
-    } else if hex::encode(calculate_block_hash(
-        block.id,
-        block.nonce,
-        block.previous.clone(),
-        block.timestamp.clone(),
-        block.transactions.clone(),
-    )) != block.hash
-    {
-        log::warn!("block with id: {} has invalid hash", block.id);
-        return false;
-    }
+
     true
 }
+
+// pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {
+//     if block.content.reference != pblock.content.reference {
+//         log::warn!("block with id: {} has wrong previous hash", block.header.id);
+//         return false;
+//     } else if !convert_hash_into_binary(
+//         &hex::decode(&block.content.reference).expect("Decoding Error: failed to decode the BlockHash"),
+//     )
+//     .starts_with(DIFFICULTY_PREFIX.as_ref())
+//     {
+//         log::warn!("block with id: {} has invalid difficulty", block.header.id);
+//         return false;
+//     } else if block.header.id != pblock.header.id + 1 {
+//         log::warn!(
+//             "block with id: {} is not the next block after the latest: {}",
+//             block.header.id,
+//             pblock.header.id
+//         );
+//         return false;
+//     } else if hex::encode(shash(serde_json::to_string(block).unwrap()) != serde_json::to_string(block.content.reference).unwrap()
+//     {
+//         log::warn!("block with id: {} has invalid hash", block.header.id);
+//         return false;
+//     }
+//     true
+// }

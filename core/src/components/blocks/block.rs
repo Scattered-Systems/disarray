@@ -1,64 +1,36 @@
 /*
-   Appellation: block <module>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-   Description:
-       ... Summary ...
+Appellation: block <module>
+Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
+Description:
+    ... Summary ...
 */
-use crate::{
-    miners::create_block_by_mining, transactions::Transactions, BlockHs, BlockId, BlockNc, BlockTs,
-    BlockTz,
-};
+use super::{content::BlockContent, header::BlockHeader};
+use crate::{crypto::hash::H256, transactions::Transaction};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use sha2::{Digest, Sha256};
 
-#[derive(Clone, Debug, Deserialize, Hash, PartialEq, Serialize)]
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Block {
-    pub id: BlockId,
-    pub hash: BlockHs,
-    pub nonce: BlockNc,
-    pub previous: BlockHs,
-    pub timestamp: BlockTs,
-    pub transactions: Transactions,
+    pub content: BlockContent,
+    pub header: BlockHeader,
 }
 
 impl Block {
-    pub fn new(id: BlockId, previous: BlockHs, transactions: Transactions) -> Self {
-        let timestamp = BlockTz::now().timestamp();
-        let (nonce, hash) = create_block_by_mining(
-            id.clone(),
-            previous.clone(),
-            timestamp.clone(),
-            transactions.clone(),
-        );
-        Self {
-            id,
-            hash,
-            nonce,
-            previous,
-            timestamp,
-            transactions,
-        }
+    pub fn new(content: BlockContent, header: BlockHeader) -> Self {
+        Self { content, header }
     }
-}
-
-impl std::convert::From<&Self> for Block {
-    fn from(data: &Self) -> Self {
-        data.clone()
+    pub fn hash(&self) -> H256 {
+        let data = json!(self.header);
+        let mut hasher = Sha256::new();
+        hasher.update(data.to_string().as_bytes());
+        hasher.finalize().to_vec().into()
     }
 }
 
 impl std::convert::Into<Value> for Block {
     fn into(self) -> Value {
         json!(self)
-    }
-}
-
-impl std::fmt::Display for Block {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Block(\nid={},\nhash={},\nnonce={},\nprevious={},\ntimestamp={:#?},\ndata={:#?})",
-            self.id, self.hash, self.nonce, self.previous, self.timestamp, self.transactions
-        )
     }
 }

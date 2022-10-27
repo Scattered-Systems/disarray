@@ -4,9 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::Block, utils::*};
+pub use self::{block::*, content::*, header::*, utils::*};
 
-mod block;
+pub(crate) mod block;
+pub(crate) mod content;
+pub(crate) mod header;
 
 pub(crate) mod utils {
     use crate::{BlockHs, BlockId, BlockNc, BlockTs};
