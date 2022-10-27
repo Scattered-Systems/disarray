@@ -1,11 +1,11 @@
 #[cfg(test)]
 mod tests {
-    use disarray_core::transactions::Transaction;
+    use disarray_core::transactions::{generate_random_transaction, Transaction};
 
     #[test]
     fn test_transaction_default() {
         let a = Transaction::default();
-        let b = a.clone();
-        assert_eq!(a, b)
+        let b = generate_random_transaction();
+        assert_ne!(a, b)
     }
 }

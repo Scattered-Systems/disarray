@@ -1,29 +1,21 @@
 #[cfg(test)]
 mod tests {
     use disarray_core::{
-        blocks::{calculate_block_hash, Block, BlockClass, BlockContent, BlockHeader},
-        transactions::Transactions,
-        validators::determine_block_validity,
-        BlockTz,
+        blocks::{Block, BlockClass, BlockContent, BlockHeader},
+        crypto::hash::{block_hasher, generate_random_hash},
     };
 
     #[test]
-    fn test_block_validity() {
-        let rc = BlockContent::default();
-
-        // assert_eq!(determine_block_validity(&nblock, &pblock), true)
-    }
-
-    #[test]
     fn test_block_hash() {
-        let header = BlockHeader::new(1, String::new(), 890890, String::new());
-        let hash = calculate_block_hash(
+        let header = BlockHeader::new(
             1,
-            890890,
-            "previous_hash".to_string(),
-            BlockTz::now().timestamp(),
-            vec!["test".to_string()],
+            generate_random_hash(),
+            String::new(),
+            90890,
+            generate_random_hash(),
         );
-        assert_eq!(&hash, &hash)
+        let block = Block::new(BlockClass::default(), BlockContent::default(), header);
+        let bhash = block_hasher(block);
+        assert_eq!(&bhash, &bhash)
     }
 }

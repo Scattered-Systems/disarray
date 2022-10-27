@@ -4,27 +4,13 @@
    Description:
        ... Summary ...
 */
-pub use self::{signed::*, spam::*, transaction::*};
+pub use self::{signed::*, misc::*, transaction::*, utils::*};
 
 pub(crate) mod signed;
-pub(crate) mod spam;
+pub(crate) mod misc;
 pub(crate) mod transaction;
 
 pub type Transactions = Vec<Transaction>;
-
-mod traits {
-    pub struct TxId<I64>(I64);
-
-    impl<I64> TxId<I64> {
-        pub fn new(data: I64) -> Self {
-            Self(data)
-        }
-    }
-
-    pub trait TransactionSpec {
-        fn id(&self) -> TxId<i64>;
-    }
-}
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
@@ -80,11 +66,7 @@ pub(crate) mod utils {
 
     pub fn generate_random_transaction() -> Transaction {
         let mut rng = rand::thread_rng();
-        Transaction {
-            recv: generate_random_hash().into(),
-            value: rng.gen(),
-            nonce: rng.gen(),
-        }
+        Transaction::new(rng.gen(), generate_random_hash().into(), rng.gen())
     }
 
     pub fn generate_random_signed_transaction() -> SignedTransaction {
@@ -95,16 +77,13 @@ pub(crate) mod utils {
             pubk: pubk.public_key().as_ref().to_vec(),
             sig: sig.as_ref().to_vec(),
         };
-        SignedTransaction { transaction, sign }
+        SignedTransaction::new(sign, transaction)
     }
 
     pub fn generate_valid_transaction(recv: H160, value: usize, nonce: usize) -> Transaction {
-        //let mut rng = rand::thread_rng();
-        Transaction {
-            recv: recv,
-            value: value,
-            nonce: nonce,
-        }
+        let mut rng = rand::thread_rng();
+
+        Transaction::new(rng.gen(), generate_random_hash().into(), rng.gen())
     }
 
     pub fn generate_valid_signed_transaction(
@@ -113,13 +92,10 @@ pub(crate) mod utils {
         nonce: usize,
         pubk: &Ed25519KeyPair,
     ) -> SignedTransaction {
-        let transaction = generate_valid_transaction(recv, value, nonce);
-        //let pubk = key_pair::random();
+        let transaction = Transaction::new(nonce, recv, value);
+        let pubk = crate::crypto::keys::random();
         let sig = sign(&transaction, &pubk);
-        let sign = Sign {
-            pubk: pubk.public_key().as_ref().to_vec(),
-            sig: sig.as_ref().to_vec(),
-        };
-        SignedTransaction { transaction, sign }
+        let sign = Sign::new(pubk.public_key().as_ref().to_vec(), sig.as_ref().to_vec());
+        SignedTransaction::new(sign, transaction)
     }
 }

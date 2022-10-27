@@ -5,14 +5,24 @@
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
 use crate::crypto::hash::{Hashable, H160, H256};
-use scsys::prelude::ring;
+use scsys::prelude::ring::{self, signature::{Ed25519KeyPair, Signature}};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Transaction {
+    pub nonce: usize,
     pub recv: H160,
     pub value: usize,
-    pub nonce: usize,
+}
+
+impl Transaction {
+    pub fn new(nonce: usize, recv: H160, value: usize) -> Self {
+        Self { nonce, recv, value }
+    }
+    /// Create digital signature of a transaction
+    pub fn sign(&self, key: &Ed25519KeyPair) -> Signature {
+        key.sign(&serde_json::to_vec(self).unwrap())
+    }
 }
 
 impl Hashable for Transaction {
