@@ -4,10 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use self::{h160::*, h256::*, utils::*};
+pub use self::{hasher::*, hashes::*, utils::*};
 
-pub(crate) mod h160;
-pub(crate) mod h256;
+pub(crate) mod hasher;
+pub(crate) mod hashes;
 
 pub trait Hashable<T: std::string::ToString = H256> {
     fn hash(&self) -> T;
@@ -20,10 +20,22 @@ pub(crate) mod utils {
     use sha2::{Digest, Sha256};
     use std::string::ToString;
 
-    pub fn base_hasher<T: Serialize>(data: T) -> Vec<u8> {
-        let mut hasher = Sha256::new();
-        hasher.update(serde_json::to_string(&data).unwrap().as_bytes());
-        hasher.finalize().as_slice().to_owned().into()
+    pub struct Hasher<T: Clone + Serialize, H: From<Vec<u8>> = H256> {
+        pub data: T,
+        pub hash: H
+    }
+
+    impl<T: Clone + Serialize, H: From<Vec<u8>>> Hasher<T, H> {
+        pub fn new(data: T) -> Self {
+            let hash: H = hasher(data.clone()).into();
+            Self { data, hash }
+        }
+    }
+
+    pub fn hasher<T: Serialize>(data: T) -> Vec<u8> {
+        let mut hs = Sha256::new();
+        hs.update(serde_json::to_string(&data).unwrap().as_bytes());
+        hs.finalize().as_slice().to_owned().into()
     }
 
     pub fn block_hasher<T: Serialize>(data: T) -> H256 {
@@ -45,10 +57,6 @@ pub(crate) mod utils {
             res = shash(res);
         }
         res
-    }
-
-    pub trait Hashable<T: ToString = H256> {
-        fn hash(&self) -> T;
     }
 
     pub fn generate_random_hash() -> H256 {

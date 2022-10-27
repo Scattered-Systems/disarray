@@ -1,5 +1,5 @@
 /*
-   Appellation: spam <module>
+   Appellation: misc <transactions>
    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
    Description:
        ... Summary ...
@@ -21,6 +21,8 @@ impl Sign {
     }
 }
 
+
+/// Implements a spad-id for malicious transactions
 #[derive(Eq, Hash, PartialEq, Serialize)]
 pub struct SpamId {
     pub nonce: usize,

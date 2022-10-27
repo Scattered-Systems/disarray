@@ -11,7 +11,7 @@ pub(crate) mod content;
 pub(crate) mod header;
 
 pub(crate) mod utils {
-    use crate::{crypto::hash::H256, BlockHs, BlockId, BlockNc, BlockTs};
+    use crate::{crypto::hash::hasher, BlockHs, BlockId, BlockNc, BlockTs};
     use serde::Serialize;
     use serde_json::json;
     use sha2::Digest;
@@ -24,7 +24,7 @@ pub(crate) mod utils {
         res.into_bytes()
     }
 
-    pub fn calculate_block_hash<Dt: Clone + serde::Serialize>(
+    pub fn calculate_block_hash<Dt: Clone + Serialize>(
         id: BlockId,
         nonce: BlockNc,
         previous: BlockHs,
@@ -40,8 +40,6 @@ pub(crate) mod utils {
                 "transactions": transactions.clone()
             }
         );
-        let mut hasher = sha2::Sha256::new();
-        hasher.update(cache.to_string().as_bytes());
-        hasher.finalize().as_slice().to_owned()
+        hasher(cache).into()
     }
 }

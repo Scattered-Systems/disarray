@@ -5,10 +5,9 @@ Description:
     ... Summary ...
 */
 use super::{content::BlockContent, header::BlockHeader};
-use crate::crypto::hash::H256;
+use crate::crypto::hash::{Hashable, H256, hasher};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-use sha2::{Digest, Sha256};
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum BlockClass {
@@ -25,18 +24,14 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(class: BlockClass, content: BlockContent, header: BlockHeader) -> Self {
-        Self {
-            class,
-            data: content,
-            header,
-        }
+    pub fn new(class: BlockClass, data: BlockContent, header: BlockHeader) -> Self {
+        Self {class, data, header }
     }
-    pub fn hash(&self) -> H256 {
-        let data = serde_json::to_string(self).unwrap();
-        let mut hasher = Sha256::new();
-        hasher.update(data.as_bytes());
-        hasher.finalize().to_vec().into()
+}
+
+impl Hashable for Block {
+    fn hash(&self) -> H256 {
+        hasher(self).into()
     }
 }
 

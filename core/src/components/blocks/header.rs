@@ -1,4 +1,10 @@
-use crate::crypto::hash::H256;
+/*
+   Appellation: header <blocks>
+   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
+   Description:
+       ... Summary ...
+*/
+use crate::crypto::hash::{Hashable, H256, hasher};
 use scsys::Timestamp;
 use serde::{Deserialize, Serialize};
 
@@ -23,5 +29,11 @@ impl BlockHeader {
             previous,
             timestamp,
         }
+    }
+}
+
+impl Hashable for BlockHeader {
+    fn hash(&self) -> H256 {
+        hasher(self).into()
     }
 }

@@ -1,8 +1,8 @@
 /*
-Appellation: block <module>
-Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-Description:
-    ... Summary ...
+    Appellation: content <blocks>
+    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
+    Description:
+        ... Summary ...
 */
 use crate::crypto::hash::H256;
 use serde::{Deserialize, Serialize};

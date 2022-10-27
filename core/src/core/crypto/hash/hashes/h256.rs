@@ -1,10 +1,9 @@
 /*
-   Appellation: h256 <module>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-   Description:
-       ... Summary ...
+    Appellation: h256 <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: Formal implementation of a hash, with 64 hexadecimals and compose of a generic array sized 32
 */
-use super::Hashable;
+use crate::crypto::hash::{Hashable, hasher};
 use scsys::prelude::ring;
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +12,7 @@ pub struct H256(pub [u8; 32]);
 
 impl Hashable<H256> for H256 {
     fn hash(&self) -> H256 {
-        ring::digest::digest(&ring::digest::SHA256, &self.0).into()
+        hasher(self).into()
     }
 }
 
