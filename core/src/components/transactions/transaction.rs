@@ -1,8 +1,8 @@
 /*
-   Appellation: transaction <module>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-   Description:
-       ... Summary ...
+    Appellation: transaction <module>
+    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
+    Description:
+        This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
 use crate::crypto::hash::{Hashable, H160, H256};
 use scsys::prelude::ring;
