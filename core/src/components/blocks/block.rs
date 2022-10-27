@@ -5,7 +5,7 @@ Description:
     ... Summary ...
 */
 use super::{content::BlockContent, header::BlockHeader};
-use crate::crypto::hash::{hasher, Hashable, H256};
+use crate::{crypto::hash::{hasher, Hashable, H256}, compute_key_hash};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
@@ -19,17 +19,31 @@ pub enum BlockClass {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Block {
     pub class: BlockClass,
-    pub data: BlockContent,
+    pub content: BlockContent,
     pub header: BlockHeader,
 }
 
 impl Block {
-    pub fn new(class: BlockClass, data: BlockContent, header: BlockHeader) -> Self {
+    pub fn new(class: BlockClass, content: BlockContent, header: BlockHeader) -> Self {
         Self {
             class,
-            data,
+            content,
             header,
         }
+    }
+    pub fn print_txns(&self) {
+        let txns = self.content.data.clone();
+        log::info!("***** Print txns in block {:?} *****", self.hash());
+        for txn in txns {
+            let sender = compute_key_hash(txn.sign.pubk);
+            let recv = txn.transaction.recv;
+            log::info!("{:?} sends {:?} value {:?}", sender, recv, txn.transaction.value);
+        }
+        log::info!("*************************************");
+    }
+
+    pub fn clear_txns(&mut self) {
+        self.content.data = Vec::new();
     }
 }
 

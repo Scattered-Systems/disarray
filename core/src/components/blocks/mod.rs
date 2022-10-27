@@ -11,7 +11,7 @@ pub(crate) mod content;
 pub(crate) mod header;
 
 pub(crate) mod utils {
-    use super::BlockHeader;
+    use super::{BlockContent, BlockHeader};
     use crate::{
         crypto::hash::{generate_random_hash, hasher, H256},
         BlockHs, BlockId, BlockNc, BlockTs,
@@ -20,14 +20,21 @@ pub(crate) mod utils {
     use serde::Serialize;
     use serde_json::json;
 
+    pub fn generate_random_block_content() -> BlockContent {
+        BlockContent::new(Vec::new(),generate_random_hash())
+    }
+
     pub fn generate_random_block_header() -> BlockHeader {
         let mut rng = rand::thread_rng();
         BlockHeader::new(
+            generate_random_hash(),
             rng.gen(),
             generate_random_hash(),
-            String::new(),
-            rng.gen(),
             generate_random_hash(),
+            generate_random_hash(),
+            Vec::new(),
+            Vec::new(),
+            Vec::new(),
         )
     }
 
@@ -68,12 +75,12 @@ mod tests {
     fn test_block_default() {
         let block1 = Block::new(
             BlockClass::default(),
-            BlockContent::default(),
+            generate_random_block_content(),
             generate_random_block_header(),
         );
         let block2 = Block::new(
             BlockClass::default(),
-            BlockContent::default(),
+            generate_random_block_content(),
             generate_random_block_header(),
         );
         assert_ne!(block1, block2)
@@ -83,7 +90,7 @@ mod tests {
     fn test_block_hash() {
         let block = Block::new(
             BlockClass::default(),
-            BlockContent::default(),
+            generate_random_block_content(),
             generate_random_block_header(),
         );
         let bhash: H256 = hasher(&block).into();

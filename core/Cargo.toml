@@ -19,6 +19,7 @@ bincode = "1.3.3"
 digest = "0.10.5"
 itertools = "0.10.5"
 hex = "0.4.3"
+hex-literal = "0.3.4"
 log = "0.4.17"
 once_cell = "1.15.0"
 scsys = { features = ["full"], version = "0.1.21" }

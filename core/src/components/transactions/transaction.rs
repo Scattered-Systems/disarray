@@ -4,7 +4,7 @@
     Description:
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
-use crate::crypto::hash::{Hashable, H160, H256};
+use crate::crypto::hash::{Hashable, H160, H256, hasher};
 use scsys::prelude::ring::{
     self,
     signature::{Ed25519KeyPair, Signature},
@@ -30,7 +30,6 @@ impl Transaction {
 
 impl Hashable for Transaction {
     fn hash(&self) -> H256 {
-        let serialized: Vec<u8> = serde_json::to_vec(self).unwrap();
-        ring::digest::digest(&ring::digest::SHA256, &serialized).into()
+        hasher(self).into()
     }
 }

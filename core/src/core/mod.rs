@@ -4,10 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{misc::*, primitives::*, utils::*};
+pub use self::{misc::*, primitives::*, states::*, utils::*};
 
 pub mod consensus;
 pub mod crypto;
 pub(crate) mod misc;
 pub(crate) mod primitives;
+pub(crate) mod states;
 pub(crate) mod utils;

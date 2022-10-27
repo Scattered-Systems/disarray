@@ -4,11 +4,8 @@
    Description:
        ... Summary ...
 */
+use crate::crypto::hash::{Hashable, H256, hasher};
 use super::{misc::Sign, transaction::Transaction};
-use scsys::{
-    crypto::hashes::{Hashable, H256},
-    prelude::ring,
-};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -25,7 +22,6 @@ impl SignedTransaction {
 
 impl Hashable for SignedTransaction {
     fn hash(&self) -> H256 {
-        let serialized: Vec<u8> = serde_json::to_vec(self).unwrap();
-        ring::digest::digest(&ring::digest::SHA256, &serialized).into()
+        hasher(self).into()
     }
 }

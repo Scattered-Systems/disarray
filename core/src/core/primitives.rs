@@ -16,7 +16,7 @@ mod types {
 
     pub type BlockId = i64;
     pub type BlockHs = String;
-    pub type BlockNc = i64;
+    pub type BlockNc = u32;
     pub type BlockTs = i64;
     pub type BlockTz = chrono::Utc;
 
