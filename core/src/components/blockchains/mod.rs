@@ -7,6 +7,7 @@
 pub use self::{blockchain::*, pieces::*, utils::*};
 
 pub(crate) mod blockchain;
+pub(crate) mod chain_data;
 pub(crate) mod pieces;
 
 pub(crate) mod utils {

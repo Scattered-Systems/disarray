@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-use super::pieces::{Epoch, Position};
+use super::{pieces::{Epoch, Position}, chain_data::BlockData};
 use crate::{
     blocks::{generate_genesis_block, Block, BlockHeader},
     BlockTs,
@@ -15,21 +15,6 @@ use scsys::{
 };
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
-
-pub type TypeBlockHeight = u128;
-pub type TypeEpochSize = u128;
-
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct BlockData {
-    pub block: Block,
-    pub height: u128,
-}
-
-impl BlockData {
-    pub fn new(block: Block, height: u128) -> Self {
-        Self { block, height }
-    }
-}
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Blockchain {
@@ -81,8 +66,6 @@ impl Blockchain {
             }
             all_block.push(current_hash);
             current_hash = parentdata.block.header.parent;
-            // debug!("current_hash {:?}!", current_hash);
-            // debug!("contains {:?}!", self.chain.get(&current_hash));
         }
         log::debug!("finish {:?}!", all_block);
 
@@ -256,7 +239,7 @@ impl Blockchain {
             }
             let num_blk = all_hashs.len();
             //let start_time: u128 = self.chain.get(&hash).unwrap().blk.header.timestamp;
-            let mut ratio = (num_blk as f64) / (epoch_size as f64);
+            let ratio = (num_blk as f64) / (epoch_size as f64);
             //println!("Ratio: {}", ratio);
             // if ratio > 4.0 {
             // 	ratio = 4.0;
@@ -426,9 +409,8 @@ impl Blockchain {
         return true;
     }
     pub fn print_longest_chain(&self) {
-        let mut longest_chain = self.all_blocks_in_longest_chain();
         log::info!("************* Print Longest Chain *************");
-        log::info!("{:?}", longest_chain);
+        log::info!("{:?}", self.all_blocks_in_longest_chain());
         log::info!("***********************************************");
     }
     /// Get the last block's hash of the longest chain

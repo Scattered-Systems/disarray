@@ -4,13 +4,7 @@
     Description:
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
-use scsys::{
-    crypto::hash::{hasher, Hashable, H160, H256},
-    prelude::ring::{
-        self,
-        signature::{Ed25519KeyPair, Signature},
-    },
-};
+use scsys::prelude::{ring::signature::{Ed25519KeyPair, Signature}, H160, H256, Hashable, hasher};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
