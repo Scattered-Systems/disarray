@@ -38,7 +38,7 @@ pub struct Blockchain {
     pub lead: u128,
     pub length: u128,
     pub position: Position,
-    pub timestamp: i64,
+    pub timestamp: i64, // genesis timestamp
     pub tip: H256,
 }
 
@@ -52,12 +52,11 @@ impl Blockchain {
 
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.clone().hash();
-
-        let mut chain = HashMap::from([(hash, data)]);
+        
         let mut map = HashMap::<String, String>::new();
 
         Self {
-            chain,
+            chain: HashMap::from([(hash, data)]),
             epoch: Epoch::default(),
             lead: 0,
             length: 0,
