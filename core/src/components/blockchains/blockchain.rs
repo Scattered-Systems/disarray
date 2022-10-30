@@ -38,7 +38,7 @@ impl Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.clone().hash();
         
-        let mut map = HashMap::<String, String>::new();
+        let mut _map = HashMap::<String, String>::new();
 
         Self {
             chain: HashMap::from([(hash, data)]),
@@ -264,8 +264,8 @@ impl Blockchain {
         &self,
         current_ts: BlockTs,
     ) -> Option<HashMap<Vec<u8>, HashSet<H256>>> {
-        let epoch_size = self.epoch.size;
-        let depth = self.position.depth;
+        let _epoch_size = self.epoch.size;
+        let _depth = self.position.depth;
         let epoch_time = self.epoch.time;
         let tip = self.tip;
         let tip_time = self.chain.get(&tip).unwrap().block.header.timestamp;
