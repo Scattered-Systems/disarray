@@ -4,30 +4,39 @@ Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
 Description:
     ... Summary ...
 */
-use crate::{transactions::SignedTransaction, compute_key_hash};
+use crate::compute_key_hash;
 use super::{BlockContent, BlockHeader};
-use crate::merkle::MerkleTree;
+
 use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum BlockClass {
+pub enum BlockType {
     PoS,
     #[default]
     PoW,
+}
+
+impl std::convert::From<bool> for BlockType {
+    fn from(data: bool) -> Self {
+        match data {
+            true => Self::PoS,
+            false => Self::PoW,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Block {
     pub content: BlockContent,
     pub header: BlockHeader,
-    pub block_type: bool,
+    pub block_type: BlockType,
     pub selfish_block: bool,
 }
 
 impl Block {
-    pub fn new(content: BlockContent, header: BlockHeader, block_type: bool, selfish_block: bool) -> Self {
+    pub fn new(content: BlockContent, header: BlockHeader, block_type: BlockType, selfish_block: bool) -> Self {
         Self {
             content,
             header,
@@ -68,72 +77,6 @@ impl std::convert::Into<Value> for Block {
     }
 }
 
-pub fn generate_pow_block(
-    data: &Vec<SignedTransaction>,
-    transaction_ref: &Vec<H256>,
-    parent: &H256,
-    nonce: u32,
-    pow_difficulty: &H256,
-    pos_difficulty: &H256,
-    timestamp: i64,
-    vrf_proof: &Vec<u8>,
-    vrf_hash: &Vec<u8>,
-    vrf_pub_key: &[u8],
-    rand: u128,
-    selfish_block: bool,
-) -> Block {
-    let mt = MerkleTree::new(data);
-    let block_type = false;
-    let content = BlockContent::new(data.to_vec(), transaction_ref.to_vec());
-    let header = BlockHeader {
-        parent: *parent,
-        nonce: nonce,
-        pow_difficulty: *pow_difficulty,
-        pos_difficulty: *pos_difficulty,
-        timestamp: timestamp,
-        merkle_root: mt.root(),
-        //mmr_root: parent_mmr.get_merkle_root().unwrap(),
-        vrf_proof: vrf_proof.to_vec(),
-        vrf_hash: vrf_hash.to_vec(),
-        vrf_pub_key: vrf_pub_key.to_vec(),
-        rand: rand,
-    };
-    Block {
-        header,
-        content,
-        block_type,
-        selfish_block: selfish_block,
-    }
-}
-
-pub fn generate_genesis_block(initial_time: i64) -> Block {
-    let content = BlockContent::default();
-    let block_type = true;
-    let selfish_block = false;
-    let header = BlockHeader {
-        parent: Default::default(),
-        nonce: Default::default(),
-        //pow_difficulty: <H256>::from([1; 32]),
-        pow_difficulty: <H256>::from([
-            0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0,
-        ]),
-        pos_difficulty: <H256>::from([1; 32]),
-        timestamp: initial_time,
-        merkle_root: Default::default(),
-        // mmr_root: MerkleMountainRange::<Sha256, Vec<Hash>>::new(Vec::new()).get_merkle_root().unwrap(),
-        vrf_proof: Default::default(),
-        vrf_hash: Default::default(),
-        vrf_pub_key: Default::default(),
-        rand: Default::default(),
-    };
-    Block {
-        header,
-        content,
-        block_type,
-        selfish_block,
-    }
-}
 
 // pub fn generate_random_block(parent: &H256,
 //     parent_mmr: &MerkleMountainRange<Sha256, Vec<Hash>>) -> Block {

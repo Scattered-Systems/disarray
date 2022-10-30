@@ -2,12 +2,14 @@ use crate::{blocks::{generate_genesis_block, Block, BlockHeader as Header}, Bloc
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use log::{debug, info};
-use tari_mmr::{MerkleMountainRange, MerkleProof};
+use tari_mmr::{Hash, MemBackendVec, MerkleMountainRange, MerkleProof};
 use scsys::{
-    crypto::hash::{hash_divide_by, Hashable, H256},
+    crypto::{hash::{hash_divide_by, Hashable, H256}, HashGeneric},
     prelude::{rand::{self, Rng}},
 };
-use sha2::{Digest, Sha256};
+use sha2::Sha256;
+use blake2::Blake2b;
+use digest::Digest;
 
 #[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 pub struct Data {
@@ -17,7 +19,7 @@ pub struct Data {
 
 pub struct Blockchain {
     chain: HashMap<H256, Data>,
-    map: HashMap<H256, MerkleMountainRange<Sha256, Vec<H256>>>,
+    map: HashMap<H256, MerkleMountainRange<Blake2b<typenum::U8>, MemBackendVec<Hash>>>,
     tip: H256,
     depth: u128,
     num_pos: u128,
@@ -48,7 +50,7 @@ impl Blockchain {
         let mut map = HashMap::new();
         map.insert(
             hash,
-            MerkleMountainRange::new(Vec::new()),
+            MerkleMountainRange::<Sha256, MemBackendVec<Hash>>::new(MemBackendVec::<Hash>::new()),
         );
         let tip: H256 = hash;
         //info!("0:{}",tip);
