@@ -5,7 +5,7 @@
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
 use scsys::{
-    crypto::hash::{hasher, Hashable, H160, H256};
+    crypto::hash::{hasher, Hashable, H160, H256},
     prelude::ring::{
         self,
         signature::{Ed25519KeyPair, Signature},
@@ -27,6 +27,12 @@ impl Transaction {
     /// Create digital signature of a transaction
     pub fn sign(&self, key: &Ed25519KeyPair) -> Signature {
         key.sign(&serde_json::to_vec(self).unwrap())
+    }
+}
+
+impl std::fmt::Display for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({}, {:?}, {})", self.nonce, self.recv.0, self.value)
     }
 }
 

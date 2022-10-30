@@ -18,7 +18,7 @@ pub(crate) mod utils {
     use serde_json::json;
 
     pub fn generate_random_block_content() -> BlockContent {
-        BlockContent::new(Vec::new(), generate_random_hash())
+        BlockContent::new(Vec::new(), vec![generate_random_hash()])
     }
 
     pub fn generate_random_block_header() -> BlockHeader {
@@ -59,7 +59,7 @@ pub(crate) mod utils {
                 "transactions": transactions.clone()
             }
         );
-        hasher(&cache).into()
+        hasher(&cache).as_slice().to_owned().into()
     }
 }
 
@@ -71,14 +71,16 @@ mod tests {
     #[test]
     fn test_block_default() {
         let block1 = Block::new(
-            BlockClass::default(),
             generate_random_block_content(),
             generate_random_block_header(),
+            false,
+            false
         );
         let block2 = Block::new(
-            BlockClass::default(),
             generate_random_block_content(),
             generate_random_block_header(),
+            true,
+            false
         );
         assert_ne!(block1, block2)
     }
@@ -86,11 +88,12 @@ mod tests {
     #[test]
     fn test_block_hash() {
         let block = Block::new(
-            BlockClass::default(),
             generate_random_block_content(),
             generate_random_block_header(),
+            false,
+            false
         );
-        let bhash: H256 = hasher(&block).into();
+        let bhash: H256 = hasher(&block).as_slice().to_owned().into();
         assert_ne!(bhash, generate_random_hash())
     }
 }

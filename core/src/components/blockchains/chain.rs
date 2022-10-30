@@ -1,15 +1,15 @@
-use crate::blocks::{generate_genesis_block, Block, BlockHeader as Header};
+use crate::{blocks::{generate_genesis_block, Block, BlockHeader as Header}, BlockTs};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use log::{debug, info};
 use tari_mmr::{MerkleMountainRange, MerkleProof, Hash};
 use scsys::{
     crypto::hash::{hash_divide_by, Hashable, H256},
-    prelude::rand::{self, Rng},
+    prelude::{rand::{self, Rng}},
 };
 use sha2::{Digest, Sha256};
 
-#[derive(Serialize, Deserialize, Hash, Eq, PartialEq, Debug, Clone)]
+#[derive(Serialize, Deserialize, Eq, PartialEq, Debug, Clone)]
 pub struct Data {
     blk: Block,
     height: u128,
@@ -23,15 +23,15 @@ pub struct Blockchain {
     num_pos: u128,
     num_pow: u128,
     epoch_size: u128,
-    epoch_time: u128,
-    genesis_time: u128,
+    epoch_time: BlockTs,
+    genesis_time: BlockTs,
     pub_len: u128,
     private_lead: u128,
 }
 
 impl Blockchain {
     /// Create a new blockchain, only containing the genesis block
-    pub fn new(initial_time: u128) -> Self {
+    pub fn new(initial_time: BlockTs) -> Self {
         //unimplemented!()
         let genesis = generate_genesis_block(initial_time);
         info!(
@@ -48,7 +48,7 @@ impl Blockchain {
         let mut map = HashMap::new();
         map.insert(
             hash,
-            MerkleMountainRange::<Sha256, Vec<Hash>>::new(Vec::new()),
+            MerkleMountainRange::new(Vec::new()),
         );
         let tip: H256 = hash;
         //info!("0:{}",tip);
@@ -185,7 +185,7 @@ impl Blockchain {
         self.tip
     }
 
-    pub fn get_pow_difficulty(&self, current_ts: u128, parent: H256) -> H256 {
+    pub fn get_pow_difficulty(&self, current_ts: BlockTs, parent: H256) -> H256 {
         let epoch_size = self.epoch_size;
         let depth = self.depth;
         let epoch_time = self.epoch_time;
@@ -199,7 +199,7 @@ impl Blockchain {
             let mut all_hashs = Vec::new();
             while true {
                 let blk = self.chain.get(&hash).unwrap().blk.clone();
-                let pow_blks = blk.content.transaction_ref.clone();
+                let pow_blks = blk.content.reference.clone();
                 for pow_blk in pow_blks {
                     if !all_hashs.contains(&pow_blk) {
                         all_hashs.push(pow_blk);
@@ -232,7 +232,7 @@ impl Blockchain {
         }
     }
 
-    pub fn epoch(&self, current_ts: u128) -> u128 {
+    pub fn epoch(&self, current_ts: BlockTs) -> BlockTs {
         let epoch_size = self.epoch_size;
         //let depth = self.depth;
         let epoch_time = self.epoch_time;
@@ -246,7 +246,7 @@ impl Blockchain {
 
     pub fn is_new_epoch_and_count_blocks(
         &self,
-        current_ts: u128,
+        current_ts: BlockTs,
     ) -> Option<HashMap<Vec<u8>, HashSet<H256>>> {
         let epoch_size = self.epoch_size;
         let depth = self.depth;
@@ -269,7 +269,7 @@ impl Blockchain {
                 if this_epoch != tip_epoch {
                     break;
                 }
-                for h in b.content.transaction_ref.iter() {
+                for h in b.content.reference.iter() {
                     let ref_b = &self
                         .chain
                         .get(h)
@@ -424,7 +424,7 @@ impl Blockchain {
                 Some(data) => parentdata = data.clone(),
             }
             //all_block.push(current_hash);
-            let pow_hashes = parentdata.blk.content.transaction_ref.clone();
+            let pow_hashes = parentdata.blk.content.reference.clone();
             for pow_hash in pow_hashes {
                 if !all_pow_hash.contains(&pow_hash) {
                     all_pow_hash.push(pow_hash);
@@ -464,7 +464,7 @@ impl Blockchain {
 }
 
 pub fn mmr_push_leaf(mmr: &mut MerkleMountainRange<Sha256, Vec<Hash>>, leaf_hash: Hash) {
-    let mut leaf_hashes = mmr
+    let mut leaf_hashes: Vec<Vec<u8>> = mmr
         .get_leaf_hashes(0, mmr.get_leaf_count().unwrap() + 1)
         .unwrap()
         .clone();

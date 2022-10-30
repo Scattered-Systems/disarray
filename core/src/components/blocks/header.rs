@@ -52,6 +52,6 @@ impl BlockHeader {
 
 impl Hashable for BlockHeader {
     fn hash(&self) -> H256 {
-        hasher(self).into()
+        hasher(self).as_slice().to_owned().into()
     }
 }

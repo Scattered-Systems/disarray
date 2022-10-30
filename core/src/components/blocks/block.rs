@@ -6,7 +6,7 @@ Description:
 */
 use crate::{transactions::SignedTransaction, compute_key_hash};
 use super::{BlockContent, BlockHeader};
-use algae::merkle::MerkleTree;
+use crate::merkle::MerkleTree;
 use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
@@ -58,7 +58,7 @@ impl Block {
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        hasher(self).into()
+        hasher(self).as_slice().to_owned().into()
     }
 }
 
@@ -75,14 +75,14 @@ pub fn generate_pow_block(
     nonce: u32,
     pow_difficulty: &H256,
     pos_difficulty: &H256,
-    timestamp: u128,
+    timestamp: i64,
     vrf_proof: &Vec<u8>,
     vrf_hash: &Vec<u8>,
     vrf_pub_key: &[u8],
     rand: u128,
     selfish_block: bool,
 ) -> Block {
-    let mt: MerkleTree = MerkleTree::new(data);
+    let mt = MerkleTree::new(data);
     let block_type = false;
     let content = BlockContent::new(data.to_vec(), transaction_ref.to_vec());
     let header = BlockHeader {
@@ -106,7 +106,7 @@ pub fn generate_pow_block(
     }
 }
 
-pub fn generate_genesis_block(initial_time: u128) -> Block {
+pub fn generate_genesis_block(initial_time: i64) -> Block {
     let content = BlockContent::default();
     let block_type = true;
     let selfish_block = false;

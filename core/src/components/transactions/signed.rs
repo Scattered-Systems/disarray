@@ -20,8 +20,14 @@ impl SignedTransaction {
     }
 }
 
+impl std::fmt::Display for SignedTransaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({}, {})", self.sign, self.transaction)
+    }
+}
+
 impl Hashable for SignedTransaction {
     fn hash(&self) -> H256 {
-        hasher(self).into()
+        hasher(self).as_slice().to_owned().into()
     }
 }

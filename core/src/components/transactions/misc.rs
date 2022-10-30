@@ -21,6 +21,12 @@ impl Sign {
     }
 }
 
+impl std::fmt::Display for Sign {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({:?}, {:?})", self.pubk, self.sig)
+    }
+}
+
 /// Implements a spad-id for malicious transactions
 #[derive(Eq, Hash, PartialEq, Serialize)]
 pub struct SpamId {

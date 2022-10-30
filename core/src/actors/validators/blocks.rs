@@ -6,7 +6,6 @@
 */
 use crate::{
     blocks::{convert_hash_into_binary, Block},
-    crypto::hash::shash,
     DIFFICULTY_PREFIX,
 };
 
