@@ -49,6 +49,9 @@ impl Block {
             selfish_block,
         }
     }
+    pub fn clear_txns(&mut self) {
+        self.content.data = Vec::new();
+    }
     pub fn print_txns(&self) {
         let txns = self.content.data.clone();
         log::info!("***** Print txns in block {:?} *****", self.hash());
@@ -63,10 +66,6 @@ impl Block {
             );
         }
         log::info!("*************************************");
-    }
-
-    pub fn clear_txns(&mut self) {
-        self.content.data = Vec::new();
     }
 }
 
