@@ -4,8 +4,8 @@
    Description:
        ... Summary ...
 */
-use crate::{crypto::hash::{hasher, Hashable, H256}, BlockId, BlockNc, BlockTs};
-use scsys::{Timestamp, generate_random_number};
+use crate::{BlockNc, BlockTs};
+use scsys::{actors::generate::generate_random_number, crypto::hash::{H256, Hashable, hasher}, core::Timestamp};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -15,7 +15,7 @@ pub struct BlockHeader {
     pub parent: H256,
     pub pos_difficulty: H256,
     pub pow_difficulty: H256,
-    pub rand: u128,     // randomness for PoS leader election. TODO: update rand every epoch 
+    pub rand: u128, // randomness for PoS leader election. TODO: update rand every epoch
     pub timestamp: BlockTs,
     pub vrf_hash: Vec<u8>,
     pub vrf_proof: Vec<u8>,
@@ -23,20 +23,29 @@ pub struct BlockHeader {
 }
 
 impl BlockHeader {
-    pub fn new(merkle_root: H256, nonce: BlockNc, parent: H256, pos_difficulty: H256, pow_difficulty: H256, vrf_hash: Vec<u8>, vrf_proof: Vec<u8>, vrf_pub_key: Vec<u8>) -> Self {
+    pub fn new(
+        merkle_root: H256,
+        nonce: BlockNc,
+        parent: H256,
+        pos_difficulty: H256,
+        pow_difficulty: H256,
+        vrf_hash: Vec<u8>,
+        vrf_proof: Vec<u8>,
+        vrf_pub_key: Vec<u8>,
+    ) -> Self {
         let rand = generate_random_number();
         let timestamp = Timestamp::timestamp();
         Self {
-           merkle_root,
-           nonce,
-           parent,
-           pos_difficulty,
-           pow_difficulty,
-           rand,
-           timestamp,
-           vrf_hash,
-           vrf_proof,
-           vrf_pub_key
+            merkle_root,
+            nonce,
+            parent,
+            pos_difficulty,
+            pow_difficulty,
+            rand,
+            timestamp,
+            vrf_hash,
+            vrf_proof,
+            vrf_pub_key,
         }
     }
 }

@@ -4,12 +4,24 @@
     Description:
         ... Summary ...
 */
-use crate::{blocks::Block, crypto::hash::{H256,H160,Hashable}, transactions::{SignedTransaction,verify_signedtxn}};
-use std::collections::HashMap;
+use crate::{
+    blocks::Block,
+    transactions::{verify_signedtxn, SignedTransaction},
+};
 use log::info;
-use scsys::prelude::{rand::{self, Rng, SeedableRng, rngs::StdRng}, ring::{self, signature::{Ed25519KeyPair, Signature, KeyPair, VerificationAlgorithm, EdDSAParameters}}};
-use std::{fs, io::{self, BufRead, BufReader}};
-
+use scsys::crypto::hash::{Hashable, H160, H256};
+use scsys::prelude::{
+    rand::{self, rngs::StdRng, Rng, SeedableRng},
+    ring::{
+        self,
+        signature::{Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm},
+    },
+};
+use std::collections::HashMap;
+use std::{
+    fs,
+    io::{self, BufRead, BufReader},
+};
 
 type state = HashMap<H160, (usize, usize)>;
 
@@ -50,8 +62,8 @@ pub fn compute_key_hash(key: Vec<u8>) -> H256 {
 }
 
 pub fn transaction_check(current_state: &mut state, tx: &SignedTransaction) -> bool {
-	if verify_signedtxn(&tx) {
-		let copy = tx.clone();
+    if verify_signedtxn(&tx) {
+        let copy = tx.clone();
         let pubk = copy.sign.pubk.clone();
         let nonce = copy.transaction.nonce.clone();
         let value = copy.transaction.value.clone();
@@ -61,27 +73,26 @@ pub fn transaction_check(current_state: &mut state, tx: &SignedTransaction) -> b
         let (s_nonce, s_amount) = current_state.get(&sender).unwrap().clone();
         let (r_nonce, r_amount) = current_state.get(&recv).unwrap().clone();
 
-        if nonce == s_nonce+1 &&  s_amount >= value{
-            current_state.insert(sender, (s_nonce+1, s_amount-value));
-            current_state.insert(recv, (r_nonce, r_amount+value));
+        if nonce == s_nonce + 1 && s_amount >= value {
+            current_state.insert(sender, (s_nonce + 1, s_amount - value));
+            current_state.insert(recv, (r_nonce, r_amount + value));
             return true;
         } else {
             return false;
         }
     } else {
-    	return false;
+        return false;
     }
-
 }
 
 impl State {
     pub fn new() -> Self {
         let state_per_block = HashMap::new();
-        State{state_per_block}
+        State { state_per_block }
     }
 
     pub fn ico(&mut self, genesis_hash: H256, accounts: &Vec<H160>, amount: usize) {
-        if self.state_per_block.len()>0 {
+        if self.state_per_block.len() > 0 {
             info!("Already did an ICO!");
             return;
         }
@@ -107,11 +118,11 @@ impl State {
             let sender: H160 = compute_key_hash(txn.sign.pubk).into();
             let recv = txn.transaction.recv;
             // todo: add txn check, if the account exists or amount is enough
-            
+
             let (s_nonce, s_amount) = parent_state.get(&sender).unwrap().clone();
             let (r_nonce, r_amount) = parent_state.get(&recv).unwrap().clone();
-            parent_state.insert(sender, (s_nonce+1, s_amount-txn.transaction.value));
-            parent_state.insert(recv, (r_nonce, r_amount+txn.transaction.value));
+            parent_state.insert(sender, (s_nonce + 1, s_amount - txn.transaction.value));
+            parent_state.insert(recv, (r_nonce, r_amount + txn.transaction.value));
         }
         self.state_per_block.insert(block.hash(), parent_state);
     }
@@ -122,14 +133,13 @@ impl State {
         }
     }
 
-    pub fn check_block(&mut self, hash: &H256) -> bool{
+    pub fn check_block(&mut self, hash: &H256) -> bool {
         return self.state_per_block.contains_key(&hash);
     }
 
     pub fn one_block_state(&mut self, hash: &H256) -> state {
-    	let find_state = self.state_per_block.get(&hash).unwrap().clone();
-    	find_state
-
+        let find_state = self.state_per_block.get(&hash).unwrap().clone();
+        find_state
     }
 
     pub fn print_last_block_state(&mut self, hash: &H256) {
@@ -139,4 +149,4 @@ impl State {
             info!("account {:?} has nonce {} value {}", key, nonce, amount);
         }
     }
- }
+}

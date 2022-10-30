@@ -4,8 +4,8 @@
    Description:
        ... Summary ...
 */
-use crate::crypto::hash::{Hashable, H256, hasher};
 use super::{misc::Sign, transaction::Transaction};
+use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

@@ -7,3 +7,4 @@
 pub use self::blockchain::*;
 
 pub(crate) mod blockchain;
+pub(crate) mod chain;

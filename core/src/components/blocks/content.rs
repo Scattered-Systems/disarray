@@ -4,7 +4,9 @@
     Description:
         ... Summary ...
 */
-use crate::{crypto::{hash::{Hashable, H256}, merkle::MerkleTree}, transactions::SignedTransaction};
+use crate::transactions::SignedTransaction;
+use algae::merkle::MerkleTree;
+use scsys::crypto::hash::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -15,16 +17,13 @@ pub struct BlockContent {
 
 impl BlockContent {
     pub fn new(data: Vec<SignedTransaction>, reference: H256) -> Self {
-        Self {
-            data,
-            reference,
-        }
+        Self { data, reference }
     }
 }
 
 impl Hashable for BlockContent {
     fn hash(&self) -> H256 {
-        let mt: MerkleTree = MerkleTree::new(&self.data);
+        let mt: MerkleTree = MerkleTree::from(&self.data);
         mt.root()
     }
 }

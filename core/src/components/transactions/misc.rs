@@ -5,7 +5,7 @@
        ... Summary ...
 */
 use super::signed::SignedTransaction;
-use crate::crypto::hash::H256;
+use scsys::crypto::hash::H256;
 use serde::{Deserialize, Serialize};
 
 /// This structure models the expected signature

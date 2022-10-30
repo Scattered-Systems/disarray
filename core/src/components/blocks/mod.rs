@@ -12,16 +12,13 @@ pub(crate) mod header;
 
 pub(crate) mod utils {
     use super::{BlockContent, BlockHeader};
-    use crate::{
-        crypto::hash::{generate_random_hash, hasher, H256},
-        BlockHs, BlockId, BlockNc, BlockTs,
-    };
-    use scsys::prelude::rand::{self, Rng};
+    use crate::{BlockHs, BlockId, BlockNc, BlockTs};
+    use scsys::{crypto::hash::{H256, generate_random_hash, hasher}, prelude::rand::{self, Rng}};
     use serde::Serialize;
     use serde_json::json;
 
     pub fn generate_random_block_content() -> BlockContent {
-        BlockContent::new(Vec::new(),generate_random_hash())
+        BlockContent::new(Vec::new(), generate_random_hash())
     }
 
     pub fn generate_random_block_header() -> BlockHeader {
@@ -69,7 +66,7 @@ pub(crate) mod utils {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::crypto::hash::{generate_random_hash, hasher, H256};
+    use scsys::crypto::hash::{generate_random_hash, hasher, H256};
 
     #[test]
     fn test_block_default() {

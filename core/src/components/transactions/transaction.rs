@@ -4,10 +4,12 @@
     Description:
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
-use crate::crypto::hash::{Hashable, H160, H256, hasher};
-use scsys::prelude::ring::{
-    self,
-    signature::{Ed25519KeyPair, Signature},
+use scsys::{
+    crypto::hash::{hasher, Hashable, H160, H256};
+    prelude::ring::{
+        self,
+        signature::{Ed25519KeyPair, Signature},
+    }
 };
 use serde::{Deserialize, Serialize};
 
@@ -30,6 +32,6 @@ impl Transaction {
 
 impl Hashable for Transaction {
     fn hash(&self) -> H256 {
-        hasher(self).into()
+        hasher(self).as_slice().to_owned().into()
     }
 }

@@ -5,7 +5,7 @@
        ... Summary ...
 */
 use super::context::RPCContext;
-use scsys::{prelude::logger_from_env, BoxResult};
+use scsys::{components::logging::logger_from_env, core::BoxResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]

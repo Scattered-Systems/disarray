@@ -14,12 +14,14 @@ pub type Transactions = Vec<Transaction>;
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
-    use crate::crypto::hash::{generate_random_hash, H160};
-    use scsys::prelude::{
-        rand::{self, Rng},
-        ring::signature::{
-            Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
-        },
+    use scsys::{
+        crypto::hash::{generate_random_hash, H160},
+        prelude::{
+            rand::{self, Rng},
+            ring::signature::{
+                Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
+            },
+        }
     };
 
     /// Create digital signature of a transaction
@@ -71,7 +73,7 @@ pub(crate) mod utils {
 
     pub fn generate_random_signed_transaction() -> SignedTransaction {
         let transaction = generate_random_transaction();
-        let pubk = crate::crypto::keys::random();
+        let pubk = crate::random_keypair();
         let sig = sign(&transaction, &pubk);
         let sign = Sign {
             pubk: pubk.public_key().as_ref().to_vec(),
@@ -93,7 +95,7 @@ pub(crate) mod utils {
         pubk: &Ed25519KeyPair,
     ) -> SignedTransaction {
         let transaction = Transaction::new(nonce, recv, value);
-        let pubk = crate::crypto::keys::random();
+        let pubk = crate::random_keypair();
         let sig = sign(&transaction, &pubk);
         let sign = Sign::new(pubk.public_key().as_ref().to_vec(), sig.as_ref().to_vec());
         SignedTransaction::new(sign, transaction)
