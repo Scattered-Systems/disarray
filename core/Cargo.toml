@@ -17,7 +17,6 @@ test = true
 [dependencies]
 algae = { features = ["full"], git = "https://github.com/scattered-systems/algae", version = "0.1.12 "}
 bincode = "1.3.3"
-ckb-merkle-mountain-range = "0.5.2"
 digest = "0.10.5"
 itertools = "0.10.5"
 hex = "0.4.3"

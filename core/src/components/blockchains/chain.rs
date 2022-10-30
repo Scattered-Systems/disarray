@@ -2,7 +2,7 @@ use crate::{blocks::{generate_genesis_block, Block, BlockHeader as Header}, Bloc
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use log::{debug, info};
-use tari_mmr::{MerkleMountainRange, MerkleProof, Hash};
+use tari_mmr::{MerkleMountainRange, MerkleProof};
 use scsys::{
     crypto::hash::{hash_divide_by, Hashable, H256},
     prelude::{rand::{self, Rng}},
@@ -17,7 +17,7 @@ pub struct Data {
 
 pub struct Blockchain {
     chain: HashMap<H256, Data>,
-    map: HashMap<H256, MerkleMountainRange<Sha256, Vec<Hash>>>,
+    map: HashMap<H256, MerkleMountainRange<Sha256, Vec<H256>>>,
     tip: H256,
     depth: u128,
     num_pos: u128,
