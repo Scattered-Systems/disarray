@@ -11,10 +11,9 @@ use crate::{
 use log::info;
 use scsys::crypto::hash::{Hashable, H160, H256};
 use scsys::prelude::{
-    rand::{self, rngs::StdRng, Rng, SeedableRng},
     ring::{
         self,
-        signature::{Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm},
+        signature::{Ed25519KeyPair, KeyPair},
     },
 };
 use std::collections::HashMap;
@@ -23,10 +22,10 @@ use std::{
     io::{self, BufRead, BufReader},
 };
 
-type state = HashMap<H160, (usize, usize)>;
+pub type StateMap = HashMap<H160, (usize, usize)>;
 
 pub struct State {
-    pub state_per_block: HashMap<H256, state>,
+    pub state_per_block: HashMap<H256, StateMap>,
 }
 
 pub fn file_to_vec(filename: String) -> io::Result<Vec<String>> {
@@ -61,7 +60,7 @@ pub fn compute_key_hash(key: Vec<u8>) -> H256 {
     ring::digest::digest(&ring::digest::SHA256, bytes).into()
 }
 
-pub fn transaction_check(current_state: &mut state, tx: &SignedTransaction) -> bool {
+pub fn transaction_check(current_state: &mut StateMap, tx: &SignedTransaction) -> bool {
     if verify_signedtxn(&tx) {
         let copy = tx.clone();
         let pubk = copy.sign.pubk.clone();
@@ -96,7 +95,7 @@ impl State {
             info!("Already did an ICO!");
             return;
         }
-        let mut s = state::new();
+        let mut s = StateMap::new();
         for account in accounts {
             s.insert(*account, (0, amount));
         }
@@ -137,7 +136,7 @@ impl State {
         return self.state_per_block.contains_key(&hash);
     }
 
-    pub fn one_block_state(&mut self, hash: &H256) -> state {
+    pub fn one_block_state(&mut self, hash: &H256) -> StateMap {
         let find_state = self.state_per_block.get(&hash).unwrap().clone();
         find_state
     }
