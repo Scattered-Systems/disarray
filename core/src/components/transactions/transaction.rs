@@ -9,7 +9,7 @@ use scsys::{
     prelude::ring::{
         self,
         signature::{Ed25519KeyPair, Signature},
-    }
+    },
 };
 use serde::{Deserialize, Serialize};
 

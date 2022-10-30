@@ -4,8 +4,8 @@
     Description:
         ... Summary ...
 */
-use crate::transactions::SignedTransaction;
 use crate::merkle::MerkleTree;
+use crate::transactions::SignedTransaction;
 use scsys::crypto::hash::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 

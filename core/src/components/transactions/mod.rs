@@ -21,7 +21,7 @@ pub(crate) mod utils {
             ring::signature::{
                 Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
             },
-        }
+        },
     };
 
     /// Create digital signature of a transaction

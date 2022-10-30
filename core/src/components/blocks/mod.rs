@@ -12,12 +12,16 @@ pub(crate) mod header;
 
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{merkle::MerkleTree, transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
-    use scsys::{crypto::hash::{H256, generate_random_hash, hasher}, prelude::rand::{self, Rng}};
+    use crate::{
+        merkle::MerkleTree, transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs,
+    };
+    use scsys::{
+        crypto::hash::{generate_random_hash, hasher, H256},
+        prelude::rand::{self, Rng},
+    };
     use serde::Serialize;
     use serde_json::json;
 
-    
     pub fn generate_pow_block(
         data: &Vec<SignedTransaction>,
         transaction_ref: &Vec<H256>,
@@ -65,8 +69,8 @@ pub(crate) mod utils {
             nonce: Default::default(),
             //pow_difficulty: <H256>::from([1; 32]),
             pow_difficulty: <H256>::from([
-                0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0,
+                0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0,
             ]),
             pos_difficulty: <H256>::from([1; 32]),
             timestamp: initial_time,
@@ -142,13 +146,13 @@ mod tests {
             generate_random_block_content(),
             generate_random_block_header(),
             BlockType::from(false),
-            false
+            false,
         );
         let block2 = Block::new(
             generate_random_block_content(),
             generate_random_block_header(),
             BlockType::from(true),
-            false
+            false,
         );
         assert_ne!(block1, block2)
     }
@@ -159,7 +163,7 @@ mod tests {
             generate_random_block_content(),
             generate_random_block_header(),
             BlockType::from(false),
-            false
+            false,
         );
         let bhash: H256 = hasher(&block).as_slice().to_owned().into();
         assert_ne!(bhash, generate_random_hash())

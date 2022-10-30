@@ -5,7 +5,11 @@
        ... Summary ...
 */
 use crate::{BlockNc, BlockTs};
-use scsys::{actors::generate::generate_random_number, crypto::hash::{H256, Hashable, hasher}, core::Timestamp};
+use scsys::{
+    actors::generate::generate_random_number,
+    core::Timestamp,
+    crypto::hash::{hasher, Hashable, H256},
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]

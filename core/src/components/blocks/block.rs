@@ -4,8 +4,8 @@ Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
 Description:
     ... Summary ...
 */
-use crate::compute_key_hash;
 use super::{BlockContent, BlockHeader};
+use crate::compute_key_hash;
 
 use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
@@ -36,7 +36,12 @@ pub struct Block {
 }
 
 impl Block {
-    pub fn new(content: BlockContent, header: BlockHeader, block_type: BlockType, selfish_block: bool) -> Self {
+    pub fn new(
+        content: BlockContent,
+        header: BlockHeader,
+        block_type: BlockType,
+        selfish_block: bool,
+    ) -> Self {
         Self {
             content,
             header,
@@ -76,7 +81,6 @@ impl std::convert::Into<Value> for Block {
         json!(self)
     }
 }
-
 
 // pub fn generate_random_block(parent: &H256,
 //     parent_mmr: &MerkleMountainRange<Sha256, Vec<Hash>>) -> Block {
