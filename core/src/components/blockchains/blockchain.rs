@@ -10,18 +10,19 @@ use crate::{
     BlockTs,
 };
 use scsys::{
-    crypto::hash::{hash_divide_by, Hashable, H256},
+    crypto::hash::{hash_divide_by, Hashable, H160, H256},
     prelude::rand::{self, Rng},
 };
-use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+
+#[derive(Debug)]
 pub struct Blockchain {
     pub chain: HashMap<H256, BlockData>,
     pub epoch: Epoch,
     pub lead: u128,
     pub length: u128,
+    pub map: HashMap<H256, HashMap<H256, H160>>,
     pub position: Position,
     pub timestamp: i64, // genesis timestamp
     pub tip: H256,
@@ -38,13 +39,15 @@ impl Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.clone().hash();
         
-        let mut _map = HashMap::<String, String>::new();
+        // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
+        let map = HashMap::new();
 
         Self {
             chain: HashMap::from([(hash, data)]),
             epoch: Epoch::default(),
             lead: 0,
             length: 0,
+            map,
             position: Position::default(),
             timestamp: genesis.header.timestamp,
             tip: hash,
