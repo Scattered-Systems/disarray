@@ -2,9 +2,6 @@
 default-members = [
     "disarray"
 ]
-exclude = [
-    "examples/*"
-]
 members = [
     "core",
     "disarray",
