@@ -10,11 +10,9 @@ use crate::{
 };
 use log::info;
 use scsys::crypto::hash::{Hashable, H160, H256};
-use scsys::prelude::{
-    ring::{
-        self,
-        signature::{Ed25519KeyPair, KeyPair},
-    },
+use scsys::prelude::ring::{
+    self,
+    signature::{Ed25519KeyPair, KeyPair},
 };
 use std::collections::HashMap;
 use std::{

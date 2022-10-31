@@ -5,11 +5,7 @@
        ... Summary ...
 */
 use crate::{BlockNc, BlockTs};
-use scsys::{
-    actors::generate::generate_random_number,
-    core::Timestamp,
-    crypto::hash::{hasher, Hashable, H256},
-};
+use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -33,12 +29,12 @@ impl BlockHeader {
         parent: H256,
         pos_difficulty: H256,
         pow_difficulty: H256,
+        rand: u128,
+        timestamp: i64,
         vrf_hash: Vec<u8>,
         vrf_proof: Vec<u8>,
         vrf_pub_key: Vec<u8>,
     ) -> Self {
-        let rand = generate_random_number();
-        let timestamp = Timestamp::timestamp();
         Self {
             merkle_root,
             nonce,

@@ -5,7 +5,6 @@
         ... Summary ...
 */
 
-
 ///
 #[derive(Clone)]
 pub struct TransportBuilder;

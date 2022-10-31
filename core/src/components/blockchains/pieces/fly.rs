@@ -4,9 +4,7 @@
     Description:
 */
 use crate::{blockchains::Blockchain, blocks::BlockHeader};
-use scsys::crypto::hash::{Hashable, H256};
 use serde::{Deserialize, Serialize};
-use sha2::Sha256;
 
 // FlyClientProposal is a proposal sent from the prover,
 // it contains current chain depth and last block header.
