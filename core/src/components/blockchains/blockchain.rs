@@ -4,7 +4,10 @@
     Description:
         ... Summary ...
 */
-use super::{pieces::{Epoch, Position}, chain_data::BlockData};
+use super::{
+    chain_data::BlockData,
+    pieces::{Epoch, Position},
+};
 use crate::{
     blocks::{generate_genesis_block, Block, BlockHeader},
     BlockTs,
@@ -14,7 +17,6 @@ use scsys::{
     prelude::rand::{self, Rng},
 };
 use std::collections::{HashMap, HashSet};
-
 
 #[derive(Debug)]
 pub struct Blockchain {
@@ -38,7 +40,7 @@ impl Blockchain {
 
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.clone().hash();
-        
+
         // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
         let map = HashMap::new();
 
@@ -346,7 +348,7 @@ impl Blockchain {
             }
             return false;
         } else {
-            /// Insert a block into blockchain as a selfish miner
+            // Insert a block into blockchain as a selfish miner
             if self.chain.contains_key(&block.hash()) {
                 return false;
             }

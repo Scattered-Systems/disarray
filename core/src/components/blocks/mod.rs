@@ -13,11 +13,17 @@ pub(crate) mod header;
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
     use crate::{
-        merkle::MerkleTree, transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs,
+        merkle::{MerkleTree, MerkleTreeWrapper},
+        transactions::SignedTransaction,
+        BlockHs, BlockId, BlockNc, BlockTs,
     };
     use scsys::{
-        crypto::hash::{generate_random_hash, hasher, H256},
-        prelude::rand::{self, Rng},
+        core::Timestamp,
+        prelude::{
+            generate_random_hash, hasher,
+            rand::{self, Rng},
+            H256,
+        },
     };
     use serde::Serialize;
     use serde_json::json;
@@ -29,64 +35,56 @@ pub(crate) mod utils {
         nonce: u32,
         pow_difficulty: &H256,
         pos_difficulty: &H256,
+        rand: u128,
         timestamp: i64,
         vrf_proof: &Vec<u8>,
         vrf_hash: &Vec<u8>,
         vrf_pub_key: &[u8],
-        rand: u128,
         selfish_block: bool,
     ) -> Block {
-        let mt = MerkleTree::new(data);
+        // let mmr_root: parent_mmr.get_merkle_root().unwrap(),
+        let mt = MerkleTree::create(data);
         let block_type = BlockType::PoW;
         let content = BlockContent::new(data.to_vec(), transaction_ref.to_vec());
-        let header = BlockHeader {
-            parent: *parent,
-            nonce: nonce,
-            pow_difficulty: *pow_difficulty,
-            pos_difficulty: *pos_difficulty,
-            timestamp: timestamp,
-            merkle_root: mt.root(),
-            //mmr_root: parent_mmr.get_merkle_root().unwrap(),
-            vrf_proof: vrf_proof.to_vec(),
-            vrf_hash: vrf_hash.to_vec(),
-            vrf_pub_key: vrf_pub_key.to_vec(),
-            rand: rand,
-        };
-        Block {
-            header,
-            content,
-            block_type,
-            selfish_block: selfish_block,
-        }
+        let header = BlockHeader::new(
+            mt.root(),
+            nonce,
+            *parent,
+            *pos_difficulty,
+            *pow_difficulty,
+            rand,
+            timestamp,
+            vrf_hash.clone().into(),
+            vrf_proof.clone().into(),
+            vrf_pub_key.to_vec(),
+        );
+
+        Block::new(content, header, block_type, selfish_block)
     }
 
     pub fn generate_genesis_block(initial_time: i64) -> Block {
         let content = BlockContent::default();
+        let pow_difficulty = <H256>::from([
+            0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,
+        ]);
+        let pos_difficulty = <H256>::from([1; 32]);
         let block_type = BlockType::from(true);
         let selfish_block = false;
-        let header = BlockHeader {
-            parent: Default::default(),
-            nonce: Default::default(),
-            //pow_difficulty: <H256>::from([1; 32]),
-            pow_difficulty: <H256>::from([
-                0, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0,
-            ]),
-            pos_difficulty: <H256>::from([1; 32]),
-            timestamp: initial_time,
-            merkle_root: Default::default(),
-            // mmr_root: MerkleMountainRange::<Sha256, Vec<Hash>>::new(Vec::new()).get_merkle_root().unwrap(),
-            vrf_proof: Default::default(),
-            vrf_hash: Default::default(),
-            vrf_pub_key: Default::default(),
-            rand: Default::default(),
-        };
-        Block {
-            header,
-            content,
-            block_type,
-            selfish_block,
-        }
+
+        let header = BlockHeader::new(
+            Default::default(),
+            Default::default(),
+            Default::default(),
+            pos_difficulty,
+            pow_difficulty,
+            Default::default(),
+            initial_time,
+            Default::default(),
+            Default::default(),
+            Default::default(),
+        );
+        Block::new(content, header, block_type, selfish_block)
     }
 
     pub fn generate_random_block_content() -> BlockContent {
@@ -101,6 +99,8 @@ pub(crate) mod utils {
             generate_random_hash(),
             generate_random_hash(),
             generate_random_hash(),
+            rng.gen(),
+            Timestamp::timestamp(),
             Vec::new(),
             Vec::new(),
             Vec::new(),

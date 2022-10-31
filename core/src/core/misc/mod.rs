@@ -5,5 +5,4 @@
        ... Summary ...
 */
 
-pub mod genesis;
 pub mod merkle;
