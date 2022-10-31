@@ -8,21 +8,27 @@ keywords = ["async", "scsys"]
 license = "MIT"
 name = "disarray-core"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.13" # TODO - Update the cargo package version
+version = "0.1.20" # TODO - Update the cargo package version
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 test = true
 
 [dependencies]
+algae = { default-features = false, features = ["merkle"], version = "0.1.12" }
 bincode = "1.3.3"
+blake2 = "0.10.4"
+ckb-merkle-mountain-range = "0.5.2"
 digest = "0.10.5"
 itertools = "0.10.5"
 hex = "0.4.3"
 hex-literal = "0.3.4"
 log = "0.4.17"
 once_cell = "1.15.0"
-scsys = { features = ["full"], version = "0.1.21" }
+scsys = { features = ["full"], version = "0.1.22" }
 serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
 sha2 = "0.10.6"
+slab = "0.4.7"
+tari_mmr = "0.9.5"
+typenum = "1.15.0"

@@ -5,7 +5,7 @@
        ... Summary ...
 */
 use super::signed::SignedTransaction;
-use crate::crypto::hash::H256;
+use scsys::crypto::hash::H256;
 use serde::{Deserialize, Serialize};
 
 /// This structure models the expected signature
@@ -18,6 +18,12 @@ pub struct Sign {
 impl Sign {
     pub fn new(pubk: Vec<u8>, sig: Vec<u8>) -> Self {
         Self { pubk, sig }
+    }
+}
+
+impl std::fmt::Display for Sign {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({:?}, {:?})", self.pubk, self.sig)
     }
 }
 

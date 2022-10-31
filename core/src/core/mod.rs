@@ -7,7 +7,6 @@
 pub use self::{misc::*, primitives::*, states::*, utils::*};
 
 pub mod consensus;
-pub mod crypto;
 pub(crate) mod misc;
 pub(crate) mod primitives;
 pub(crate) mod states;

@@ -4,11 +4,7 @@
     Description:
         This module implements the structure for a transaction destined to be used within a block on a blockchain
 */
-use crate::crypto::hash::{Hashable, H160, H256, hasher};
-use scsys::prelude::ring::{
-    self,
-    signature::{Ed25519KeyPair, Signature},
-};
+use scsys::prelude::{ring::signature::{Ed25519KeyPair, Signature}, H160, H256, Hashable, hasher};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -28,8 +24,14 @@ impl Transaction {
     }
 }
 
+impl std::fmt::Display for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "({}, {:?}, {})", self.nonce, self.recv.0, self.value)
+    }
+}
+
 impl Hashable for Transaction {
     fn hash(&self) -> H256 {
-        hasher(self).into()
+        hasher(self).as_slice().to_owned().into()
     }
 }

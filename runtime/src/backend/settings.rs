@@ -5,11 +5,10 @@
        ... Summary ...
 */
 use scsys::{
-    collect_config_files,
-    prelude::{
-        config::{Config, ConfigError, Environment},
-        Logger, Server,
-    },
+    actors::AppConfig,
+    components::{logging::Logger, networking::Server},
+    core::{collect_config_files, ConfigResult},
+    prelude::config::{Config, Environment},
 };
 use serde::{Deserialize, Serialize};
 
@@ -19,24 +18,27 @@ pub struct RPCSettings {
     pub server: Server,
 }
 
+impl AppConfig<'_> for RPCSettings {}
+
 impl RPCSettings {
-    pub fn build() -> Result<Self, ConfigError> {
+    pub fn new() -> ConfigResult<Self> {
         let mut builder = Config::builder();
 
         builder = builder.add_source(collect_config_files("**/default.config.*", true));
         builder = builder.add_source(collect_config_files("**/*.config.*", false));
         builder = builder.add_source(Environment::default().separator("__"));
 
-        builder
-            .build()
-            .expect("Failed to build the configuration...")
-            .try_deserialize()
+        builder.build()?.try_deserialize()
     }
 }
 
 impl Default for RPCSettings {
     fn default() -> Self {
-        match Self::build() {
+        let settings = Self {
+            logger: Logger::new("info".to_string()),
+            server: Server::default(),
+        };
+        match settings.build(Some("__"), Some("**/*.config.*"), Some(true)) {
             Ok(v) => v,
             Err(e) => panic!("Configuration Error: {}", e),
         }
