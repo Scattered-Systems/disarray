@@ -27,7 +27,7 @@ pub trait CoreBlockSpec: Hashable {
 pub trait CoreBlockWrapper: CoreBlockSpec {
     fn clear_txns(&mut self) -> &Self;
     fn print_txns(&self) -> &Self {
-        let txns = self.content().data.clone();
+        let txns = self.transactions().clone();
         log::info!("***** Print txns in block {:?} *****", self.hash());
         for txn in txns {
             let sender = compute_key_hash(txn.sign.pubk);
