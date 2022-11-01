@@ -4,11 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::*, content::*, header::*, utils::*};
+pub use self::{block::*, content::*, headers::*, utils::*};
 
 pub(crate) mod block;
 pub(crate) mod content;
-pub(crate) mod header;
+pub(crate) mod headers;
 
 pub trait Blockable {}
 

@@ -15,6 +15,12 @@ use crate::{
 use scsys::crypto::hash::{hash_divide_by, Hashable, H160, H256};
 use std::collections::{HashMap, HashSet};
 
+pub trait GenesisBlock {
+    fn genesis(timestamp: i64) -> Block {
+        generate_genesis_block(timestamp)
+    }
+}
+
 pub trait ChainWrapper {
     fn chain(&self) -> &HashMap<H256, BlockData>;
     fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockData) -> T) -> Option<T> {
@@ -84,9 +90,11 @@ pub trait ChainWrapperExt: ChainWrapper {
             curhash = child.block.header.parent.clone();
         }
     }
-    fn genesis(timestamp: i64) -> Self
+    /// Create a new blockchain 
+    fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self
     where
         Self: Sized;
+    /// TODO: Finalize the chain quality
     fn get_chain_quality(&self) -> f32 {
         //unimplemented!()
         // let mut all_block : Vec<H256> = vec![];

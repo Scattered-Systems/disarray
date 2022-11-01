@@ -8,59 +8,9 @@ use super::{
     chain_data::BlockData,
     pieces::{Epoch, Position},
 };
-use crate::{
-    blocks::{generate_genesis_block, Block, BlockHeader},
-    BlockTs,
-};
-use scsys::{
-    crypto::hash::{hash_divide_by, Hashable, H160, H256},
-    prelude::rand::{self, Rng},
-};
-use std::collections::{HashMap, HashSet};
-
-pub trait Blocker {
-    fn chain(&self) -> &HashMap<H256, BlockData>;
-    fn epoch(&self) -> &Epoch;
-    fn tip(&self) -> H256;
-    fn lead(&self) -> u128;
-    fn length(&self) -> u128;
-    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
-    fn position(&self) -> &Position;
-    fn timestamp(&self) -> i64; // genesis timestamp
-}
-
-pub trait BlockerExt: Blocker {
-    fn contains_hash(&self, hash: &H256) -> bool {
-        self.chain().contains_key(hash)
-    }
-    fn genesis(timestamp: i64) -> Block {
-        let block = generate_genesis_block(timestamp);
-        log::info!(
-            "Created the genesis block with the timestamp: {}",
-            &block.header.timestamp
-        );
-        block
-    }
-    fn get_all_blocks_from_longest(&self) -> Vec<H256> {
-        let mut blocks: Vec<H256> = vec![];
-        let mut current_hash = self.tip();
-        //let mut parent_hash;
-        let mut pdata: BlockData;
-
-        loop {
-            match self.chain().get(&current_hash) {
-                None => break,
-                Some(b) => pdata = b.clone(),
-            }
-            blocks.push(current_hash);
-            current_hash = pdata.block.header.parent;
-        }
-        log::debug!("finish {:?}!", blocks);
-
-        blocks.reverse();
-        blocks
-    }
-}
+use crate::blocks::Block;
+use scsys::prelude::{Hashable, H160, H256};
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Blockchain {
@@ -88,104 +38,11 @@ impl Blockchain {
 
     /// Insert a PoS block into blockchain
     pub fn insert_pos(&mut self, block: &Block, selfish: bool) -> bool {
-        //unimplemented!()
-        if !selfish {
-            if self.chain.contains_key(&block.hash()) {
-                return false;
-            }
-            let header: BlockHeader = block.header.clone();
-            let parenthash: H256 = header.parent;
-            let parentdata: BlockData;
-            match self.chain.get(&parenthash) {
-                Some(data) => parentdata = data.clone(),
-                None => return false,
-            }
-            let parentheight = parentdata.height;
-            let newheight = parentheight + 1;
-            let newdata = BlockData::new(block.clone(), newheight);
-            let newhash = block.hash();
-            // let mut new_mmr = self.get_mmr(&parenthash);
-            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
-            self.chain.insert(newhash, newdata);
-            // self.map.insert(newhash, new_mmr);
-            self.position.pos = self.position.pos + 1;
-
-            let mut rng = rand::thread_rng();
-            let p: f64 = rng.gen::<f64>(); // toss a coin
-
-            if newheight > self.position.depth
-                || (newheight == self.position.depth && block.selfish_block == true && p < 1.0)
-            {
-                self.position.depth = newheight;
-                self.tip = newhash;
-                return true;
-            }
-            return false;
-        } else {
-            // Insert a block into blockchain as a selfish miner
-            if self.chain.contains_key(&block.hash()) {
-                return false;
-            }
-            let header: BlockHeader = block.header.clone();
-            let parenthash: H256 = header.parent;
-            let parentdata: BlockData;
-            match self.chain.get(&parenthash) {
-                Some(data) => parentdata = data.clone(),
-                None => return false,
-            }
-            let parentheight = parentdata.height;
-            let newheight = parentheight + 1;
-            let newdata = BlockData::new(block.clone(), newheight);
-            let newhash = block.hash();
-            // let mut new_mmr = self.get_mmr(&parenthash);
-            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
-            self.chain.insert(newhash, newdata);
-            // self.map.insert(newhash, new_mmr);
-            self.position.pos = self.position.pos + 1;
-            if newheight > self.position.depth && block.selfish_block == true {
-                self.lead = self.lead + 1;
-                self.position.depth = newheight;
-                self.tip = newhash;
-                return true;
-            } else if block.selfish_block == false && newheight > self.length {
-                if self.lead > 0 {
-                    self.lead = self.lead - 1;
-                    self.length = self.length + 1;
-                    return false;
-                } else {
-                    self.position.depth = newheight;
-                    self.tip = newhash;
-                    self.length = newheight;
-                    return true;
-                }
-            }
-            return false;
-        }
+        super::insert_pos(self, block, selfish)
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-        //unimplemented!()
-        if self.chain.contains_key(&block.hash()) {
-            return false;
-        }
-        let header: BlockHeader = block.header.clone();
-        let parenthash: H256 = header.parent;
-        let parentdata: BlockData;
-        match self.chain.get(&parenthash) {
-            Some(data) => parentdata = data.clone(),
-            None => return false,
-        }
-        let parentheight = parentdata.height;
-        let newheight = parentheight + 1;
-        let newdata = BlockData::new(block.clone(), newheight);
-        let newhash = block.hash();
-        // let mut new_mmr = self.get_mmr(&parenthash);
-        // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
-        self.chain.insert(newhash, newdata);
-        // self.map.insert(newhash, new_mmr);
-        self.position.pow = self.position.pow + 1;
-
-        return true;
+        super::insert_pow(self, block)
     }
 }
 
@@ -224,11 +81,11 @@ impl super::ChainWrapper for Blockchain {
 }
 
 impl super::ChainWrapperExt for Blockchain {
-    fn genesis(timestamp: i64) -> Self
+    fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self
     where
         Self: Sized,
     {
-        let genesis = generate_genesis_block(timestamp);
+        let genesis = blockgen(timestamp);
         log::info!(
             "Created the genesis block with the timestamp: {}",
             genesis.header.timestamp

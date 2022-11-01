@@ -7,9 +7,11 @@ Description:
 use super::{BlockContent, BlockHeader};
 use crate::compute_key_hash;
 
-use scsys::crypto::hash::{hasher, Hashable, H256};
+use algae::merkle::{MerkleTree, MerkleTreeWrapper};
+use scsys::{core::Timestamp, prelude::{rand::{self, Rng}, Hashable, H256, generate_random_hash}};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::ops::Range;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum BlockType {
@@ -71,7 +73,7 @@ impl Block {
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        hasher(self).as_slice().to_owned().into()
+        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes()).as_bytes().to_owned().into()
     }
 }
 
@@ -81,29 +83,31 @@ impl std::convert::Into<Value> for Block {
     }
 }
 
-// pub fn generate_random_block(parent: &H256,
-//     parent_mmr: &MerkleMountainRange<Sha256, Vec<Hash>>) -> Block {
-//     let mut rng = rand::thread_rng();
-//     let mut data: Vec<SignedTransaction> = Vec::new();
-//     let t = generate_random_signed_transaction();
-//     data.push(t);
-//     let mt: MerkleTree = MerkleTree::new(&data);
-//     let content = Content {
-//         data: data,
-//     };
-//     let header = Header {
-//         parent: *parent,
-//         nonce: rng.gen(),
-//         difficulty: hash::generate_random_hash(),
-//         timestamp: rng.gen(),
-//         merkle_root: mt.root(),
-//         mmr_root: parent_mmr.get_merkle_root().unwrap(),
-//     };
-//     Block {
-//         header,
-//         content,
-//    }
-// }
+pub fn generate_random_block(parent: &H256) -> Block {
+    let mut rng = rand::thread_rng();
+    let mut data: Vec<crate::transactions::SignedTransaction> = Vec::new();
+    let t = crate::transactions::generate_random_signed_transaction();
+    data.push(t);
+    let mt = MerkleTree::create(&data);
+    let content = BlockContent::new(
+        data.clone(),
+        Range { start: 0, end: data.len() }.into_iter().map(|_| generate_random_hash()).collect::<Vec<H256>>()
+    );
+    let header = BlockHeader::new(
+        mt.root(), 
+        rng.gen(), 
+        *parent, 
+        generate_random_hash(), 
+        generate_random_hash(), 
+        rng.gen(), 
+        Timestamp::timestamp(),
+        generate_random_hash().0.to_vec(),
+        generate_random_hash().0.to_vec(),
+        generate_random_hash().0.to_vec()
+    );
+
+    Block::new(content, header, BlockType::PoS, true)
+}
 
 // #[cfg(any(test, test_utilities))]
 // pub mod test {
