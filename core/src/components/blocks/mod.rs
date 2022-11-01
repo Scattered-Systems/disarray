@@ -4,11 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::*, content::*, headers::*, utils::*};
+pub use self::{block::*, interface::*, pieces::*, utils::*};
 
 pub(crate) mod block;
-pub(crate) mod content;
-pub(crate) mod headers;
+pub(crate) mod interface;
+pub(crate) mod pieces;
 
 pub trait Blockable {}
 
@@ -38,6 +38,34 @@ pub(crate) mod utils {
     };
     use serde::Serialize;
     use serde_json::json;
+    use std::ops::Range;
+
+    pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
+        let mut res: String = String::default();
+        for c in hash {
+            res.push_str(&format!("{:b}", c));
+        }
+        res.into_bytes()
+    }
+
+    pub fn calculate_block_hash<Dt: Clone + Serialize>(
+        id: BlockId,
+        nonce: BlockNc,
+        previous: BlockHs,
+        timestamp: BlockTs,
+        transactions: Vec<Dt>,
+    ) -> H256 {
+        let cache = json!(
+            {
+                "id": id,
+                "nonce": nonce,
+                "previous": previous,
+                "timestamp": timestamp,
+                "transactions": transactions.clone()
+            }
+        );
+        hasher(&cache).as_slice().to_owned().into()
+    }
 
     pub fn generate_pow_block(
         data: &Vec<SignedTransaction>,
@@ -98,6 +126,19 @@ pub(crate) mod utils {
         Block::new(content, header, block_type, selfish_block)
     }
 
+    pub fn generate_random_block(parent: &H256) -> Block {
+        let mut rng = rand::thread_rng();
+        let mut data: Vec<crate::transactions::SignedTransaction> = Vec::new();
+        let t = crate::transactions::generate_random_signed_transaction();
+        data.push(t);
+        let mt = MerkleTree::create(&data);
+        let content = generate_random_block_content();
+        let header = generate_random_block_header();
+    
+        Block::new(content, header, BlockType::PoS, true)
+    }
+    
+
     pub fn generate_random_block_content() -> BlockContent {
         BlockContent::new(Vec::new(), vec![generate_random_hash()])
     }
@@ -117,39 +158,12 @@ pub(crate) mod utils {
             Vec::new(),
         )
     }
-
-    pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
-        let mut res: String = String::default();
-        for c in hash {
-            res.push_str(&format!("{:b}", c));
-        }
-        res.into_bytes()
-    }
-
-    pub fn calculate_block_hash<Dt: Clone + Serialize>(
-        id: BlockId,
-        nonce: BlockNc,
-        previous: BlockHs,
-        timestamp: BlockTs,
-        transactions: Vec<Dt>,
-    ) -> H256 {
-        let cache = json!(
-            {
-                "id": id,
-                "nonce": nonce,
-                "previous": previous,
-                "timestamp": timestamp,
-                "transactions": transactions.clone()
-            }
-        );
-        hasher(&cache).as_slice().to_owned().into()
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use scsys::crypto::hash::{generate_random_hash, hasher, H256};
+    use scsys::{core::Timestamp, prelude::{generate_random_hash, hasher, H256}};
 
     #[test]
     fn test_block_default() {
@@ -176,7 +190,16 @@ mod tests {
             BlockType::from(false),
             false,
         );
-        let bhash: H256 = hasher(&block).as_slice().to_owned().into();
+        let bhash: H256 = blake3::hash(&block.to_string().as_bytes()).as_bytes().to_owned().into();
         assert_ne!(bhash, generate_random_hash())
+    }
+
+    
+    #[test]
+    fn test_generate_random_block() {
+        let a = generate_genesis_block(Timestamp::timestamp());
+        let b = generate_random_block(&a.header.parent);
+        assert_ne!(&a, &b);
+
     }
 }
