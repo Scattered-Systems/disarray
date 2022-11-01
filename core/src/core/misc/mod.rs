@@ -4,5 +4,3 @@
    Description:
        ... Summary ...
 */
-
-pub mod merkle;

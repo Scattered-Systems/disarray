@@ -3,7 +3,10 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description:
 */
-use crate::{blockchains::Blockchain, blocks::BlockHeader};
+use crate::{
+    blockchains::{Blockchain, ChainWrapper, ChainWrapperExt},
+    blocks::BlockHeader,
+};
 use serde::{Deserialize, Serialize};
 
 // FlyClientProposal is a proposal sent from the prover,

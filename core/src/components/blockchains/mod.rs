@@ -4,11 +4,12 @@
    Description:
        ... Summary ...
 */
-pub use self::{blockchain::*, pieces::*, utils::*};
+pub use self::{blockchain::*, pieces::*, utils::*, wrapper::*};
 
 pub(crate) mod blockchain;
 pub(crate) mod chain_data;
 pub(crate) mod pieces;
+pub(crate) mod wrapper;
 
 pub(crate) mod utils {
 

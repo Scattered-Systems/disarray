@@ -10,13 +10,24 @@ pub(crate) mod block;
 pub(crate) mod content;
 pub(crate) mod header;
 
+pub trait Blockable {}
+
+pub trait BlockExt {
+    /// Create a new genesis block
+    fn genesis(timestamp: i64) -> Block {
+        let block = generate_genesis_block(timestamp);
+        log::info!(
+            "Created the genesis block with the timestamp: {}",
+            &block.header.timestamp
+        );
+        block
+    }
+}
+
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{
-        merkle::{MerkleTree, MerkleTreeWrapper},
-        transactions::SignedTransaction,
-        BlockHs, BlockId, BlockNc, BlockTs,
-    };
+    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
+    use algae::merkle::{MerkleTree, MerkleTreeWrapper};
     use scsys::{
         core::Timestamp,
         prelude::{

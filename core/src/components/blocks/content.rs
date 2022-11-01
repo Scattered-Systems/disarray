@@ -5,7 +5,7 @@
         ... Summary ...
 */
 use crate::transactions::SignedTransaction;
-use algae::merkle::MerkleTree;
+use algae::merkle::{MerkleTree, MerkleTreeWrapper};
 use scsys::crypto::hash::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 
@@ -23,7 +23,7 @@ impl BlockContent {
 
 impl Hashable for BlockContent {
     fn hash(&self) -> H256 {
-        let mt: MerkleTree<&SignedTransaction> = MerkleTree::from(&self.data);
-        mt.root_hash()
+        let mt = MerkleTree::create(&self.data);
+        mt.root()
     }
 }
