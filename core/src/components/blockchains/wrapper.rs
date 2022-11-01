@@ -90,7 +90,7 @@ pub trait ChainWrapperExt: ChainWrapper {
             curhash = child.block.header.parent.clone();
         }
     }
-    /// Create a new blockchain 
+    /// Create a new blockchain
     fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self
     where
         Self: Sized;

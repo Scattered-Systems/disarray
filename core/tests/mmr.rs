@@ -1,15 +1,14 @@
-
 use blake3::Hasher;
-use ckb_merkle_mountain_range::Merge;
-use std::str::Bytes;
+use bytes::Bytes;
+use ckb_merkle_mountain_range::{Error, Merge};
 
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
+struct NumberHash(pub Bytes);
 
-#[derive(Eq, PartialEq, Clone, Debug, Default)]
-struct NumberHash([u8]);
-
-impl From<u32> for NumberHash {
+impl std::convert::From<u32> for NumberHash {
     fn from(num: u32) -> Self {
-        NumberHash(blake3::hash(&num.to_le_bytes()).to_vec().into())
+        let hash = blake3::hash(&num.to_le_bytes());
+        NumberHash(Bytes::copy_from_slice(hash.as_bytes()))
     }
 }
 
@@ -17,13 +16,12 @@ struct MergeNumberHash;
 
 impl Merge for MergeNumberHash {
     type Item = NumberHash;
-    fn merge(lhs: &Self::Item, rhs: &Self::Item) -> Result<Self::Item> {
+    fn merge(lhs: &Self::Item, rhs: &Self::Item) -> Result<Self::Item, Error> {
         let mut hasher = Hasher::new();
-        let mut hash = [0u8; 32];
         hasher.update(&lhs.0);
         hasher.update(&rhs.0);
         let res = hasher.finalize();
-        Ok(NumberHash(res.to_vec().into()))
+        Ok(NumberHash(Bytes::copy_from_slice(res.as_bytes())))
     }
 }
 
@@ -35,7 +33,7 @@ mod tests {
     };
     use faster_hex::hex_string;
     use proptest::prelude::*;
-    use scsys::prelude::rand::{self, seq::SliceRandom, thread_rng};
+    use scsys::prelude::rand::{seq::SliceRandom, thread_rng};
 
     fn test_mmr(count: u32, proof_elem: Vec<u32>) {
         let store = MemStore::default();
@@ -91,6 +89,8 @@ mod tests {
 
     #[test]
     fn test_mmr_root() {
+        // let expected = "f6794677f37a57df6a5ec36ce61036e43a36c1a009d05c81c9aa685dde1fd6e3";
+        let expected = "42dff21ded4ba18909dd5cb284ac4456f83b2f8edb3545328f9be9be1130ee4d";
         let store = MemStore::default();
         let mut mmr = MMR::<_, MergeNumberHash, _>::new(0, &store);
         (0u32..11).for_each(|i| {
@@ -98,10 +98,8 @@ mod tests {
         });
         let root = mmr.get_root().expect("get root");
         let hex_root = hex_string(&root.0);
-        assert_eq!(
-            "f6794677f37a57df6a5ec36ce61036e43a36c1a009d05c81c9aa685dde1fd6e3",
-            hex_root
-        );
+        println!("{:?}", &hex_root);
+        assert_eq!(hex_root, expected);
     }
 
     #[test]
@@ -186,7 +184,7 @@ mod tests {
         // optionally handroll proof from these positions
         handrolled_proof_positions: Option<Vec<u64>>,
     ) {
-        use crate::{util::MemMMR, Merge, MerkleProof};
+        use ckb_merkle_mountain_range::{util::MemMMR, Merge, MerkleProof};
         use std::fmt::{Debug, Formatter};
 
         // Simple item struct to allow debugging the contents of MMR nodes/peaks
@@ -236,8 +234,8 @@ mod tests {
             )
         });
 
-        let handrolled_proof: Option<MerkleProof<MyItem, MyMerge>> =
-            handrolled_proof_positions.map(|handrolled_proof_positions| {
+        let handrolled_proof: Option<MerkleProof<MyItem, MyMerge>> = handrolled_proof_positions
+            .map(|handrolled_proof_positions| {
                 MerkleProof::new(
                     mmr.mmr_size(),
                     handrolled_proof_positions
@@ -314,5 +312,4 @@ mod tests {
             test_gen_new_root_from_proof(count);
         }
     }
-
 }

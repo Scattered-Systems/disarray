@@ -3,14 +3,13 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use super::{BlockContent, BlockHeader};
-use crate::compute_key_hash;
-
-use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-use scsys::{core::Timestamp, prelude::{rand::{self, Rng}, Hashable, H256, generate_random_hash}};
+use super::{
+    interface::{CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt},
+    BlockContent, BlockHeader,
+};
+use scsys::prelude::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
-
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum BlockType {
@@ -50,31 +49,34 @@ impl Block {
             selfish_block,
         }
     }
-    pub fn clear_txns(&mut self) {
-        self.content.data = Vec::new();
-    }
-    pub fn print_txns(&self) {
-        let txns = self.content.data.clone();
-        log::info!("***** Print txns in block {:?} *****", self.hash());
-        for txn in txns {
-            let sender = compute_key_hash(txn.sign.pubk);
-            let recv = txn.transaction.recv;
-            log::info!(
-                "{:?} sends {:?} value {:?}",
-                sender,
-                recv,
-                txn.transaction.value
-            );
-        }
-        log::info!("*************************************");
-    }
 }
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes()).as_bytes().to_owned().into()
+        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes())
+            .as_bytes()
+            .to_owned()
+            .into()
     }
 }
+
+impl CoreBlockSpec for Block {
+    fn content(&self) -> &BlockContent {
+        &self.content
+    }
+    fn header(&self) -> &BlockHeader {
+        &self.header
+    }
+}
+
+impl CoreBlockWrapper for Block {
+    fn clear_txns(&mut self) -> &Self {
+        self.content.data = Vec::new();
+        self
+    }
+}
+
+impl CoreBlockWrapperExt for Block {}
 
 impl std::convert::Into<Value> for Block {
     fn into(self) -> Value {
@@ -84,6 +86,6 @@ impl std::convert::Into<Value> for Block {
 
 impl std::fmt::Display for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "", )
+        write!(f, "",)
     }
 }

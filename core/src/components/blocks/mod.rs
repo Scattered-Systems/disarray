@@ -10,35 +10,23 @@ pub(crate) mod block;
 pub(crate) mod interface;
 pub(crate) mod pieces;
 
-pub trait Blockable {}
-
-pub trait BlockExt {
-    /// Create a new genesis block
-    fn genesis(timestamp: i64) -> Block {
-        let block = generate_genesis_block(timestamp);
-        log::info!(
-            "Created the genesis block with the timestamp: {}",
-            &block.header.timestamp
-        );
-        block
-    }
-}
-
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
+    use crate::{
+        transactions::{generate_random_signed_transaction, SignedTransaction},
+        BlockHs, BlockId, BlockNc, BlockTs,
+    };
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
     use scsys::{
         core::Timestamp,
         prelude::{
-            generate_random_hash, hasher,
+            generate_random_hash,
             rand::{self, Rng},
             H256,
         },
     };
     use serde::Serialize;
     use serde_json::json;
-    use std::ops::Range;
 
     pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
         let mut res: String = String::default();
@@ -64,7 +52,10 @@ pub(crate) mod utils {
                 "transactions": transactions.clone()
             }
         );
-        hasher(&cache).as_slice().to_owned().into()
+        blake3::hash(serde_json::to_string(&cache).unwrap().as_bytes())
+            .as_bytes()
+            .to_owned()
+            .into()
     }
 
     pub fn generate_pow_block(
@@ -126,27 +117,24 @@ pub(crate) mod utils {
         Block::new(content, header, block_type, selfish_block)
     }
 
-    pub fn generate_random_block(parent: &H256) -> Block {
-        let mut rng = rand::thread_rng();
-        let mut data: Vec<crate::transactions::SignedTransaction> = Vec::new();
-        let t = crate::transactions::generate_random_signed_transaction();
-        data.push(t);
-        let mt = MerkleTree::create(&data);
+    pub fn generate_random_block() -> Block {
         let content = generate_random_block_content();
-        let header = generate_random_block_header();
-    
+        let header = generate_random_block_header(content.data.clone());
+
         Block::new(content, header, BlockType::PoS, true)
     }
-    
 
     pub fn generate_random_block_content() -> BlockContent {
-        BlockContent::new(Vec::new(), vec![generate_random_hash()])
+        BlockContent::new(
+            vec![generate_random_signed_transaction()],
+            vec![generate_random_hash()],
+        )
     }
 
-    pub fn generate_random_block_header() -> BlockHeader {
+    pub fn generate_random_block_header(transactions: Vec<SignedTransaction>) -> BlockHeader {
         let mut rng = rand::thread_rng();
         BlockHeader::new(
-            generate_random_hash(),
+            MerkleTree::create(&transactions).root(),
             rng.gen(),
             generate_random_hash(),
             generate_random_hash(),
@@ -157,49 +145,5 @@ pub(crate) mod utils {
             Vec::new(),
             Vec::new(),
         )
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use scsys::{core::Timestamp, prelude::{generate_random_hash, hasher, H256}};
-
-    #[test]
-    fn test_block_default() {
-        let block1 = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(false),
-            false,
-        );
-        let block2 = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(true),
-            false,
-        );
-        assert_ne!(block1, block2)
-    }
-
-    #[test]
-    fn test_block_hash() {
-        let block = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(false),
-            false,
-        );
-        let bhash: H256 = blake3::hash(&block.to_string().as_bytes()).as_bytes().to_owned().into();
-        assert_ne!(bhash, generate_random_hash())
-    }
-
-    
-    #[test]
-    fn test_generate_random_block() {
-        let a = generate_genesis_block(Timestamp::timestamp());
-        let b = generate_random_block(&a.header.parent);
-        assert_ne!(&a, &b);
-
     }
 }

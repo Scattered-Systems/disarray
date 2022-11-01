@@ -34,7 +34,7 @@ pub fn create_block_by_mining<Dt: Clone + serde::Serialize>(
                 hex::encode(&hash),
                 binary_hash
             );
-            return (nonce, hex::encode(hash).into());
+            return (nonce, hash);
         }
         nonce += 1;
     }
