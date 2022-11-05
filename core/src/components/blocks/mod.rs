@@ -4,41 +4,53 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::*, content::*, header::*, utils::*};
+pub use self::{block::*, contents::*, headers::*, misc::*, utils::*};
 
 pub(crate) mod block;
-pub(crate) mod content;
-pub(crate) mod header;
+pub(crate) mod contents;
+pub(crate) mod headers;
+pub(crate) mod misc;
 
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{
-        merkle::{MerkleTree, MerkleTreeWrapper},
-        transactions::SignedTransaction,
-        BlockHs, BlockId, BlockNc, BlockTs,
-    };
-    use scsys::{
-        core::Timestamp,
-        prelude::{
-            generate_random_hash, hasher,
-            rand::{self, Rng},
-            H256,
-        },
-    };
-    use serde::Serialize;
+    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
+    use algae::merkle::{MerkleTree, MerkleTreeWrapper};
+    use scsys::prelude::H256;
     use serde_json::json;
 
+    pub fn calculate_block_hash(
+        id: BlockId,
+        nonce: BlockNc,
+        previous: BlockHs,
+        timestamp: BlockTs,
+        transactions: Vec<SignedTransaction>,
+    ) -> H256 {
+        let cache = json!(
+            {
+                "id": id,
+                "nonce": nonce,
+                "previous": previous,
+                "timestamp": timestamp,
+                "transactions": transactions
+            }
+        );
+        blake3::hash(serde_json::to_string(&cache).unwrap().as_bytes())
+            .as_bytes()
+            .to_owned()
+            .into()
+    }
+
     pub fn generate_pow_block(
-        data: &Vec<SignedTransaction>,
-        transaction_ref: &Vec<H256>,
+        data: &[SignedTransaction],
+        transaction_ref: &[H256],
         parent: &H256,
         nonce: u32,
         pow_difficulty: &H256,
         pos_difficulty: &H256,
         rand: u128,
         timestamp: i64,
-        vrf_proof: &Vec<u8>,
-        vrf_hash: &Vec<u8>,
+        vrf_proof: &[u8],
+        vrf_hash: &[u8],
         vrf_pub_key: &[u8],
         selfish_block: bool,
     ) -> Block {
@@ -54,8 +66,8 @@ pub(crate) mod utils {
             *pow_difficulty,
             rand,
             timestamp,
-            vrf_hash.clone().into(),
-            vrf_proof.clone().into(),
+            vrf_hash.to_owned(),
+            vrf_proof.to_owned(),
             vrf_pub_key.to_vec(),
         );
 
@@ -87,85 +99,10 @@ pub(crate) mod utils {
         Block::new(content, header, block_type, selfish_block)
     }
 
-    pub fn generate_random_block_content() -> BlockContent {
-        BlockContent::new(Vec::new(), vec![generate_random_hash()])
-    }
+    pub fn generate_random_block() -> Block {
+        let content = super::generate_random_block_content();
+        let header = super::generate_random_block_header(content.data.clone());
 
-    pub fn generate_random_block_header() -> BlockHeader {
-        let mut rng = rand::thread_rng();
-        BlockHeader::new(
-            generate_random_hash(),
-            rng.gen(),
-            generate_random_hash(),
-            generate_random_hash(),
-            generate_random_hash(),
-            rng.gen(),
-            Timestamp::timestamp(),
-            Vec::new(),
-            Vec::new(),
-            Vec::new(),
-        )
-    }
-
-    pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
-        let mut res: String = String::default();
-        for c in hash {
-            res.push_str(&format!("{:b}", c));
-        }
-        res.into_bytes()
-    }
-
-    pub fn calculate_block_hash<Dt: Clone + Serialize>(
-        id: BlockId,
-        nonce: BlockNc,
-        previous: BlockHs,
-        timestamp: BlockTs,
-        transactions: Vec<Dt>,
-    ) -> H256 {
-        let cache = json!(
-            {
-                "id": id,
-                "nonce": nonce,
-                "previous": previous,
-                "timestamp": timestamp,
-                "transactions": transactions.clone()
-            }
-        );
-        hasher(&cache).as_slice().to_owned().into()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use scsys::crypto::hash::{generate_random_hash, hasher, H256};
-
-    #[test]
-    fn test_block_default() {
-        let block1 = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(false),
-            false,
-        );
-        let block2 = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(true),
-            false,
-        );
-        assert_ne!(block1, block2)
-    }
-
-    #[test]
-    fn test_block_hash() {
-        let block = Block::new(
-            generate_random_block_content(),
-            generate_random_block_header(),
-            BlockType::from(false),
-            false,
-        );
-        let bhash: H256 = hasher(&block).as_slice().to_owned().into();
-        assert_ne!(bhash, generate_random_hash())
+        Block::new(content, header, BlockType::PoS, true)
     }
 }

@@ -4,3 +4,10 @@
    Description:
        ... Summary ...
 */
+use std::string::ToString;
+
+pub trait Addressable: ToString {
+    fn address(&self) -> &Self {
+        self
+    }
+}

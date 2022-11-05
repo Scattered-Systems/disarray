@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use super::{misc::Sign, transaction::Transaction};
+use crate::transactions::{Sign, Transaction};
 use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
@@ -29,5 +29,20 @@ impl std::fmt::Display for SignedTransaction {
 impl Hashable for SignedTransaction {
     fn hash(&self) -> H256 {
         hasher(self).as_slice().to_owned().into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_signed_transaction() {
+        let signature = Sign::default();
+        let transaction = Transaction::default();
+
+        let a = SignedTransaction::new(signature, transaction);
+        let b = SignedTransaction::default();
+        assert_eq!(a, b)
     }
 }

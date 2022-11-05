@@ -1,8 +1,7 @@
 /*
     Appellation: transaction <module>
-    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-    Description:
-        This module implements the structure for a transaction destined to be used within a block on a blockchain
+    Contributors: FL03 <jo3mccain@icloud.com>
+    Description: ... summary ...
 */
 use scsys::prelude::{
     hasher,
@@ -37,5 +36,17 @@ impl std::fmt::Display for Transaction {
 impl Hashable for Transaction {
     fn hash(&self) -> H256 {
         hasher(self).as_slice().to_owned().into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_transaction() {
+        let a = Transaction::default();
+        let b = a.clone();
+        assert_eq!(a, b)
     }
 }

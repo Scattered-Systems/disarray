@@ -4,13 +4,12 @@
    Description:
        ... Summary ...
 */
-use crate::{
-    blocks::{convert_hash_into_binary, Block},
-    DIFFICULTY_PREFIX,
-};
+use crate::blocks::Block;
 
 /// Determine the validity of a new block by comparing the previous one
 pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {
+    let _curblock = block.clone();
+    let _prev = pblock.clone();
     true
 }
 

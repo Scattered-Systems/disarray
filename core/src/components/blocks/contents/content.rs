@@ -1,11 +1,10 @@
 /*
-    Appellation: content <blocks>
-    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-    Description:
-        ... Summary ...
+   Appellation: content <blocks>
+   Contributors: FL03 <jo3mccain@icloud.com>
+   Description: ... Summary ...
 */
 use crate::transactions::SignedTransaction;
-use algae::merkle::MerkleTree;
+use algae::merkle::{MerkleTree, MerkleTreeWrapper};
 use scsys::crypto::hash::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 
@@ -23,7 +22,19 @@ impl BlockContent {
 
 impl Hashable for BlockContent {
     fn hash(&self) -> H256 {
-        let mt: MerkleTree<&SignedTransaction> = MerkleTree::from(&self.data);
-        mt.root_hash()
+        let mt = MerkleTree::create(&self.data);
+        mt.root()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_block_content() {
+        let a = BlockContent::default();
+        let b = BlockContent::new(Default::default(), Default::default());
+        assert_eq!(&a, &b);
     }
 }

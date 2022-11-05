@@ -5,7 +5,6 @@
        ... Summary ...
 */
 use crate::BoxedTransport;
-use libp2p::Transport;
 
 #[derive(Debug)]
 pub struct Provider<Addr = String> {

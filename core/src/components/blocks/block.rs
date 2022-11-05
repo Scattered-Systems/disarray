@@ -1,31 +1,14 @@
 /*
-Appellation: block <module>
-Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-Description:
-    ... Summary ...
+    Appellation: block <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
-use super::{BlockContent, BlockHeader};
-use crate::compute_key_hash;
-
-use scsys::crypto::hash::{hasher, Hashable, H256};
+use super::{
+    BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
+};
+use scsys::prelude::{Hashable, H256};
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
-
-#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum BlockType {
-    PoS,
-    #[default]
-    PoW,
-}
-
-impl std::convert::From<bool> for BlockType {
-    fn from(data: bool) -> Self {
-        match data {
-            true => Self::PoS,
-            false => Self::PoW,
-        }
-    }
-}
+use serde_json::Value;
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Block {
@@ -49,88 +32,49 @@ impl Block {
             selfish_block,
         }
     }
-    pub fn clear_txns(&mut self) {
-        self.content.data = Vec::new();
-    }
-    pub fn print_txns(&self) {
-        let txns = self.content.data.clone();
-        log::info!("***** Print txns in block {:?} *****", self.hash());
-        for txn in txns {
-            let sender = compute_key_hash(txn.sign.pubk);
-            let recv = txn.transaction.recv;
-            log::info!(
-                "{:?} sends {:?} value {:?}",
-                sender,
-                recv,
-                txn.transaction.value
-            );
-        }
-        log::info!("*************************************");
-    }
 }
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        hasher(self).as_slice().to_owned().into()
+        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes())
+            .as_bytes()
+            .to_owned()
+            .into()
     }
 }
 
-impl std::convert::Into<Value> for Block {
-    fn into(self) -> Value {
-        json!(self)
+impl CoreBlockSpec for Block {
+    fn content(&self) -> &BlockContent {
+        &self.content
+    }
+    fn header(&self) -> &BlockHeader {
+        &self.header
     }
 }
 
-// pub fn generate_random_block(parent: &H256,
-//     parent_mmr: &MerkleMountainRange<Sha256, Vec<Hash>>) -> Block {
-//     let mut rng = rand::thread_rng();
-//     let mut data: Vec<SignedTransaction> = Vec::new();
-//     let t = generate_random_signed_transaction();
-//     data.push(t);
-//     let mt: MerkleTree = MerkleTree::new(&data);
-//     let content = Content {
-//         data: data,
-//     };
-//     let header = Header {
-//         parent: *parent,
-//         nonce: rng.gen(),
-//         difficulty: hash::generate_random_hash(),
-//         timestamp: rng.gen(),
-//         merkle_root: mt.root(),
-//         mmr_root: parent_mmr.get_merkle_root().unwrap(),
-//     };
-//     Block {
-//         header,
-//         content,
-//    }
-// }
+impl CoreBlockWrapper for Block {
+    fn clear_txns(&mut self) -> &Self {
+        self.content.data = Vec::new();
+        self
+    }
+}
 
-// #[cfg(any(test, test_utilities))]
-// pub mod test {
-//     use super::*;
-//     use crate::crypto::hash::H256;
+impl CoreBlockWrapperExt for Block {}
 
-//     pub fn generate_random_block(parent: &H256,
-//         parent_mmr: &MerkleMountainRange<Sha256, Vec<Hash>>) -> Block {
-//         let mut rng = rand::thread_rng();
-//         let mut data: Vec<SignedTransaction> = Vec::new();
-//         let t = generate_random_signed_transaction();
-//         data.push(t);
-//         let mt: MerkleTree = MerkleTree::new(&data);
-//         let content = Content {
-//             data: data,
-//         };
-//         let header = Header {
-//             parent: *parent,
-//             nonce: rng.gen(),
-//             difficulty: hash::generate_random_hash(),
-//             timestamp: rng.gen(),
-//             merkle_root: mt.root(),
-//             mmr_root: parent_mmr.get_merkle_root().unwrap(),
-//         };
-//         Block {
-//             header,
-//             content,
-//        }
+// impl std::convert::Into<String> for Block {
+//     fn into(self) -> String {
+//         serde_json::to_string(&self).expect("Failed to serialize the content...")
 //     }
 // }
+
+impl std::convert::From<Value> for Block {
+    fn from(data: Value) -> Self {
+        data.into()
+    }
+}
+
+impl std::fmt::Display for Block {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "",)
+    }
+}

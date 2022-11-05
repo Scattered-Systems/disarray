@@ -4,16 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use provider::*;
-pub use utils::*;
+pub use self::{misc::*, provider::*, utils::*};
 
-mod provider;
-
-#[derive(Clone, Debug, Hash, PartialEq, serde::Deserialize, serde::Serialize)]
-pub enum ProviderConnectionSatus {
-    Dialing,
-    Listening,
-}
+pub(crate) mod misc;
+pub(crate) mod provider;
 
 mod utils {
     use crate::AuthNoiseKeys;

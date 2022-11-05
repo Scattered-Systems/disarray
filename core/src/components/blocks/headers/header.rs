@@ -1,8 +1,7 @@
 /*
    Appellation: header <blocks>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-   Description:
-       ... Summary ...
+   Contributors: FL03 <jo3mccain@icloud.com>
+   Description: ... Summary ...
 */
 use crate::{BlockNc, BlockTs};
 use scsys::prelude::{hasher, Hashable, H256};
@@ -53,5 +52,21 @@ impl BlockHeader {
 impl Hashable for BlockHeader {
     fn hash(&self) -> H256 {
         hasher(self).as_slice().to_owned().into()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        blocks::generate_random_block_header, transactions::generate_random_signed_transaction,
+    };
+
+    #[test]
+    fn test_default_block_header() {
+        let a: BlockHeader =
+            generate_random_block_header(vec![generate_random_signed_transaction()]);
+        let b = a.clone();
+        assert_eq!(&a, &b);
     }
 }

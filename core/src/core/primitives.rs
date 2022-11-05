@@ -12,10 +12,10 @@ mod constants {
 }
 
 mod types {
-    use scsys::prelude::chrono;
+    use scsys::prelude::{chrono, H256};
 
     pub type BlockId = i64;
-    pub type BlockHs = String;
+    pub type BlockHs = H256;
     pub type BlockNc = u32;
     pub type BlockTs = i64;
     pub type BlockTz = chrono::Utc;

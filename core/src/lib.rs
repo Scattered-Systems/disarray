@@ -5,7 +5,6 @@
     ... Summary ...
 */
 #[cfg(test)]
-#[macro_use]
 extern crate hex_literal;
 
 #[doc(inline)]
