@@ -1,8 +1,7 @@
 /*
-    Appellation: content <blocks>
-    Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-    Description:
-        ... Summary ...
+   Appellation: content <blocks>
+   Contributors: FL03 <jo3mccain@icloud.com>
+   Description: ... Summary ...
 */
 use crate::transactions::SignedTransaction;
 use algae::merkle::{MerkleTree, MerkleTreeWrapper};

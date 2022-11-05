@@ -5,12 +5,15 @@
        ... Summary ...
 */
 use crate::{
-    blocks::{convert_hash_into_binary, Block},
+    blocks::Block,
     DIFFICULTY_PREFIX,
+    convert_hash_into_binary
 };
 
 /// Determine the validity of a new block by comparing the previous one
 pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {
+    let _curblock = block.clone();
+    let _prev = pblock.clone();
     true
 }
 

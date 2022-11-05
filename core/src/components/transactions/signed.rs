@@ -31,3 +31,18 @@ impl Hashable for SignedTransaction {
         hasher(self).as_slice().to_owned().into()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_signed_transaction() {
+        let signature = Sign::default();
+        let transaction = Transaction::default();
+
+        let a = SignedTransaction::new(signature, transaction);
+        let b = SignedTransaction::default();
+        assert_eq!(a, b)
+    }
+}

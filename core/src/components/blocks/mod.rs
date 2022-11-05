@@ -4,44 +4,26 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::*, interface::*, pieces::*, utils::*};
+pub use self::{block::*, contents::*, headers::*, interface::*, utils::*};
 
 pub(crate) mod block;
+pub(crate) mod contents;
+pub(crate) mod headers;
 pub(crate) mod interface;
-pub(crate) mod pieces;
 
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{
-        transactions::{generate_random_signed_transaction, SignedTransaction},
-        BlockHs, BlockId, BlockNc, BlockTs,
-    };
+    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs,};
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-    use scsys::{
-        core::Timestamp,
-        prelude::{
-            generate_random_hash,
-            rand::{self, Rng},
-            H256,
-        },
-    };
-    use serde::Serialize;
+    use scsys::prelude::{H256, Hashable};
     use serde_json::json;
 
-    pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
-        let mut res: String = String::default();
-        for c in hash {
-            res.push_str(&format!("{:b}", c));
-        }
-        res.into_bytes()
-    }
-
-    pub fn calculate_block_hash<Dt: Clone + Serialize>(
+    pub fn calculate_block_hash(
         id: BlockId,
         nonce: BlockNc,
         previous: BlockHs,
         timestamp: BlockTs,
-        transactions: Vec<Dt>,
+        transactions: Vec<SignedTransaction>,
     ) -> H256 {
         let cache = json!(
             {
@@ -49,7 +31,7 @@ pub(crate) mod utils {
                 "nonce": nonce,
                 "previous": previous,
                 "timestamp": timestamp,
-                "transactions": transactions.clone()
+                "transactions": transactions
             }
         );
         blake3::hash(serde_json::to_string(&cache).unwrap().as_bytes())
@@ -118,32 +100,9 @@ pub(crate) mod utils {
     }
 
     pub fn generate_random_block() -> Block {
-        let content = generate_random_block_content();
-        let header = generate_random_block_header(content.data.clone());
+        let content = super::generate_random_block_content();
+        let header = super::generate_random_block_header(content.data.clone());
 
         Block::new(content, header, BlockType::PoS, true)
-    }
-
-    pub fn generate_random_block_content() -> BlockContent {
-        BlockContent::new(
-            vec![generate_random_signed_transaction()],
-            vec![generate_random_hash()],
-        )
-    }
-
-    pub fn generate_random_block_header(transactions: Vec<SignedTransaction>) -> BlockHeader {
-        let mut rng = rand::thread_rng();
-        BlockHeader::new(
-            MerkleTree::create(&transactions).root(),
-            rng.gen(),
-            generate_random_hash(),
-            generate_random_hash(),
-            generate_random_hash(),
-            rng.gen(),
-            Timestamp::timestamp(),
-            Vec::new(),
-            Vec::new(),
-            Vec::new(),
-        )
     }
 }

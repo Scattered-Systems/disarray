@@ -15,6 +15,7 @@ pub(crate) mod utils {
     use super::{BlockData, Blockchain};
     use crate::blocks::{Block, BlockHeader};
     use scsys::prelude::{
+        core::BoxResult,
         rand::{self, Rng},
         Hashable, H256,
     };
@@ -39,7 +40,7 @@ pub(crate) mod utils {
             let parentdata: BlockData;
             match bc.chain.get(&parenthash) {
                 Some(data) => parentdata = data.clone(),
-                None => return false,
+                None => return Ok(false),
             }
             let parentheight = parentdata.height;
             let newheight = parentheight + 1;
@@ -59,7 +60,7 @@ pub(crate) mod utils {
             {
                 bc.position.depth = newheight;
                 bc.tip = newhash;
-                return true;
+                return Ok(true);
             }
             return false;
         } else {
@@ -82,16 +83,16 @@ pub(crate) mod utils {
             // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
             bc.chain.insert(newhash, newdata);
             // self.map.insert(newhash, new_mmr);
-            bc.position.pos = bc.position.pos + 1;
+            bc.position.pos += 1;
             if newheight > bc.position.depth && block.selfish_block == true {
-                bc.lead = bc.lead + 1;
+                bc.lead += 1;
                 bc.position.depth = newheight;
                 bc.tip = newhash;
                 return true;
-            } else if block.selfish_block == false && newheight > bc.length {
+            } else if !block.selfish_block && newheight > bc.length {
                 if bc.lead > 0 {
-                    bc.lead = bc.lead - 1;
-                    bc.length = bc.length + 1;
+                    bc.lead -= 1;
+                    bc.length += 1;
                     return false;
                 } else {
                     bc.position.depth = newheight;
@@ -104,18 +105,14 @@ pub(crate) mod utils {
         }
     }
     /// Insert a PoW block into blockchain
-    pub fn insert_pow(bc: &mut Blockchain, block: &Block) -> bool {
+    pub fn insert_pow(bc: &mut Blockchain, block: &Block) -> BoxResult<bool> {
         //unimplemented!()
         if bc.chain.contains_key(&block.hash()) {
             return false;
         }
         let header: BlockHeader = block.header.clone();
         let parenthash: H256 = header.parent;
-        let parentdata: BlockData;
-        match bc.chain.get(&parenthash) {
-            Some(data) => parentdata = data.clone(),
-            None => return false,
-        }
+        let parentdata = bc.chain.get(&parenthash);
         let parentheight = parentdata.height;
         let newheight = parentheight + 1;
         let newdata = BlockData::new(block.clone(), newheight);
@@ -126,6 +123,6 @@ pub(crate) mod utils {
         // self.map.insert(newhash, new_mmr);
         bc.position.pow = bc.position.pow + 1;
 
-        return true;
+        true
     }
 }

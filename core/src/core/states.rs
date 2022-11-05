@@ -131,19 +131,19 @@ impl State {
     }
 
     pub fn check_block(&mut self, hash: &H256) -> bool {
-        return self.state_per_block.contains_key(&hash);
+        self.state_per_block.contains_key(hash)
     }
 
     pub fn one_block_state(&mut self, hash: &H256) -> StateMap {
-        let find_state = self.state_per_block.get(&hash).unwrap().clone();
+        let find_state = self.state_per_block.get(hash).unwrap().clone();
         find_state
     }
 
     pub fn print_last_block_state(&mut self, hash: &H256) {
-        let last_state = self.state_per_block.get(&hash).unwrap().clone();
+        let last_state = self.state_per_block.get(hash).unwrap().clone();
         for (key, value) in last_state {
             let (nonce, amount) = value;
-            info!("account {:?} has nonce {} value {}", key, nonce, amount);
+            tracing::info!("account {:?} has nonce {} value {}", key, nonce, amount);
         }
     }
 }
