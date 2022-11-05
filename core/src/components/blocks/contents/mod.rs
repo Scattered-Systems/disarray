@@ -3,7 +3,7 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{content::BlockContent,  utils::*};
+pub use self::{content::BlockContent, utils::*};
 
 pub(crate) mod content;
 

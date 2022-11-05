@@ -116,7 +116,7 @@ pub(crate) mod utils {
         let parentdata: BlockData;
         match bc.chain.get(&parenthash) {
             None => return Ok(false),
-            Some(v) => parentdata = v.clone()
+            Some(v) => parentdata = v.clone(),
         };
         let parentheight = parentdata.height;
         let newheight = parentheight + 1;

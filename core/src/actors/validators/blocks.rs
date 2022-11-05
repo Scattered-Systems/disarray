@@ -4,11 +4,7 @@
    Description:
        ... Summary ...
 */
-use crate::{
-    blocks::Block,
-    DIFFICULTY_PREFIX,
-    convert_hash_into_binary
-};
+use crate::{blocks::Block, convert_hash_into_binary, DIFFICULTY_PREFIX};
 
 /// Determine the validity of a new block by comparing the previous one
 pub fn determine_block_validity(block: &Block, pblock: &Block) -> bool {

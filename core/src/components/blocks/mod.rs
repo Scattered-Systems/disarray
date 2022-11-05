@@ -13,9 +13,9 @@ pub(crate) mod interface;
 
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
-    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs,};
+    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-    use scsys::prelude::{H256, Hashable};
+    use scsys::prelude::{Hashable, H256};
     use serde_json::json;
 
     pub fn calculate_block_hash(
