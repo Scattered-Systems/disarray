@@ -61,12 +61,6 @@ impl CoreBlockWrapper for Block {
 
 impl CoreBlockWrapperExt for Block {}
 
-// impl std::convert::Into<String> for Block {
-//     fn into(self) -> String {
-//         serde_json::to_string(&self).expect("Failed to serialize the content...")
-//     }
-// }
-
 impl std::convert::From<Value> for Block {
     fn from(data: Value) -> Self {
         data.into()
