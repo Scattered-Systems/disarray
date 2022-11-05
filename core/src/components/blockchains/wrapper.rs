@@ -4,10 +4,7 @@
     Description:
         ... Summary ...
 */
-use super::{
-    chain_data::BlockData,
-    pieces::{Epoch, Position},
-};
+use super::{BlockData, Epoch, Position};
 use crate::{
     blocks::{generate_genesis_block, Block, BlockHeader},
     BlockTs,

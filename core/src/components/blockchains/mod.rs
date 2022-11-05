@@ -4,11 +4,12 @@
    Description:
        ... Summary ...
 */
-pub use self::{blockchain::*, chain_data::*, pieces::*, utils::*, wrapper::*};
+pub use self::{blockchain::*, chain_data::*, epochs::*, misc::*, utils::*, wrapper::*};
 
 pub(crate) mod blockchain;
 pub(crate) mod chain_data;
-pub(crate) mod pieces;
+pub(crate) mod epochs;
+pub(crate) mod misc;
 pub(crate) mod wrapper;
 
 pub(crate) mod utils {
@@ -33,14 +34,14 @@ pub(crate) mod utils {
         //unimplemented!()
         if !selfish {
             if bc.chain.contains_key(&block.hash()) {
-                panic!("")
+                panic!("Attempting to insert a pre-existing block...")
             }
             let header: BlockHeader = block.header.clone();
             let parenthash: H256 = header.parent;
             let parentdata: BlockData;
             match bc.chain.get(&parenthash) {
                 Some(data) => parentdata = data.clone(),
-                None => return Ok(false),
+                None => return false,
             }
             let parentheight = parentdata.height;
             let newheight = parentheight + 1;
@@ -60,7 +61,7 @@ pub(crate) mod utils {
             {
                 bc.position.depth = newheight;
                 bc.tip = newhash;
-                return Ok(true);
+                return true;
             }
             return false;
         } else {
@@ -108,11 +109,15 @@ pub(crate) mod utils {
     pub fn insert_pow(bc: &mut Blockchain, block: &Block) -> BoxResult<bool> {
         //unimplemented!()
         if bc.chain.contains_key(&block.hash()) {
-            return false;
+            return Ok(false);
         }
         let header: BlockHeader = block.header.clone();
         let parenthash: H256 = header.parent;
-        let parentdata = bc.chain.get(&parenthash);
+        let parentdata: BlockData;
+        match bc.chain.get(&parenthash) {
+            None => return Ok(false),
+            Some(v) => parentdata = v.clone()
+        };
         let parentheight = parentdata.height;
         let newheight = parentheight + 1;
         let newdata = BlockData::new(block.clone(), newheight);
@@ -121,8 +126,8 @@ pub(crate) mod utils {
         // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
         bc.chain.insert(newhash, newdata);
         // self.map.insert(newhash, new_mmr);
-        bc.position.pow = bc.position.pow + 1;
+        bc.position.pow += 1;
 
-        true
+        Ok(true)
     }
 }

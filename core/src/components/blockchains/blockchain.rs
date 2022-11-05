@@ -4,10 +4,7 @@
     Description:
         ... Summary ...
 */
-use super::{
-    chain_data::BlockData,
-    pieces::{Epoch, Position},
-};
+use super::{BlockData, Epoch, Position};
 use crate::blocks::Block;
 use scsys::prelude::{Hashable, H160, H256};
 use std::collections::HashMap;
@@ -42,7 +39,7 @@ impl Blockchain {
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-        super::insert_pow(self, block)
+        super::insert_pow(self, block).expect("")
     }
 }
 
