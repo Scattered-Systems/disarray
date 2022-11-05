@@ -26,3 +26,15 @@ impl Hashable for BlockContent {
         mt.root()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_block_content() {
+        let a = BlockContent::default();
+        let b = BlockContent::new(Default::default(), Default::default());
+        assert_eq!(&a, &b);
+    }
+}

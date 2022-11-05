@@ -16,8 +16,8 @@ mod utils {
     use std::str::from_utf8;
 
     pub fn capture_kademlia_event(message: KademliaEvent) {
-        match message {
-            KademliaEvent::OutboundQueryCompleted { result, .. } => match result {
+        if let KademliaEvent::OutboundQueryCompleted { result, .. } = message {
+            match result {
                 QueryResult::GetProviders(Ok(ok)) => {
                     for peer in ok.providers {
                         println!(
@@ -65,8 +65,7 @@ mod utils {
                     eprintln!("Failed to put provider record: {:?}", err);
                 }
                 _ => {}
-            },
-            _ => {}
+            }
         }
     }
 }

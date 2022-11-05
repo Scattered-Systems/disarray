@@ -4,12 +4,12 @@
    Description:
        ... Summary ...
 */
-pub use self::{block::*, contents::*, headers::*, interface::*, utils::*};
+pub use self::{block::*, contents::*, headers::*, misc::*, utils::*};
 
 pub(crate) mod block;
 pub(crate) mod contents;
 pub(crate) mod headers;
-pub(crate) mod interface;
+pub(crate) mod misc;
 
 pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};

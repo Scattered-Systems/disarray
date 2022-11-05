@@ -3,8 +3,12 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use super::{generate_genesis_block, Block, BlockContent, BlockHeader};
-use crate::{compute_key_hash, transactions::SignedTransaction, BlockHs, BlockNc, BlockTs};
+use crate::{
+    blocks::{generate_genesis_block, Block, BlockContent, BlockHeader},
+    compute_key_hash,
+    transactions::SignedTransaction,
+    BlockHs, BlockNc, BlockTs,
+};
 use scsys::prelude::Hashable;
 
 pub trait CoreBlockSpec: Hashable {

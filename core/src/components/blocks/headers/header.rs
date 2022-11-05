@@ -54,3 +54,19 @@ impl Hashable for BlockHeader {
         hasher(self).as_slice().to_owned().into()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        blocks::generate_random_block_header, transactions::generate_random_signed_transaction,
+    };
+
+    #[test]
+    fn test_default_block_header() {
+        let a: BlockHeader =
+            generate_random_block_header(vec![generate_random_signed_transaction()]);
+        let b = a.clone();
+        assert_eq!(&a, &b);
+    }
+}

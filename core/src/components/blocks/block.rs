@@ -4,28 +4,11 @@
     Description: ... Summary ...
 */
 use super::{
-    interface::{CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt},
-    BlockContent, BlockHeader,
+    BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
 };
 use scsys::prelude::{Hashable, H256};
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
-
-#[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub enum BlockType {
-    PoS,
-    #[default]
-    PoW,
-}
-
-impl std::convert::From<bool> for BlockType {
-    fn from(data: bool) -> Self {
-        match data {
-            true => Self::PoS,
-            false => Self::PoW,
-        }
-    }
-}
+use serde_json::Value;
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Block {
@@ -84,9 +67,9 @@ impl CoreBlockWrapperExt for Block {}
 //     }
 // }
 
-impl std::convert::Into<Value> for Block {
-    fn into(self) -> Value {
-        json!(self)
+impl std::convert::From<Value> for Block {
+    fn from(data: Value) -> Self {
+        data.into()
     }
 }
 
