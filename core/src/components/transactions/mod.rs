@@ -1,16 +1,15 @@
 /*
    Appellation: transactions <module>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
-   Description:
-       ... Summary ...
+   Contributors: FL03 <jo3mccain@icloud.com>
+   Description: ... Summary ...
 */
-pub use self::{misc::*, signed::*, transaction::*, utils::*};
+pub use self::{sig::*, spam::*, transaction::*, utils::*};
 
-pub(crate) mod misc;
-pub(crate) mod signed;
+pub(crate) mod sig;
+pub(crate) mod spam;
 pub(crate) mod transaction;
 
-pub type Transactions = Vec<Transaction>;
+pub type SignedTransactions = Vec<SignedTransaction>;
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
@@ -23,12 +22,6 @@ pub(crate) mod utils {
             },
         },
     };
-
-    /// Create digital signature of a transaction
-    pub fn sign(t: &Transaction, key: &Ed25519KeyPair) -> Signature {
-        let serialized: Vec<u8> = serde_json::to_vec(t).unwrap();
-        key.sign(&serialized)
-    }
 
     /// Verify digital signature of a transaction, using public key instead of secret key
     pub fn verify(
@@ -74,7 +67,7 @@ pub(crate) mod utils {
     pub fn generate_random_signed_transaction() -> SignedTransaction {
         let transaction = generate_random_transaction();
         let pubk = crate::random_keypair();
-        let sig = sign(&transaction, &pubk);
+        let sig = super::sign(&transaction, &pubk);
         let sign = Sign {
             pubk: pubk.public_key().as_ref().to_vec(),
             sig: sig.as_ref().to_vec(),

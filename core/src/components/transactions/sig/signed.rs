@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use super::{misc::Sign, transaction::Transaction};
+use crate::transactions::{Sign, Transaction};
 use scsys::crypto::hash::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 

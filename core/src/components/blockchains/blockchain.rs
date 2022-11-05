@@ -4,9 +4,9 @@
     Description:
         ... Summary ...
 */
-use super::{BlockData, Epoch, Position};
-use crate::blocks::Block;
-use scsys::prelude::{Hashable, H160, H256};
+use super::{BlockData, ChainWrapper, ChainWrapperExt, Epoch, Position};
+use crate::blocks::{generate_genesis_block, Block};
+use scsys::{core::Timestamp, prelude::{Hashable, H160, H256}};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -22,6 +22,31 @@ pub struct Blockchain {
 }
 
 impl Blockchain {
+    pub fn new(timestamp: i64) -> Self {
+        let genesis = generate_genesis_block(timestamp);
+        log::info!(
+            "Created the genesis block with the timestamp: {}",
+            genesis.header.timestamp
+        );
+
+        let data = BlockData::new(genesis.clone(), 0);
+        let hash: H256 = genesis.clone().hash();
+
+        // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
+        let map = HashMap::new();
+
+        Self {
+            chain: HashMap::from([(hash, data)]),
+            epoch: Epoch::default(),
+            lead: 0,
+            length: 0,
+            map,
+            position: Position::default(),
+            timestamp: genesis.header.timestamp,
+            tip: hash,
+        }
+    }
+
     // pub fn get_mmr(&self, hash: &H256) -> MerkleMountainRange<Sha256, Vec<Hash>> {
     //     let mmr_ref = self.map.get(hash).unwrap();
     //     let leaf_hashes = mmr_ref
@@ -39,11 +64,11 @@ impl Blockchain {
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-        super::insert_pow(self, block).expect("")
+        super::insert_pow(self, block).unwrap_or_else(|_| false)
     }
 }
 
-impl super::ChainWrapper for Blockchain {
+impl ChainWrapper for Blockchain {
     fn chain(&self) -> &HashMap<H256, BlockData> {
         &self.chain
     }
@@ -77,7 +102,7 @@ impl super::ChainWrapper for Blockchain {
     }
 }
 
-impl super::ChainWrapperExt for Blockchain {
+impl ChainWrapperExt for Blockchain {
     fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self
     where
         Self: Sized,
@@ -107,8 +132,26 @@ impl super::ChainWrapperExt for Blockchain {
     }
 }
 
+impl Default for Blockchain {
+    fn default() -> Self {
+        Self::new(Timestamp::default().into())
+    }
+}
+
 impl std::fmt::Display for Blockchain {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_blockchain_genesis() {
+        let a = Blockchain::default();
+
+        assert!(a.contains_hash(a.chain.keys().last().unwrap()));
     }
 }

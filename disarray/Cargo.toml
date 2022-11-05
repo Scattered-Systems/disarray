@@ -23,7 +23,23 @@ runtime = ["disarray-runtime"]
 crate-type = ["cdylib", "rlib"]
 test = true
 
+[build-dependencies]
+substrate-wasm-builder = "4.0.0"
+
 [dependencies]
-disarray-core = { optional = true, path = "../core", version = "0.1.13" }
-disarray-network = { optional = true, path = "../network", version = "0.1.5" }
-disarray-runtime = { optional = true, path = "../runtime", version = "0.1.0" }
+
+
+[dependencies.disarray-core]
+optional = true
+path = "../core"
+version = "0.1.13"
+
+[dependencies.disarray-network]
+optional = true
+path = "../network"
+version = "0.1.5"
+
+[dependencies.disarray-runtime]
+optional = true
+path = "../runtime"
+version = "0.1.0"
