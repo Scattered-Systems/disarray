@@ -22,6 +22,7 @@ use std::{
 
 pub type StateMap = HashMap<H160, (usize, usize)>;
 
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct State {
     pub state_per_block: HashMap<H256, StateMap>,
 }
@@ -36,9 +37,9 @@ pub fn create_ico_keys(n: usize) -> Vec<Ed25519KeyPair> {
     let lines: Vec<String> = file_to_vec("pubkeys.txt".to_string()).unwrap();
 
     let mut keys: Vec<Ed25519KeyPair> = Vec::new();
-    for i in 0..n {
-        let pkcs8_bytes = hex::decode(lines[i].clone()).unwrap();
-        let key = Ed25519KeyPair::from_pkcs8((&pkcs8_bytes[..]).into()).unwrap();
+    for i in lines.iter().take(n) {
+        let pkcs8_bytes = hex::decode(i.clone()).unwrap();
+        let key = Ed25519KeyPair::from_pkcs8(&pkcs8_bytes[..]).unwrap();
         keys.push(key);
     }
     keys
@@ -59,26 +60,26 @@ pub fn compute_key_hash(key: Vec<u8>) -> H256 {
 }
 
 pub fn transaction_check(current_state: &mut StateMap, tx: &SignedTransaction) -> bool {
-    if verify_signedtxn(&tx) {
+    if verify_signedtxn(tx) {
         let copy = tx.clone();
         let pubk = copy.sign.pubk.clone();
-        let nonce = copy.transaction.nonce.clone();
-        let value = copy.transaction.value.clone();
-        let recv = copy.transaction.recv.clone();
+        let nonce = copy.transaction.nonce;
+        let value = copy.transaction.value;
+        let recv = copy.transaction.recv;
 
         let sender: H160 = compute_key_hash(pubk).into();
-        let (s_nonce, s_amount) = current_state.get(&sender).unwrap().clone();
-        let (r_nonce, r_amount) = current_state.get(&recv).unwrap().clone();
+        let (s_nonce, s_amount) = *current_state.get(&sender).unwrap();
+        let (r_nonce, r_amount) = *current_state.get(&recv).unwrap();
 
         if nonce == s_nonce + 1 && s_amount >= value {
             current_state.insert(sender, (s_nonce + 1, s_amount - value));
             current_state.insert(recv, (r_nonce, r_amount + value));
-            return true;
+            true
         } else {
-            return false;
+            false
         }
     } else {
-        return false;
+        false
     }
 }
 
@@ -89,7 +90,7 @@ impl State {
     }
 
     pub fn ico(&mut self, genesis_hash: H256, accounts: &Vec<H160>, amount: usize) {
-        if self.state_per_block.len() > 0 {
+        if !self.state_per_block.is_empty() {
             info!("Already did an ICO!");
             return;
         }
@@ -116,8 +117,8 @@ impl State {
             let recv = txn.transaction.recv;
             // todo: add txn check, if the account exists or amount is enough
 
-            let (s_nonce, s_amount) = parent_state.get(&sender).unwrap().clone();
-            let (r_nonce, r_amount) = parent_state.get(&recv).unwrap().clone();
+            let (s_nonce, s_amount) = *parent_state.get(&sender).unwrap();
+            let (r_nonce, r_amount) = *parent_state.get(&recv).unwrap();
             parent_state.insert(sender, (s_nonce + 1, s_amount - txn.transaction.value));
             parent_state.insert(recv, (r_nonce, r_amount + txn.transaction.value));
         }

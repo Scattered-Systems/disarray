@@ -15,7 +15,7 @@ pub(crate) mod utils {
     use super::{Block, BlockContent, BlockHeader, BlockType};
     use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-    use scsys::prelude::{Hashable, H256};
+    use scsys::prelude::H256;
     use serde_json::json;
 
     pub fn calculate_block_hash(
@@ -41,16 +41,16 @@ pub(crate) mod utils {
     }
 
     pub fn generate_pow_block(
-        data: &Vec<SignedTransaction>,
-        transaction_ref: &Vec<H256>,
+        data: &[SignedTransaction],
+        transaction_ref: &[H256],
         parent: &H256,
         nonce: u32,
         pow_difficulty: &H256,
         pos_difficulty: &H256,
         rand: u128,
         timestamp: i64,
-        vrf_proof: &Vec<u8>,
-        vrf_hash: &Vec<u8>,
+        vrf_proof: &[u8],
+        vrf_hash: &[u8],
         vrf_pub_key: &[u8],
         selfish_block: bool,
     ) -> Block {
@@ -66,8 +66,8 @@ pub(crate) mod utils {
             *pow_difficulty,
             rand,
             timestamp,
-            vrf_hash.clone().into(),
-            vrf_proof.clone().into(),
+            vrf_hash.to_owned(),
+            vrf_proof.to_owned(),
             vrf_pub_key.to_vec(),
         );
 

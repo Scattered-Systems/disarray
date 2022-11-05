@@ -19,7 +19,7 @@ impl Peer {
         crate::NoiseKeys::new()
     }
     pub fn authenticate(self) -> Result<AuthNoiseKeys, NoiseError> {
-        Self::generate_noise_keys().into_authentic(self.keypair.clone().borrow())
+        Self::generate_noise_keys().into_authentic(self.keypair.borrow())
     }
     pub fn new(id: PeerId, keypair: PeerKp) -> Self {
         Self { id, keypair }

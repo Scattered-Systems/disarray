@@ -9,16 +9,8 @@ pub(crate) mod sign;
 pub(crate) mod signed;
 
 pub(crate) mod utils {
-    use crate::transactions::{Sign, SignedTransaction, Transaction};
-    use scsys::{
-        crypto::hash::generate_random_hash,
-        prelude::{
-            rand::{self, Rng},
-            ring::signature::{
-                Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
-            },
-        },
-    };
+    use crate::transactions::Transaction;
+    use scsys::prelude::ring::signature::{Ed25519KeyPair, Signature};
 
     /// Create digital signature of a transaction
     pub fn sign(t: &Transaction, key: &Ed25519KeyPair) -> Signature {

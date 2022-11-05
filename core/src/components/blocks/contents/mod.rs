@@ -9,7 +9,7 @@ pub(crate) mod content;
 
 pub(crate) mod utils {
     use super::BlockContent;
-    use crate::transactions::{generate_random_signed_transaction, SignedTransaction};
+    use crate::transactions::generate_random_signed_transaction;
     use scsys::prelude::generate_random_hash;
 
     pub fn generate_random_block_content() -> BlockContent {

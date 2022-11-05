@@ -22,13 +22,7 @@ pub fn create_block_by_mining(
         if nonce % 100000 == 0 {
             log::info!("nonce: {}", nonce);
         }
-        let hash = calculate_block_hash(
-            id,
-            nonce,
-            previous.clone(),
-            timestamp.clone(),
-            transactions.clone(),
-        );
+        let hash = calculate_block_hash(id, nonce, previous, timestamp, transactions.clone());
         let binary_hash = &hash.0;
         if binary_hash.starts_with(DIFFICULTY_PREFIX.as_ref()) {
             log::info!(

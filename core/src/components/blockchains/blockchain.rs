@@ -6,7 +6,10 @@
 */
 use super::{BlockData, ChainWrapper, ChainWrapperExt, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block};
-use scsys::{core::Timestamp, prelude::{Hashable, H160, H256}};
+use scsys::{
+    core::Timestamp,
+    prelude::{Hashable, H160, H256},
+};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -30,7 +33,7 @@ impl Blockchain {
         );
 
         let data = BlockData::new(genesis.clone(), 0);
-        let hash: H256 = genesis.clone().hash();
+        let hash: H256 = genesis.hash();
 
         // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
         let map = HashMap::new();
@@ -64,7 +67,7 @@ impl Blockchain {
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-        super::insert_pow(self, block).unwrap_or_else(|_| false)
+        super::insert_pow(self, block)
     }
 }
 
@@ -78,7 +81,7 @@ impl ChainWrapper for Blockchain {
     }
 
     fn tip(&self) -> H256 {
-        self.tip.clone()
+        self.tip
     }
 
     fn map(&self) -> &HashMap<H256, HashMap<H256, H160>> {
@@ -114,7 +117,7 @@ impl ChainWrapperExt for Blockchain {
         );
 
         let data = BlockData::new(genesis.clone(), 0);
-        let hash: H256 = genesis.clone().hash();
+        let hash: H256 = genesis.hash();
 
         // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
         let map = HashMap::new();

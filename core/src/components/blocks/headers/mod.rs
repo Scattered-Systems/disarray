@@ -9,14 +9,13 @@ pub(crate) mod header;
 
 pub(crate) mod utils {
     use super::header::BlockHeader;
-    use crate::transactions::{generate_random_signed_transaction, SignedTransaction};
+    use crate::transactions::SignedTransaction;
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
     use scsys::{
         core::Timestamp,
         prelude::{
             generate_random_hash,
             rand::{self, Rng},
-            H256,
         },
     };
 

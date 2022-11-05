@@ -9,8 +9,6 @@ use libp2p::{
     NetworkBehaviour,
 };
 
-use crate::KademliaMS;
-
 /// Create the standard behaviour for blockchain networks, building on top of Kademlia and MDNS
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "MainnetEvent")]

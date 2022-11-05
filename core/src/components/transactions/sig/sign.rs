@@ -3,8 +3,7 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use crate::transactions::SignedTransaction;
-use scsys::crypto::hash::H256;
+
 use serde::{Deserialize, Serialize};
 
 /// This structure models the expected signature

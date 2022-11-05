@@ -21,10 +21,7 @@ pub trait GenesisBlock {
 pub trait ChainWrapper {
     fn chain(&self) -> &HashMap<H256, BlockData>;
     fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockData) -> T) -> Option<T> {
-        match self.chain().get(data) {
-            Some(v) => Some(catalyst(v)),
-            None => None,
-        }
+        self.chain().get(data).map(catalyst)
     }
     fn chain_size(&self) -> usize {
         self.chain().len()
@@ -36,8 +33,7 @@ pub trait ChainWrapper {
     fn epoch_current(&self, current_ts: BlockTs) -> BlockTs {
         let epoch_time = self.epoch().time;
         let genesis_time = self.timestamp();
-        let current_epoch = (current_ts - genesis_time) / epoch_time;
-        current_epoch
+        (current_ts - genesis_time) / epoch_time
     }
     fn tip(&self) -> H256;
     fn lead(&self) -> u128;
@@ -82,9 +78,9 @@ pub trait ChainWrapperExt: ChainWrapper {
         loop {
             child = self.chain().get(&curhash).unwrap().clone();
             if child.height == height {
-                return child.block.hash().clone();
+                return child.block.hash();
             }
-            curhash = child.block.header.parent.clone();
+            curhash = child.block.header.parent;
         }
     }
     /// Create a new blockchain
@@ -111,10 +107,10 @@ pub trait ChainWrapperExt: ChainWrapper {
             for pow_hash in pow_hashes {
                 if !all_pow_hash.contains(&pow_hash) {
                     all_pow_hash.push(pow_hash);
-                    count = count + 1;
+                    count += 1;
                     let pow_block = self.find_one_block(&pow_hash).unwrap().clone();
-                    if pow_block.selfish_block == true {
-                        count_selfish = count_selfish + 1;
+                    if pow_block.selfish_block {
+                        count_selfish += 1;
                     }
                 }
             }
@@ -191,7 +187,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 .block
                 .header
                 .pow_difficulty;
-            let mut hash = parent.clone();
+            let mut hash = parent;
             let mut all_hashs = Vec::new();
             loop {
                 let block = self.chain().get(&hash).unwrap().block.clone();
@@ -265,10 +261,10 @@ pub trait ChainWrapperExt: ChainWrapper {
                         .block;
                     let miner = ref_b.header.vrf_pub_key.clone();
                     if let Some(m) = cnt.get_mut(&miner) {
-                        m.insert(h.clone());
+                        m.insert(*h);
                     } else {
                         let mut m = HashSet::new();
-                        m.insert(h.clone());
+                        m.insert(*h);
                         cnt.insert(miner, m);
                     }
                 }
