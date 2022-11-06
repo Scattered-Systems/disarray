@@ -9,7 +9,7 @@ use scsys::prelude::{Hashable, H160, H256};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct State {
-    pub state_per_block: BlockState
+    pub state_per_block: BlockState,
 }
 
 impl State {
@@ -78,8 +78,8 @@ impl State {
     }
 }
 
-pub trait Stateful {
-    fn state(&self) -> &Self {
-        &self
+impl Default for State {
+    fn default() -> Self {
+        Self::new()
     }
 }

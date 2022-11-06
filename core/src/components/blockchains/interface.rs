@@ -6,7 +6,10 @@
 */
 use super::{BlockData, Epoch, Position};
 use crate::{
-    blocks::{generate_genesis_block, Block, BlockHeader},
+    blocks::{
+        generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec, Resistable,
+        Verifiable,
+    },
     BlockTs,
 };
 use scsys::crypto::hash::{Hashable, H160, H256};
@@ -66,7 +69,7 @@ pub trait ChainWrapperExt: ChainWrapper {
     }
     ///
     fn find_one_header(&self, hash: &H256) -> Option<BlockHeader> {
-        let catalyst = |v: &BlockData| v.block.header.clone();
+        let catalyst = |v: &BlockData| v.block.header().clone();
         self.chain_fetch(hash, catalyst)
     }
     ///
@@ -80,7 +83,7 @@ pub trait ChainWrapperExt: ChainWrapper {
             if child.height == height {
                 return child.block.hash();
             }
-            curhash = child.block.header.parent;
+            curhash = child.block.header().parent();
         }
     }
     /// Create a new blockchain
@@ -107,7 +110,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 }
             }
 
-            current_hash = pdata.block.header.parent;
+            current_hash = pdata.block.header().parent();
         }
         let chain_quality: f32 = 1.0 - (count_selfish as f32) / (count as f32);
         chain_quality
@@ -123,7 +126,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 Some(b) => pdata = b.clone(),
             }
             blocks.push(current_hash);
-            current_hash = pdata.block.header.parent;
+            current_hash = pdata.block.header().parent();
         }
         log::debug!("finish {:?}!", blocks);
 
@@ -143,7 +146,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 Some(data) => pdata = data.clone(),
             }
             all_block.push(current_hash);
-            current_hash = pdata.block.header.parent;
+            current_hash = pdata.block.header().parent();
         }
         all_block.reverse();
         log::debug!("finish {:?}!", all_block);
@@ -161,12 +164,12 @@ pub trait ChainWrapperExt: ChainWrapper {
             .unwrap()
             .block
             .header
-            .pos_difficulty
+            .pos_difficulty()
     }
     fn get_pow_difficulty(&self, current_ts: BlockTs, parent: H256) -> H256 {
         let dt = |a: i64, b: i64| (a - b) / self.epoch().time;
         let pare = dt(
-            self.chain().get(&parent).unwrap().block.header.timestamp,
+            self.chain().get(&parent).unwrap().block.header().timestamp,
             self.timestamp(),
         ); // parent epoch
         let cure = dt(current_ts, self.timestamp()); // current epoch
@@ -177,7 +180,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 .unwrap()
                 .block
                 .header
-                .pow_difficulty;
+                .pow_difficulty();
             let mut hash = parent;
             let mut all_hashs = Vec::new();
             loop {
@@ -188,8 +191,8 @@ pub trait ChainWrapperExt: ChainWrapper {
                         all_hashs.push(pow);
                     }
                 }
-                hash = self.chain().get(&hash).unwrap().block.header.parent;
-                let btime = self.chain().get(&hash).unwrap().block.header.timestamp;
+                hash = self.chain().get(&hash).unwrap().block.parent();
+                let btime = self.chain().get(&hash).unwrap().block.header().timestamp;
 
                 if dt(btime, self.timestamp()) < pare || btime == self.timestamp() {
                     break;
@@ -210,7 +213,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 .unwrap()
                 .block
                 .header
-                .pow_difficulty
+                .pow_difficulty()
         }
     }
     /// Quickly check for a blocks existance
@@ -251,7 +254,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                         .get(h)
                         .expect("error, transaction ref is not in blockchain!!!")
                         .block;
-                    let miner = ref_b.header.vrf_pub_key.clone();
+                    let miner = ref_b.header.vrf_pub_key().clone();
                     if let Some(m) = cnt.get_mut(&miner) {
                         m.insert(*h);
                     } else {

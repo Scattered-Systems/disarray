@@ -3,24 +3,29 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-pub use self::{state::*, utils::*};
+pub use self::{interface::*, state::*, utils::*};
 
+pub(crate) mod interface;
 pub(crate) mod state;
 
 pub(crate) mod utils {
-    use crate::{transactions::{verify_signedtxn, SignedTransaction}, StateMap};
-    use scsys::prelude::{ring::{self, signature::{Ed25519KeyPair, KeyPair}}, H160, H256};
-    use std::{fs, io::{self, BufRead, BufReader},};
+    use crate::{
+        transactions::{verify_signedtxn, SignedTransaction},
+        StateMap,
+    };
+    use scsys::prelude::{
+        ring::signature::{Ed25519KeyPair, KeyPair},
+        H160, H256,
+    };
+    use std::io::{BufRead, BufReader};
 
+    /// Creates a vector of accounts from the provided collection of keys
     pub fn create_ico_accounts(keys: Vec<Ed25519KeyPair>) -> Vec<H160> {
-        let mut accounts: Vec<H160> = Vec::new();
-        for key in keys {
-            let account: H160 = compute_key_hash(key.public_key().as_ref().to_vec()).into();
-            accounts.push(account);
-        }
-        accounts
+        keys.iter()
+            .map(|i| compute_key_hash(i.public_key().as_ref().to_vec()).into())
+            .collect::<Vec<H160>>()
     }
-
+    /// Creates a vector of the given size composed of elligble keypairs
     pub fn create_ico_keys(n: usize) -> Vec<Ed25519KeyPair> {
         let lines: Vec<String> = file_to_vec("pubkeys.txt".to_string()).unwrap();
 
@@ -32,19 +37,19 @@ pub(crate) mod utils {
         }
         keys
     }
-
-    /// Given the 
+    /// A function wrapper converting the given vector of elements type u8
     pub fn compute_key_hash(key: Vec<u8>) -> H256 {
-        let bytes: &[u8] = &key;
-        ring::digest::digest(&ring::digest::SHA256, bytes).into()
+        key.into()
     }
     /// From the given path, open the file and gathers its contents into a vector
-    pub fn file_to_vec(filename: String) -> io::Result<Vec<String>> {
-        let file_in = fs::File::open(filename)?;
+    pub fn file_to_vec(filename: String) -> std::io::Result<Vec<String>> {
+        let file_in = std::fs::File::open(filename)?;
         let file_reader = BufReader::new(file_in);
-        Ok(file_reader.lines().filter_map(io::Result::ok).collect())
+        Ok(file_reader
+            .lines()
+            .filter_map(std::io::Result::ok)
+            .collect())
     }
-
     /// Check the given transaction against the provided state-map
     pub fn transaction_check(current_state: &mut StateMap, tx: &SignedTransaction) -> bool {
         if verify_signedtxn(tx) {

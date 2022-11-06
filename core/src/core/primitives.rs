@@ -9,6 +9,15 @@ pub use self::{constants::*, types::*};
 mod constants {
     /// Set the difficulty for mining new blocks
     pub const DIFFICULTY_PREFIX: &str = "00";
+
+    pub const INITIAL_POW_DIFFICULTY: [u8; 32] =  [
+        0, 40, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0, 
+        0, 0, 0, 0, 0, 0, 0, 0,
+    ];
+
+    pub const INITIAL_POS_DIFFICULTY: [u8; 32] = [1; 32];
 }
 
 mod types {

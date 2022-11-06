@@ -12,26 +12,23 @@ pub(crate) mod transaction;
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
-    use scsys::{
-        crypto::hash::generate_random_hash,
-        prelude::{
-            rand::{self, Rng},
-            ring::signature::{
-                self, ED25519, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey, VerificationAlgorithm,
-            },
+    use scsys::prelude::{
+        generate_random_hash,
+        rand::{self, Rng},
+        random_keypair,
+        ring::signature::{
+            self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
+            VerificationAlgorithm, ED25519,
         },
     };
 
-    pub fn validate_transaction_signature(trx: &Transaction, key: &Ed25519KeyPair, sig: &signature::Signature) -> bool {
-        let ppk = UnparsedPublicKey::new(
-            &ED25519, 
-            key.public_key().as_ref()
-        );
-        match ppk.verify(trx.to_string().as_bytes(), sig.as_ref()) {
-            Err(_) => false,
-            Ok(_) => true
-        }
-        
+    pub fn validate_transaction_signature(
+        trx: &Transaction,
+        key: &Ed25519KeyPair,
+        sig: &signature::Signature,
+    ) -> bool {
+        let ppk = UnparsedPublicKey::new(&ED25519, key.public_key().as_ref());
+        ppk.verify(trx.to_string().as_bytes(), sig.as_ref()).is_ok()
     }
 
     /// Verify digital signature of a transaction, using public key instead of secret key
@@ -77,7 +74,7 @@ pub(crate) mod utils {
 
     pub fn generate_random_signed_transaction() -> SignedTransaction {
         let transaction = generate_random_transaction();
-        let pubk = crate::random_keypair();
+        let pubk = random_keypair();
         let sig = super::sign(&transaction, &pubk);
         let sign = Sign {
             pubk: pubk.public_key().as_ref().to_vec(),

@@ -4,7 +4,7 @@
    Description:
     ... Summary ...
 */
-#[cfg(test)]
+// #[cfg(test)]
 extern crate hex_literal;
 
 #[doc(inline)]

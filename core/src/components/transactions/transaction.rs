@@ -6,8 +6,8 @@
 use super::validate_transaction_signature;
 use scsys::prelude::{
     hasher,
-    ring::signature::{self, ED25519, Ed25519KeyPair, KeyPair, UnparsedPublicKey},
-    Hashable, H160, H256, Keypair
+    ring::signature::{self, Ed25519KeyPair},
+    Hashable, H160, H256,
 };
 use serde::{Deserialize, Serialize};
 
@@ -28,7 +28,7 @@ impl Transaction {
     }
     /// Validate the transaction given the correct key, signature pair
     pub fn validate(&self, key: &Ed25519KeyPair, sig: &signature::Signature) -> bool {
-        validate_transaction_signature(&self, key, sig)
+        validate_transaction_signature(self, key, sig)
     }
 }
 
