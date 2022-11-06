@@ -17,10 +17,22 @@ pub(crate) mod utils {
         prelude::{
             rand::{self, Rng},
             ring::signature::{
-                Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, VerificationAlgorithm,
+                self, ED25519, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey, VerificationAlgorithm,
             },
         },
     };
+
+    pub fn validate_transaction_signature(trx: &Transaction, key: &Ed25519KeyPair, sig: &signature::Signature) -> bool {
+        let ppk = UnparsedPublicKey::new(
+            &ED25519, 
+            key.public_key().as_ref()
+        );
+        match ppk.verify(trx.to_string().as_bytes(), sig.as_ref()) {
+            Err(_) => false,
+            Ok(_) => true
+        }
+        
+    }
 
     /// Verify digital signature of a transaction, using public key instead of secret key
     pub fn verify(
