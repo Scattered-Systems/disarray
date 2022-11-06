@@ -51,7 +51,10 @@ impl BlockHeader {
 
 impl Hashable for BlockHeader {
     fn hash(&self) -> H256 {
-        hasher(self).as_slice().to_owned().into()
+        hasher(&serde_json::to_string(&self).unwrap())
+            .as_slice()
+            .to_owned()
+            .into()
     }
 }
 

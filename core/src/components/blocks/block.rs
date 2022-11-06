@@ -6,7 +6,7 @@
 use super::{
     BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
 };
-use scsys::prelude::{Hashable, H256};
+use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -36,8 +36,8 @@ impl Block {
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes())
-            .as_bytes()
+        hasher(&serde_json::to_string(&self).unwrap())
+            .as_slice()
             .to_owned()
             .into()
     }

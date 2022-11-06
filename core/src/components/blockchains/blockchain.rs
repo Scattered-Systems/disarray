@@ -137,7 +137,7 @@ impl ChainWrapperExt for Blockchain {
 
 impl Default for Blockchain {
     fn default() -> Self {
-        Self::new(Timestamp::default().into())
+        Self::new(Timestamp::timestamp())
     }
 }
 

@@ -9,7 +9,7 @@ use crate::{
     blocks::{generate_genesis_block, Block, BlockHeader},
     BlockTs,
 };
-use scsys::crypto::hash::{hash_divide_by, Hashable, H160, H256};
+use scsys::crypto::hash::{Hashable, H160, H256};
 use std::collections::{HashMap, HashSet};
 
 pub trait GenesisBlock {
@@ -206,7 +206,7 @@ pub trait ChainWrapperExt: ChainWrapper {
             }
             //let start_time: u128 = self.chain.get(&hash).unwrap().blk.header.timestamp;
             let ratio = (all_hashs.len() as f64) / (self.epoch().size as f64);
-            let new_diff: H256 = hash_divide_by(&old_diff, ratio);
+            let new_diff: H256 = old_diff / ratio;
             log::debug!(
                 "Mining difficulty changes from {} to {}",
                 old_diff,
