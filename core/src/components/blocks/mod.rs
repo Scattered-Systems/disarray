@@ -68,9 +68,7 @@ pub(crate) mod utils {
 
     pub fn generate_genesis_block(initial_time: i64) -> Block {
         let content = BlockContent::default();
-        let pow_difficulty = <H256>::from(crate::INITIAL_POW_DIFFICULTY);
-        let pos_difficulty = <H256>::from([1; 32]);
-        let difficulty = BlockDifficulty::new(pos_difficulty, pow_difficulty);
+        let difficulty = BlockDifficulty::default();
         let justification = BlockJustification::default();
         let block_type = BlockType::from(true);
         let selfish_block = false;

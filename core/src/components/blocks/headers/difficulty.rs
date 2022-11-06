@@ -7,7 +7,7 @@ use crate::blocks::Resistable;
 use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BlockDifficulty {
     pub pos: H256,
     pub pow: H256,
@@ -34,6 +34,13 @@ impl Resistable for BlockDifficulty {
     }
 }
 
+impl Default for BlockDifficulty {
+    fn default() -> Self {
+        let pos = <H256>::from(crate::INITIAL_POS_DIFFICULTY);
+        let pow = <H256>::from(crate::INITIAL_POW_DIFFICULTY);
+        Self::new(pos, pow)
+    }
+}
 impl std::fmt::Display for BlockDifficulty {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {:?})", self.pos, self.pow)
@@ -59,7 +66,10 @@ mod tests {
     #[test]
     fn test_default_difficulty() {
         let a = BlockDifficulty::default();
-        let b = BlockDifficulty::new(Default::default(), Default::default());
+        let b = BlockDifficulty::new(
+            <H256>::from(crate::INITIAL_POS_DIFFICULTY),
+            <H256>::from(crate::INITIAL_POW_DIFFICULTY),
+        );
         assert_eq!(&a, &b)
     }
 }
