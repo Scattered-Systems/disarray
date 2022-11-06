@@ -1,5 +1,5 @@
 /*
-    Appellation: wrapper <module>
+    Appellation: interface <blockchains>
     Contrib: FL03 <jo3mccain@icloud.com>
     Description:
         ... Summary ...
@@ -89,8 +89,6 @@ pub trait ChainWrapperExt: ChainWrapper {
         Self: Sized;
     /// TODO: Finalize the chain quality
     fn get_chain_quality(&self) -> f32 {
-        //unimplemented!()
-        // let mut all_block : Vec<H256> = vec![];
         let mut current_hash = self.tip();
         let mut parentdata: BlockData;
         let mut count = 0;
@@ -102,7 +100,6 @@ pub trait ChainWrapperExt: ChainWrapper {
                 Some(data) => parentdata = data.clone(),
                 None => break,
             }
-            //all_block.push(current_hash);
             let pow_hashes = parentdata.block.content.reference.clone();
             for pow_hash in pow_hashes {
                 if !all_pow_hash.contains(&pow_hash) {
@@ -123,7 +120,6 @@ pub trait ChainWrapperExt: ChainWrapper {
     fn get_all_blocks_from_longest(&self) -> Vec<H256> {
         let mut blocks: Vec<H256> = vec![];
         let mut current_hash = self.tip();
-        //let mut parent_hash;
         let mut pdata: BlockData;
 
         loop {

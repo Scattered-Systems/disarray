@@ -29,7 +29,7 @@ impl Transaction {
 
 impl std::fmt::Display for Transaction {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({}, {}, {})", self.nonce, H256::from(self.recv.0), self.value)
+        write!(f, "({}, {:?}, {})", self.nonce, self.recv.0, self.value)
     }
 }
 
