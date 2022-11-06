@@ -4,10 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{blockchain::*, chainstore::*, epochs::*, interface::*, misc::*, utils::*};
+pub use self::{blockchain::*, epochs::*, interface::*, misc::*, utils::*};
 
 pub(crate) mod blockchain;
-pub(crate) mod chainstore;
 pub(crate) mod epochs;
 pub(crate) mod interface;
 pub(crate) mod misc;
