@@ -3,7 +3,6 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-
 use serde::{Deserialize, Serialize};
 
 /// This structure models the expected signature

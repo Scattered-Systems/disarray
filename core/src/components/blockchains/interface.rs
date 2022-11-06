@@ -218,6 +218,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 .pow_difficulty
         }
     }
+    /// Quickly check for a blocks existance
     fn is_block(&self, hash: &H256) -> bool {
         self.chain().contains_key(hash)
     }

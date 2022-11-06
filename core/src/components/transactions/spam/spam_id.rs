@@ -8,7 +8,7 @@ use scsys::crypto::hash::H256;
 use serde::{Deserialize, Serialize};
 
 /// Implements a spad-id for malicious transactions
-#[derive(Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct SpamId {
     pub nonce: usize,
     pub pubk: String,

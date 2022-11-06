@@ -38,15 +38,3 @@ impl Hashable for Transaction {
         hasher(self).as_slice().to_owned().into()
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_default_transaction() {
-        let a = Transaction::default();
-        let b = a.clone();
-        assert_eq!(a, b)
-    }
-}

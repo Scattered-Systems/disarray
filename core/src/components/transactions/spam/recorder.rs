@@ -7,16 +7,14 @@ use std::collections::HashSet;
 
 use crate::transactions::{SpamId, SignedTransaction};
 
-#[derive(Debug)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct SpamRecorder {
     set: HashSet<SpamId>
 }
 
 impl SpamRecorder {
-    pub fn new() -> Self {
-        Self {
-            set: HashSet::new()
-        }
+    pub fn new(set: HashSet<SpamId>) -> Self {
+        Self { set }
     }
     /// return false if the element is already in
     pub fn test(&self, t: &SignedTransaction) -> bool {
