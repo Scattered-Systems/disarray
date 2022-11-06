@@ -27,6 +27,12 @@ impl Hashable for BlockContent {
     }
 }
 
+impl std::fmt::Display for BlockContent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

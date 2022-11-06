@@ -20,3 +20,13 @@ impl std::convert::From<bool> for BlockType {
         }
     }
 }
+
+impl std::fmt::Display for BlockType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            serde_json::to_string(&self).unwrap().to_lowercase()
+        )
+    }
+}

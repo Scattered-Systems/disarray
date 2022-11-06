@@ -20,7 +20,7 @@ pub struct Blockchain {
     pub length: u128,
     pub map: HashMap<H256, HashMap<H256, H160>>,
     pub position: Position,
-    pub timestamp: i64, // genesis timestamp
+    pub timestamp: i64, // The time of creation (genesis_timestamp)
     pub tip: H256,
 }
 
@@ -137,13 +137,13 @@ impl ChainWrapperExt for Blockchain {
 
 impl Default for Blockchain {
     fn default() -> Self {
-        Self::new(Timestamp::default().into())
+        Self::new(Timestamp::timestamp())
     }
 }
 
 impl std::fmt::Display for Blockchain {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{}", serde_json::to_string(&self.chain).unwrap())
     }
 }
 

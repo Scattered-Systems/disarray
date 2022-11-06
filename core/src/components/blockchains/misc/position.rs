@@ -17,3 +17,21 @@ impl Position {
         Self { depth, pos, pow }
     }
 }
+
+impl std::fmt::Display for Position {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_position() {
+        let a = Position::default();
+        let b = Position::new(Default::default(), Default::default(), Default::default());
+        assert_eq!(&a, &b)
+    }
+}

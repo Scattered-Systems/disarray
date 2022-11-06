@@ -3,9 +3,10 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
+use super::validate_transaction_signature;
 use scsys::prelude::{
     hasher,
-    ring::signature::{Ed25519KeyPair, Signature},
+    ring::signature::{self, Ed25519KeyPair},
     Hashable, H160, H256,
 };
 use serde::{Deserialize, Serialize};
@@ -22,31 +23,23 @@ impl Transaction {
         Self { nonce, recv, value }
     }
     /// Create digital signature of a transaction
-    pub fn sign(&self, key: &Ed25519KeyPair) -> Signature {
-        key.sign(&serde_json::to_vec(self).unwrap())
+    pub fn sign(&self, key: &Ed25519KeyPair) -> signature::Signature {
+        key.sign(self.to_string().as_bytes())
+    }
+    /// Validate the transaction given the correct key, signature pair
+    pub fn validate(&self, key: &Ed25519KeyPair, sig: &signature::Signature) -> bool {
+        validate_transaction_signature(self, key, sig)
     }
 }
 
 impl std::fmt::Display for Transaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({}, {:?}, {})", self.nonce, self.recv.0, self.value)
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 
 impl Hashable for Transaction {
     fn hash(&self) -> H256 {
         hasher(self).as_slice().to_owned().into()
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_default_transaction() {
-        let a = Transaction::default();
-        let b = a.clone();
-        assert_eq!(a, b)
     }
 }

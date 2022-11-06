@@ -3,6 +3,7 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::spam_id::*;
+pub use self::{recorder::*, spam_id::*};
 
+pub(crate) mod recorder;
 pub(crate) mod spam_id;

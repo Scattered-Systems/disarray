@@ -4,7 +4,8 @@
    Description:
        ... Summary ...
 */
-pub use self::{blocks::*, chains::*};
+pub use self::{blocks::*, chains::*, validator::Validator};
 
 pub(crate) mod blocks;
 pub(crate) mod chains;
+pub(crate) mod validator;

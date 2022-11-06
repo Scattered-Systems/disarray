@@ -8,7 +8,7 @@ use scsys::crypto::hash::H256;
 use serde::{Deserialize, Serialize};
 
 /// Implements a spad-id for malicious transactions
-#[derive(Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct SpamId {
     pub nonce: usize,
     pub pubk: String,
@@ -27,5 +27,11 @@ impl std::convert::From<&SignedTransaction> for SpamId {
             nonce: t.transaction.nonce,
             pubk: hash.to_string(),
         }
+    }
+}
+
+impl std::fmt::Display for SpamId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }

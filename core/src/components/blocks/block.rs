@@ -6,7 +6,7 @@
 use super::{
     BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
 };
-use scsys::prelude::{Hashable, H256};
+use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -36,10 +36,7 @@ impl Block {
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        blake3::hash(serde_json::to_string(&self).unwrap().as_bytes())
-            .as_bytes()
-            .to_owned()
-            .into()
+        hasher(self).as_slice().to_owned().into()
     }
 }
 
@@ -61,12 +58,6 @@ impl CoreBlockWrapper for Block {
 
 impl CoreBlockWrapperExt for Block {}
 
-// impl std::convert::Into<String> for Block {
-//     fn into(self) -> String {
-//         serde_json::to_string(&self).expect("Failed to serialize the content...")
-//     }
-// }
-
 impl std::convert::From<Value> for Block {
     fn from(data: Value) -> Self {
         data.into()
@@ -75,6 +66,6 @@ impl std::convert::From<Value> for Block {
 
 impl std::fmt::Display for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "",)
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }

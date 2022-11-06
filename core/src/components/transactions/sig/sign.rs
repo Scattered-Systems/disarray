@@ -3,8 +3,12 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-
 use serde::{Deserialize, Serialize};
+
+pub trait SignatureWrapper {
+    fn public_key(&self) -> Vec<u8>;
+    fn signature(&self) -> Vec<u8>;
+}
 
 /// This structure models the expected signature
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -16,6 +20,15 @@ pub struct Sign {
 impl Sign {
     pub fn new(pubk: Vec<u8>, sig: Vec<u8>) -> Self {
         Self { pubk, sig }
+    }
+}
+
+impl SignatureWrapper for Sign {
+    fn public_key(&self) -> Vec<u8> {
+        self.pubk.clone()
+    }
+    fn signature(&self) -> Vec<u8> {
+        self.sig.clone()
     }
 }
 

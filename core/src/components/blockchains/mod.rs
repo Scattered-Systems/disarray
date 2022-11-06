@@ -4,13 +4,12 @@
    Description:
        ... Summary ...
 */
-pub use self::{blockchain::*, chain_data::*, epochs::*, misc::*, utils::*, wrapper::*};
+pub use self::{blockchain::*, epochs::*, interface::*, misc::*, utils::*};
 
 pub(crate) mod blockchain;
-pub(crate) mod chain_data;
 pub(crate) mod epochs;
+pub(crate) mod interface;
 pub(crate) mod misc;
-pub(crate) mod wrapper;
 
 pub(crate) mod utils {
     use super::{BlockData, Blockchain};
@@ -29,11 +28,12 @@ pub(crate) mod utils {
     //     mmr.assign(leaf_hashes).unwrap();
     // }
 
+    /// Ouroboros Praos Proof-of-Stake
     pub fn insert_pos(bc: &mut Blockchain, block: &Block, selfish: bool) -> bool {
         //unimplemented!()
         if !selfish {
             if bc.chain.contains_key(&block.hash()) {
-                panic!("Attempting to insert a pre-existing block...")
+                return false;
             }
             let header: BlockHeader = block.header.clone();
             let parenthash: H256 = header.parent;

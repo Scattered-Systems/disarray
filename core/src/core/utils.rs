@@ -4,7 +4,8 @@
    Description:
        ... Summary ...
 */
-use scsys::prelude::ring::{rand::SystemRandom, signature::Ed25519KeyPair};
+use scsys::prelude::H256;
+use std::io::{self, BufRead, BufReader};
 
 pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
     let mut res: String = String::default();
@@ -13,9 +14,13 @@ pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
     }
     res.into_bytes()
 }
-
-pub fn random_keypair() -> Ed25519KeyPair {
-    let rng = SystemRandom::new();
-    let pkcs8_bytes = Ed25519KeyPair::generate_pkcs8(&rng).unwrap();
-    Ed25519KeyPair::from_pkcs8(pkcs8_bytes.as_ref()).unwrap()
+/// A function wrapper converting the given vector of elements type u8
+pub fn compute_key_hash(key: Vec<u8>) -> H256 {
+    key.into()
+}
+/// From the given path, open the file and gathers its contents into a vector
+pub fn file_to_vec(filename: String) -> io::Result<Vec<String>> {
+    let file_in = std::fs::File::open(filename)?;
+    let file_reader = BufReader::new(file_in);
+    Ok(file_reader.lines().filter_map(io::Result::ok).collect())
 }
