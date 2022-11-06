@@ -11,9 +11,10 @@ mod tests {
             TokioMdns,
         },
         mplex, noise,
-        swarm::{SwarmBuilder, SwarmEvent},
+        swarm::{Swarm, SwarmBuilder, SwarmEvent},
         tcp, Multiaddr, NetworkBehaviour, PeerId, Transport,
     };
+    use scsys::prelude::BoxResult;
     use std::error::Error;
     use tokio::io::{self, AsyncBufReadExt};
 
@@ -41,6 +42,50 @@ mod tests {
     impl From<MdnsEvent> for ChatBehaviourEvent {
         fn from(event: MdnsEvent) -> Self {
             Self::Mdns(event)
+        }
+    }
+
+    async fn chat_engine(swarm: &mut Swarm<ChatBehaviour>, topic: Option<&str>) -> BoxResult {
+        let floodsub_topic = floodsub::Topic::new(topic.unwrap_or("chat"));
+        let mut stdin = io::BufReader::new(io::stdin()).lines();
+        loop {
+            tokio::select! {
+                line = stdin.next_line() => {
+                    let line = line?.expect("stdin closed");
+                    swarm.behaviour_mut().floodsub.publish(floodsub_topic.clone(), line.as_bytes());
+                }
+                event = swarm.select_next_some() => {
+                    match event {
+                        SwarmEvent::NewListenAddr { address, .. } => {
+                            println!("Listening on {:?}", address);
+                        }
+                        SwarmEvent::Behaviour(ChatBehaviourEvent::Floodsub(FloodsubEvent::Message(message))) => {
+                            println!(
+                                    "Received: '{:?}' from {:?}",
+                                    String::from_utf8_lossy(&message.data),
+                                    message.source
+                                );
+                        }
+                        SwarmEvent::Behaviour(ChatBehaviourEvent::Mdns(event)) => {
+                            match event {
+                                MdnsEvent::Discovered(list) => {
+                                    for (peer, _) in list {
+                                        swarm.behaviour_mut().floodsub.add_node_to_partial_view(peer);
+                                    }
+                                }
+                                MdnsEvent::Expired(list) => {
+                                    for (peer, _) in list {
+                                        if !swarm.behaviour().mdns.has_node(&peer) {
+                                            swarm.behaviour_mut().floodsub.remove_node_from_partial_view(&peer);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
         }
     }
 
@@ -99,46 +144,6 @@ mod tests {
 
         // Listen on all interfaces and whatever port the OS assigns
         swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
-
-        // Kick it off
-        loop {
-            tokio::select! {
-                line = stdin.next_line() => {
-                    let line = line?.expect("stdin closed");
-                    swarm.behaviour_mut().floodsub.publish(floodsub_topic.clone(), line.as_bytes());
-                }
-                event = swarm.select_next_some() => {
-                    match event {
-                        SwarmEvent::NewListenAddr { address, .. } => {
-                            println!("Listening on {:?}", address);
-                        }
-                        SwarmEvent::Behaviour(ChatBehaviourEvent::Floodsub(FloodsubEvent::Message(message))) => {
-                            println!(
-                                    "Received: '{:?}' from {:?}",
-                                    String::from_utf8_lossy(&message.data),
-                                    message.source
-                                );
-                        }
-                        SwarmEvent::Behaviour(ChatBehaviourEvent::Mdns(event)) => {
-                            match event {
-                                MdnsEvent::Discovered(list) => {
-                                    for (peer, _) in list {
-                                        swarm.behaviour_mut().floodsub.add_node_to_partial_view(peer);
-                                    }
-                                }
-                                MdnsEvent::Expired(list) => {
-                                    for (peer, _) in list {
-                                        if !swarm.behaviour().mdns.has_node(&peer) {
-                                            swarm.behaviour_mut().floodsub.remove_node_from_partial_view(&peer);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        _ => {}
-                    }
-                }
-            }
-        }
+        Ok(())
     }
 }

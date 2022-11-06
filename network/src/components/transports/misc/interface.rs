@@ -7,6 +7,12 @@ use crate::{BoxedTransport, NoiseKeys, NoiseResult, PeerId, PeerKp};
 use libp2p::{core::upgrade, mplex, noise, tcp, Transport};
 
 pub trait Transporter {
+    fn config_mplex(&self) -> mplex::MplexConfig {
+        mplex::MplexConfig::new()
+    }
+    fn config_tcp(&self, delay: Option<bool>) -> tcp::GenTcpConfig {
+        tcp::GenTcpConfig::default().nodelay(delay.unwrap_or(false))
+    }
     fn keypair(&self) -> &PeerKp;
     fn noise_keys(&self) -> &NoiseKeys;
     fn peer_id(&self) -> PeerId {
@@ -28,13 +34,13 @@ pub trait TransportWrapperExt: TransportWrapper {
         self.auth().is_ok()
     }
     fn quickstart_tcp(&self) -> BoxedTransport {
-        tcp::TokioTcpTransport::new(tcp::GenTcpConfig::default().nodelay(true))
-            .upgrade(upgrade::Version::V1)
+        tcp::TokioTcpTransport::new(self.config_tcp(None))
+            .upgrade(self.version())
             .authenticate(
                 self.auth()
                     .expect("Signing libp2p-noise static DH keypair failed."),
             )
-            .multiplex(mplex::MplexConfig::new())
+            .multiplex(self.config_mplex())
             .boxed()
     }
 }
