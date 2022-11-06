@@ -5,9 +5,9 @@
         ... Summary ...
 */
 use super::{TransportWrapper, TransportWrapperExt, Transporter};
-use crate::{BoxedTransport, NoiseKeys, PeerId, PeerKp};
-use scsys::prelude::BoxResult;
+use crate::{NoiseKeys, PeerKp};
 
+#[derive(Clone)]
 pub struct Transport {
     pub key: PeerKp,
     pub noise: NoiseKeys,

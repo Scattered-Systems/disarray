@@ -6,7 +6,6 @@
 use crate::{BoxedTransport, NoiseKeys, NoiseResult, PeerId, PeerKp};
 use libp2p::{core::upgrade, mplex, noise, tcp, Transport};
 
-#[derive(Clone)]
 pub trait Transporter {
     fn keypair(&self) -> &PeerKp;
     fn noise_keys(&self) -> &NoiseKeys;
