@@ -21,12 +21,12 @@ pub trait TransportWrapper: Transporter {
     fn auth(&self) -> NoiseResult<noise::NoiseAuthenticated<noise::XX, noise::X25519Spec, ()>> {
         noise::NoiseAuthenticated::xx(self.keypair())
     }
-    fn is_authenticated(&self) -> bool {
-        self.auth().is_ok()
-    }
 }
 
 pub trait TransportWrapperExt: TransportWrapper {
+    fn is_authenticated(&self) -> bool {
+        self.auth().is_ok()
+    }
     fn quickstart_tcp(&self) -> BoxedTransport {
         tcp::TokioTcpTransport::new(tcp::GenTcpConfig::default().nodelay(true))
             .upgrade(upgrade::Version::V1)
