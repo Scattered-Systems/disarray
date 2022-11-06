@@ -90,17 +90,12 @@ pub trait ChainWrapperExt: ChainWrapper {
     /// TODO: Finalize the chain quality
     fn get_chain_quality(&self) -> f32 {
         let mut current_hash = self.tip();
-        let mut parentdata: BlockData;
         let mut count = 0;
         let mut count_selfish = 0;
         let mut all_pow_hash: Vec<H256> = Vec::new();
 
-        loop {
-            match self.chain().get(&current_hash) {
-                Some(data) => parentdata = data.clone(),
-                None => break,
-            }
-            let pow_hashes = parentdata.block.content.reference.clone();
+        while let Some(pdata) = self.chain().get(&current_hash) {
+            let pow_hashes = pdata.block.content.reference.clone();
             for pow_hash in pow_hashes {
                 if !all_pow_hash.contains(&pow_hash) {
                     all_pow_hash.push(pow_hash);
@@ -112,7 +107,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 }
             }
 
-            current_hash = parentdata.block.header.parent;
+            current_hash = pdata.block.header.parent;
         }
         let chain_quality: f32 = 1.0 - (count_selfish as f32) / (count as f32);
         chain_quality

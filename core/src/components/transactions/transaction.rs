@@ -5,7 +5,7 @@
 */
 use scsys::prelude::{
     hasher,
-    ring::signature::{Ed25519KeyPair, Signature},
+    ring::signature::{self, Ed25519KeyPair},
     Hashable, H160, H256,
 };
 use serde::{Deserialize, Serialize};
@@ -22,8 +22,8 @@ impl Transaction {
         Self { nonce, recv, value }
     }
     /// Create digital signature of a transaction
-    pub fn sign(&self, key: &Ed25519KeyPair) -> Signature {
-        key.sign(&serde_json::to_vec(self).unwrap())
+    pub fn sign(&self, key: &Ed25519KeyPair) -> signature::Signature {
+        key.sign(self.to_string().as_bytes())
     }
 }
 

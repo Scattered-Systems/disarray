@@ -28,7 +28,7 @@ pub fn create_block_by_mining(
             log::info!(
                 "mined! nonce: {}, hash: {}, binary hash: {:#?}",
                 nonce,
-                hex::encode(&hash),
+                hex::encode(hash),
                 binary_hash
             );
             return (nonce, hash);

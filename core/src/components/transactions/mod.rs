@@ -3,13 +3,12 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{sig::*, spam::*, transaction::*, utils::*};
+pub use self::{interface::*, sig::*, spam::*, transaction::*, utils::*};
 
+pub(crate) mod interface;
 pub(crate) mod sig;
 pub(crate) mod spam;
 pub(crate) mod transaction;
-
-pub type SignedTransactions = Vec<SignedTransaction>;
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};

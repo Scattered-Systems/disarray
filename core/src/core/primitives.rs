@@ -12,6 +12,7 @@ mod constants {
 }
 
 mod types {
+    use crate::transactions::{SignedTransaction, Transaction};
     use scsys::prelude::{chrono, H256};
 
     pub type BlockId = i64;
@@ -22,4 +23,9 @@ mod types {
 
     /// Simplistic wrapper for implementing transaction data
     pub type BlockData<Dt = String> = Vec<Dt>;
+
+    /// Type alias for a vector of signed transactions
+    pub type SignedTransactions = Vec<SignedTransaction>;
+    /// Type alias for a vector of unsigned transactions
+    pub type Transactions = Vec<Transaction>;
 }
