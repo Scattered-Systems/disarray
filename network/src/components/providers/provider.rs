@@ -7,13 +7,13 @@
 use crate::BoxedTransport;
 
 #[derive(Debug)]
-pub struct Provider<Addr = String> {
-    pub address: Addr,
+pub struct Provider {
+    pub address: String,
     pub clients: Vec<BoxedTransport>,
 }
 
-impl<Addr> Provider<Addr> {
-    pub fn constructor(address: Addr, clients: Vec<BoxedTransport>) -> Self {
+impl Provider {
+    pub fn constructor(address: String, clients: Vec<BoxedTransport>) -> Self {
         Self { address, clients }
     }
 }

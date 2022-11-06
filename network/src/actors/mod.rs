@@ -6,4 +6,3 @@
 */
 
 pub mod behaviours;
-pub mod providers;

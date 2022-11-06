@@ -42,6 +42,8 @@ mod types {
     pub type NetworkAddress = libp2p::Multiaddr;
     /// Type alias for [libp2p::noise::Keypair<libp2p::noise::X25519Spec>]
     pub type NoiseKeys = libp2p::noise::Keypair<NoiseSpec>;
+    ///
+    pub type NoiseResult<T = AuthNoiseKeys> = Result<T, NoiseError>;
     /// Type alias for [libp2p::noise::X25519Spec]
     pub type NoiseSpec = libp2p::noise::X25519Spec;
     /// Type alias for [libp2p::PeerId]

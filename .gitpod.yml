@@ -1,6 +1,6 @@
 tasks:
   - init: |
-      sudo apt update -y && sudo apt upgrade -y 
+      sudo apt update -y && sudo apt upgrade -y && sudo apt -y autoremove
       sudo apt install -y protobuf-compiler
       rustup update
       rustup default nightly 
