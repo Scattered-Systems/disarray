@@ -36,10 +36,7 @@ impl Block {
 
 impl Hashable for Block {
     fn hash(&self) -> H256 {
-        hasher(&serde_json::to_string(&self).unwrap())
-            .as_slice()
-            .to_owned()
-            .into()
+        hasher(self).as_slice().to_owned().into()
     }
 }
 
