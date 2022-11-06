@@ -6,14 +6,14 @@
 */
 use crate::BoxedTransport;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Provider {
     pub address: String,
     pub clients: Vec<BoxedTransport>,
 }
 
 impl Provider {
-    pub fn constructor(address: String, clients: Vec<BoxedTransport>) -> Self {
+    pub fn new(address: String, clients: Vec<BoxedTransport>) -> Self {
         Self { address, clients }
     }
 }
@@ -26,9 +26,12 @@ impl std::fmt::Display for Provider {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
-    fn test() {
-        let f = |x: usize| x.pow(x.try_into().unwrap());
-        assert_eq!(f(2), 4)
+    fn test_default_provider() {
+        let a = Provider::default();
+        let b = Provider::new(Default::default(), Default::default());
+        assert_eq!(&a.address, &b.address)
     }
 }

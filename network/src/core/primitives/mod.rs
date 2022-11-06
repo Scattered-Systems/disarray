@@ -1,19 +1,20 @@
 /*
-    Appellation: primitives <module>
+    Appellation: misc <proviers>
     Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Description: ... summary ...
 */
-pub use self::{constants::*, statics::*, types::*};
+pub use self::{addressing::*, constants::*, statics::*, types::*};
 
-mod constants {
+pub(crate) mod addressing;
+
+pub(crate) mod constants {
     /// Define the port typically associated with a mainnet
     pub const MAINNET_PORT: u16 = 9090;
     /// Define the port typically associated with a testnet
     pub const TESTNET_PORT: u16 = 9091;
 }
 
-mod statics {
+pub(crate) mod statics {
 
     // lazy_static::lazy_static! {
     //     /// Mainnet config for mina p2p network
@@ -25,7 +26,7 @@ mod statics {
     // }
 }
 
-mod types {
+pub(crate) mod types {
     use libp2p::core::{muxing::StreamMuxerBox, transport::Boxed};
     pub use libp2p::{
         dns::{GenDnsConfig, TokioDnsConfig},
