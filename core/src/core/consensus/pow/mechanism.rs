@@ -4,7 +4,6 @@
     Description: ... Summary ...
 */
 
-
 pub enum PoW {
-    OuroborosPraos
+    OuroborosPraos,
 }

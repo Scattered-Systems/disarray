@@ -28,7 +28,7 @@ pub(crate) mod utils {
     //     leaf_hashes.push(leaf_hash);
     //     mmr.assign(leaf_hashes).unwrap();
     // }
-    
+
     /// Ouroboros Praos Proof-of-Stake
     pub fn insert_pos(bc: &mut Blockchain, block: &Block, selfish: bool) -> bool {
         //unimplemented!()

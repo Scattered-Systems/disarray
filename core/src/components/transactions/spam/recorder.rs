@@ -5,11 +5,11 @@
 */
 use std::collections::HashSet;
 
-use crate::transactions::{SpamId, SignedTransaction};
+use crate::transactions::{SignedTransaction, SpamId};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct SpamRecorder {
-    set: HashSet<SpamId>
+    set: HashSet<SpamId>,
 }
 
 impl SpamRecorder {
@@ -25,4 +25,3 @@ impl SpamRecorder {
         self.set.insert(t.into())
     }
 }
-
