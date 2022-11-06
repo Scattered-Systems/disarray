@@ -41,9 +41,10 @@ impl Default for BlockDifficulty {
         Self::new(pos, pow)
     }
 }
+
 impl std::fmt::Display for BlockDifficulty {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({:?}, {:?})", self.pos, self.pow)
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 

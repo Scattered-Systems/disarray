@@ -95,17 +95,7 @@ impl Hashable for BlockHeader {
 
 impl std::fmt::Display for BlockHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}, {}, {}, {}, {}, {}, {}",
-            self.nonce(),
-            self.parent(),
-            self.merkle_root(),
-            self.pos_difficulty(),
-            self.pow_difficulty(),
-            self.rand(),
-            self.timestamp()
-        )
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 

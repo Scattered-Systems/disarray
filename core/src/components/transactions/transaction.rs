@@ -33,8 +33,8 @@ impl Transaction {
 }
 
 impl std::fmt::Display for Transaction {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "({}, {:?}, {})", self.nonce, self.recv.0, self.value)
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 

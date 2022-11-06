@@ -56,7 +56,7 @@ impl std::convert::From<(&[u8], &[u8], &[u8])> for BlockJustification {
 
 impl std::fmt::Display for BlockJustification {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({:?}, {:?}, {:?})", self.hash, self.proof, self.pub_key)
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 

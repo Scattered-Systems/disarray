@@ -66,6 +66,6 @@ impl std::convert::From<Value> for Block {
 
 impl std::fmt::Display for Block {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "",)
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }

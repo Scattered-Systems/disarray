@@ -4,3 +4,7 @@
    Description:
        ... Summary ...
 */
+pub use self::{stake::*, staker::*};
+
+pub(crate) mod stake;
+pub(crate) mod staker;
