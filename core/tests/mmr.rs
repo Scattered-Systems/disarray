@@ -1,33 +1,6 @@
-use blake3::Hasher;
-use bytes::Bytes;
-use ckb_merkle_mountain_range::{Error, Merge};
-
-#[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
-struct NumberHash(pub Bytes);
-
-impl std::convert::From<u32> for NumberHash {
-    fn from(num: u32) -> Self {
-        let hash = blake3::hash(&num.to_le_bytes());
-        NumberHash(Bytes::copy_from_slice(hash.as_bytes()))
-    }
-}
-
-struct MergeNumberHash;
-
-impl Merge for MergeNumberHash {
-    type Item = NumberHash;
-    fn merge(lhs: &Self::Item, rhs: &Self::Item) -> Result<Self::Item, Error> {
-        let mut hasher = Hasher::new();
-        hasher.update(&lhs.0);
-        hasher.update(&rhs.0);
-        let res = hasher.finalize();
-        Ok(NumberHash(Bytes::copy_from_slice(res.as_bytes())))
-    }
-}
-
 #[cfg(test)]
 mod tests {
-    use super::{MergeNumberHash, NumberHash};
+    use disarray_core::{MergeNumberHash, NumberHash};
     use ckb_merkle_mountain_range::{
         helper::pos_height_in_tree, leaf_index_to_mmr_size, util::MemStore, Error, MMRStore, MMR,
     };
@@ -208,7 +181,7 @@ mod tests {
 
         impl Merge for MyMerge {
             type Item = MyItem;
-            fn merge(lhs: &Self::Item, rhs: &Self::Item) -> Result<Self::Item, crate::Error> {
+            fn merge(lhs: &Self::Item, rhs: &Self::Item) -> Result<Self::Item, Error> {
                 Ok(MyItem::Merged(Box::new(lhs.clone()), Box::new(rhs.clone())))
             }
         }

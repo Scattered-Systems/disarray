@@ -4,6 +4,21 @@
    Description:
        ... Summary ...
 */
-pub use node::*;
+pub use self::{misc::*, node::*, utils::*};
 
-mod node;
+pub(crate) mod misc;
+pub(crate) mod node;
+
+pub(crate) mod utils {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_basic_node() {
+        let a = 0;
+        let b = 0;
+        assert_eq!(&a, &b);
+    }
+}

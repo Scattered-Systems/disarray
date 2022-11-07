@@ -4,9 +4,11 @@
    Description:
        ... Summary ...
 */
-pub use self::{constants::*, types::*};
+pub use self::{constants::*, mnhash::*, types::*};
 
-mod constants {
+pub(crate) mod mnhash;
+
+pub(crate) mod constants {
     /// Set the difficulty for mining new blocks
     pub const DIFFICULTY_PREFIX: &str = "00";
 
@@ -18,7 +20,7 @@ mod constants {
     pub const INITIAL_POS_DIFFICULTY: [u8; 32] = [1; 32];
 }
 
-mod types {
+pub(crate) mod types {
     use crate::transactions::{SignedTransaction, Transaction};
     use scsys::prelude::{chrono, H160, H256};
     use std::collections::HashMap;

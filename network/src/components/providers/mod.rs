@@ -10,7 +10,7 @@ pub(crate) mod misc;
 pub(crate) mod provider;
 
 mod utils {
-    use crate::AuthNoiseKeys;
+    use crate::{AuthNoiseKeys, BoxedTransport};
     use libp2p::{
         core::upgrade,
         mplex, noise,
@@ -18,7 +18,7 @@ mod utils {
         Transport,
     };
 
-    pub fn create_tokio_transport(noise_keys: AuthNoiseKeys) -> crate::BoxedTransport {
+    pub fn create_tokio_transport(noise_keys: AuthNoiseKeys) -> BoxedTransport {
         TokioTcpTransport::new(GenTcpConfig::default().nodelay(true))
             .upgrade(upgrade::Version::V1)
             .authenticate(noise::NoiseConfig::xx(noise_keys).into_authenticated())

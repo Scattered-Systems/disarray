@@ -7,4 +7,5 @@
 
 pub mod nodes;
 pub mod peers;
+pub mod providers;
 pub mod transports;
