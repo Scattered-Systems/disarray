@@ -5,9 +5,9 @@
        ... Summary ...
 */
 use crate::{peers::Peer, NetworkAddress};
-use std::{net::IpAddr, str::FromStr};
+use std::net::IpAddr;
 
-/// Implement a standard peer on a p2p network
+/// This structure implements the node framework expected for network participants
 #[derive(Clone, Debug)]
 pub struct Node {
     pub address: NetworkAddress,
@@ -20,9 +20,32 @@ impl Node {
     }
 }
 
+impl std::convert::From<NetworkAddress> for Node {
+    fn from(data: NetworkAddress) -> Self {
+        Self::new(data, Default::default())
+    }
+}
+
+impl std::convert::From<IpAddr> for Node {
+    fn from(data: IpAddr) -> Self {
+        Self::from(NetworkAddress::from(data))
+    }
+}
+
+impl std::convert::From<&str> for Node {
+    fn from(data: &str) -> Self {
+        Self::from(data.parse::<IpAddr>().unwrap())
+    }
+}
+
+impl std::convert::From<String> for Node {
+    fn from(data: String) -> Self {
+        Self::from(data.as_str())
+    }
+}
+
 impl Default for Node {
     fn default() -> Self {
-        let address = NetworkAddress::from(IpAddr::from_str("0.0.0.0:9090").ok().unwrap());
-        Self::new(address, Vec::new())
+        Self::from(format!("0.0.0.0:{}", crate::MAINNET_PORT))
     }
 }
