@@ -1,9 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use disarray_core::{MergeNumberHash, NumberHash};
     use ckb_merkle_mountain_range::{
         helper::pos_height_in_tree, leaf_index_to_mmr_size, util::MemStore, Error, MMRStore, MMR,
     };
+    use disarray_core::{MergeNumberHash, NumberHash};
     use faster_hex::hex_string;
     use proptest::prelude::*;
     use scsys::prelude::rand::{seq::SliceRandom, thread_rng};
