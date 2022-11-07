@@ -1,9 +1,20 @@
-job("Build and Publish Crates") {
+job("Build the workspace (Rust)") {
+    startOn {
+        gitPush { 
+            branchFilter {
+                +"refs/heads/main"
+                +"refs/heads/v*.*.*"
+            }
+        }
+        schedule { cron("0 8 * * *") }
+    }
     container(displayName = "Rust", image = "rust") {
         shellScript {
             interpreter = "/bin/bash"
             content = """
-                rustup default nightly && rustup target add wasm32-unknown-unknown && apt-get install -y protobuf-compiler
+                apt-get update -y && apt-get upgrade -y
+                apt-get install -y protobuf-compiler
+                rustup default nightly && rustup target add wasm32-unknown-unknown --toolchain nightly
                 cargo login ${'$'}CARGO_REGISTRY_TOKEN
                 cargo test --all
             """
