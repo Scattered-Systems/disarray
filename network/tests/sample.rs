@@ -16,7 +16,7 @@ mod tests {
     };
     use scsys::prelude::BoxResult;
     use std::error::Error;
-    use tokio::io::{self, AsyncBufReadExt};
+    use tokio::io::{self, AsyncBufReadExt, BufReader};
 
     // We create a custom  behaviour that combines floodsub and mDNS.
     // The derive generates a delegating `NetworkBehaviour` impl.
@@ -47,7 +47,18 @@ mod tests {
 
     async fn chat_engine(swarm: &mut Swarm<ChatBehaviour>, topic: Option<&str>) -> BoxResult {
         let floodsub_topic = floodsub::Topic::new(topic.unwrap_or("chat"));
-        let mut stdin = io::BufReader::new(io::stdin()).lines();
+        // Reach out to another node if specified
+        if let Some(to_dial) = std::env::args().nth(1) {
+            let addr: Multiaddr = to_dial.parse()?;
+            swarm.dial(addr)?;
+            println!("Dialed {:?}", to_dial);
+        }
+
+        // Read full lines from stdin
+        let mut stdin = BufReader::new(io::stdin()).lines();
+
+        // Listen on all interfaces and whatever port the OS assigns
+        swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
         loop {
             tokio::select! {
                 line = stdin.next_line() => {
@@ -97,7 +108,7 @@ mod tests {
         // Create a random PeerId
         let id_keys = identity::Keypair::generate_ed25519();
         let peer_id = PeerId::from(id_keys.public());
-        println!("Local peer id: {:?}", peer_id);
+        tracing::info!("Local peer id: {:?}", peer_id);
 
         // Create a tokio-based TCP transport use noise for authenticated
         // encryption and Mplex for multiplexing of substreams on a TCP stream.
@@ -132,18 +143,6 @@ mod tests {
                 .build()
         };
 
-        // Reach out to another node if specified
-        if let Some(to_dial) = std::env::args().nth(1) {
-            let addr: Multiaddr = to_dial.parse()?;
-            swarm.dial(addr)?;
-            println!("Dialed {:?}", to_dial);
-        }
-
-        // Read full lines from stdin
-        let mut stdin = io::BufReader::new(io::stdin()).lines();
-
-        // Listen on all interfaces and whatever port the OS assigns
-        swarm.listen_on("/ip4/0.0.0.0/tcp/0".parse()?)?;
         Ok(())
     }
 }
