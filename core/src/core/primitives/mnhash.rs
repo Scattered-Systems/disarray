@@ -8,7 +8,7 @@ use bytes::Bytes;
 use ckb_merkle_mountain_range::{Error, Merge};
 
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
-struct NumberHash(pub Bytes);
+pub struct NumberHash(pub Bytes);
 
 impl std::convert::From<u32> for NumberHash {
     fn from(num: u32) -> Self {
@@ -17,7 +17,8 @@ impl std::convert::From<u32> for NumberHash {
     }
 }
 
-struct MergeNumberHash;
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq)]
+pub struct MergeNumberHash;
 
 impl Merge for MergeNumberHash {
     type Item = NumberHash;
