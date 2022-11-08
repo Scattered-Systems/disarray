@@ -1,5 +1,5 @@
 
-use crate::network::{peer::{self, ReadResult, WriteResult}, Message};
+use crate::network::{contexts::{self, ReadResult, WriteResult}, Message};
 use crossbeam::channel as cbchannel;
 use log::{debug, error, info, trace, warn};
 use mio::{self, net};
@@ -12,7 +12,7 @@ const MAX_EVENT: usize = 1024;
 
 pub fn new(
     addr: std::net::SocketAddr,
-    msg_sink: cbchannel::Sender<(Vec<u8>, peer::Handle)>,
+    msg_sink: cbchannel::Sender<(Vec<u8>, contexts::Handle)>,
 ) -> std::io::Result<(Context, Handle)> {
     let (control_signal_sender, control_signal_receiver) = channel::channel();
     let handle = Handle {
@@ -31,12 +31,12 @@ pub fn new(
 }
 
 pub struct Context {
-    peers: slab::Slab<peer::Context>,
+    peers: slab::Slab<contexts::Context>,
     peer_list: Vec<usize>,
     addr: std::net::SocketAddr,
     poll: mio::Poll,
     control_chan: channel::Receiver<ControlSignal>,
-    new_msg_chan: cbchannel::Sender<(Vec<u8>, peer::Handle)>,
+    new_msg_chan: cbchannel::Sender<(Vec<u8>, contexts::Handle)>,
     _handle: Handle,
 }
 
@@ -55,8 +55,8 @@ impl Context {
     fn register(
         &mut self,
         stream: net::TcpStream,
-        direction: peer::Direction,
-    ) -> std::io::Result<peer::Handle> {
+        direction: contexts::Direction,
+    ) -> std::io::Result<contexts::Handle> {
         // get a new slot in the connection set
         let vacant = self.peers.vacant_entry();
         let key: usize = vacant.key();
@@ -78,7 +78,7 @@ impl Context {
             socket_token,
             mio::Interest::READABLE,
         )?;
-        let (ctx, handle) = peer::new(stream, direction)?;
+        let (ctx, handle) = contexts::new(stream, direction)?;
 
         // register the writer queue
         self.poll.registry().register(
@@ -96,12 +96,12 @@ impl Context {
     }
 
     /// Connect to a peer, and register this peer
-    fn connect(&mut self, addr: &std::net::SocketAddr) -> std::io::Result<peer::Handle> {
+    fn connect(&mut self, addr: &std::net::SocketAddr) -> std::io::Result<contexts::Handle> {
         // we need to estabilsh a stdlib tcp stream, since we need it to block
         debug!("Establishing connection to peer {}", addr);
         let stream = std::net::TcpStream::connect(addr)?;
         let mio_stream = net::TcpStream::from_std(stream);
-        self.register(mio_stream, peer::Direction::Outgoing)
+        self.register(mio_stream, contexts::Direction::Outgoing)
     }
 
     /// Accept an incoming peer and register it
@@ -111,7 +111,7 @@ impl Context {
         addr: std::net::SocketAddr,
     ) -> std::io::Result<()> {
         debug!("New incoming connection from {}", addr);
-        match self.register(stream, peer::Direction::Incoming) {
+        match self.register(stream, contexts::Direction::Incoming) {
             Ok(_) => {
                 info!("Connected to incoming peer {}", addr);
             }
@@ -362,7 +362,7 @@ pub struct Handle {
 }
 
 impl Handle {
-    pub fn connect(&self, addr: std::net::SocketAddr) -> std::io::Result<peer::Handle> {
+    pub fn connect(&self, addr: std::net::SocketAddr) -> std::io::Result<contexts::Handle> {
         let (sender, receiver) = cbchannel::unbounded();
         let request = ConnectRequest {
             addr,
@@ -388,5 +388,5 @@ enum ControlSignal {
 
 struct ConnectRequest {
     addr: std::net::SocketAddr,
-    result_chan: cbchannel::Sender<std::io::Result<peer::Handle>>,
+    result_chan: cbchannel::Sender<std::io::Result<contexts::Handle>>,
 }

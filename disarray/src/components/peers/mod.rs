@@ -4,9 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use self::{attr::*, peer::*, utils::*};
+pub use self::{attr::*, interface::*, peer::*, utils::*};
 
 pub(crate) mod attr;
+pub(crate) mod interface;
 pub(crate) mod peer;
 
 pub(crate) mod utils {

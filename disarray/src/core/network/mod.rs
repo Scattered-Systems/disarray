@@ -3,7 +3,9 @@
     Creator: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-pub use self::{messages::*, peer::*};
+pub use self::{contexts::*, messages::*, misc::*,};
 
+pub(crate) mod contexts;
 pub(crate) mod messages;
-pub(crate) mod peer;
+pub(crate) mod misc;
+

@@ -1,21 +1,13 @@
-
-use crate::network::Message;
+/*
+    Appellation: peer <module>
+    Contributors: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
+*/
+use crate::network::{DecodeState, Message, ReadResult, WriteResult, WriteState};
 use log::{trace, warn};
 use mio::net::TcpStream;
 use mio_extras::channel;
 use std::{convert::TryInto, io::{Read, Write}, sync::mpsc};
-
-
-enum DecodeState {
-    Length,
-    Payload,
-}
-
-pub enum ReadResult {
-    Continue,
-    Message(Vec<u8>),
-    EOF,
-}
 
 pub struct ReadContext {
     reader: std::io::BufReader<mio::net::TcpStream>,
@@ -70,17 +62,6 @@ impl ReadContext {
             Err(e) => Err(e),
         }
     }
-}
-
-pub enum WriteResult {
-    Complete,
-    EOF,
-    ChanClosed,
-}
-
-enum WriteState {
-    Length,
-    Payload,
 }
 
 pub struct WriteContext {
