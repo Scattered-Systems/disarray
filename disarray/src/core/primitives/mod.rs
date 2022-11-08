@@ -6,6 +6,7 @@
 */
 pub use self::{constants::*, mnhash::*, types::*};
 
+pub(crate) mod addressing;
 pub(crate) mod mnhash;
 
 pub(crate) mod constants {
@@ -18,6 +19,9 @@ pub(crate) mod constants {
     ];
 
     pub const INITIAL_POS_DIFFICULTY: [u8; 32] = [1; 32];
+
+    pub const MAINNET_PORT: u16 = 9090;
+    pub const TESTNET_PORT: u16 = 9091;
 }
 
 pub(crate) mod types {

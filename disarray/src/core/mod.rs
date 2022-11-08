@@ -6,6 +6,7 @@
 */
 pub use self::{primitives::*, states::*, utils::*};
 
+pub mod backend;
 pub mod consensus;
 pub(crate) mod primitives;
 pub(crate) mod states;

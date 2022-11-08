@@ -5,6 +5,8 @@
        ... Summary ...
 */
 
+pub mod behaviours;
+pub mod engines;
 pub mod miners;
 pub mod stakers;
 pub mod validators;

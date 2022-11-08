@@ -4,20 +4,14 @@
    Description:
        Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks.
 */
-#[doc(inline)]
-#[cfg(feature = "core")]
-pub use disarray_core::*;
-#[doc(inline)]
-#[cfg(feature = "derive")]
-pub use disarray_derive::*;
-#[doc(inline)]
-#[cfg(feature = "macros")]
-pub use disarray_macros::*;
-#[doc(inline)]
-#[cfg(feature = "network")]
-pub use disarray_network as network;
+// #[cfg(test)]
+extern crate hex_literal;
 
-mod prelude {
-    #[cfg(feature = "network")]
-    pub use crate::network::*;
-}
+#[doc(inline)]
+pub use crate::{actors::*, components::*, core::*, data::*};
+
+pub(crate) mod actors;
+pub(crate) mod components;
+pub(crate) mod core;
+pub(crate) mod data;
+

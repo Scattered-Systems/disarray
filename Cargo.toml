@@ -6,10 +6,7 @@ exclude = [
     "examples/*"
 ]
 members = [
-    "core",
     "disarray",
-    "network",
-    "runtime"
 ]
 
 [profile.dev]
