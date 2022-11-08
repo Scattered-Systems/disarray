@@ -4,7 +4,7 @@
     Description:
 */
 use crate::{
-    blockchains::{Blockchain, ChainWrapper, ChainWrapperExt},
+    blockchains::{Blockchain, CoreChainSpec, ChainWrapperExt},
     blocks::BlockHeader,
 };
 use serde::{Deserialize, Serialize};

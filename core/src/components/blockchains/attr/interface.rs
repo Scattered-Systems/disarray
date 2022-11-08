@@ -21,42 +21,44 @@ pub trait GenesisBlock {
     }
 }
 
-pub trait ChainWrapper {
+pub trait CoreChainSpec {
     fn chain(&self) -> &HashMap<H256, BlockData>;
+    fn epoch(&self) -> &Epoch;
+    fn tip(&self) -> H256;
+    fn lead(&self) -> u128;
+    fn length(&self) -> u128;
+    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
+    fn position(&self) -> &Position;
+    fn timestamp(&self) -> i64; // genesis timestamp
+}
+
+pub trait ChainWrapper: CoreChainSpec {
     fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockData) -> T) -> Option<T> {
         self.chain().get(data).map(catalyst)
     }
     fn chain_size(&self) -> usize {
         self.chain().len()
     }
+    fn contains_hash(&self, hash: &H256) -> bool {
+        self.chain().contains_key(hash)
+    }
     fn depth(&self) -> u128 {
         self.position().depth
     }
-    fn epoch(&self) -> &Epoch;
     fn epoch_current(&self, current_ts: BlockTs) -> BlockTs {
         let epoch_time = self.epoch().time;
         let genesis_time = self.timestamp();
         (current_ts - genesis_time) / epoch_time
     }
-    fn tip(&self) -> H256;
-    fn lead(&self) -> u128;
-    fn length(&self) -> u128;
-    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
-    fn position(&self) -> &Position;
-
     fn position_pos(&self) -> u128 {
         self.position().pos
     }
     fn position_pow(&self) -> u128 {
         self.position().pow
     }
-    fn timestamp(&self) -> i64; // genesis timestamp
 }
 
 pub trait ChainWrapperExt: ChainWrapper {
-    fn contains_hash(&self, hash: &H256) -> bool {
-        self.chain().contains_key(hash)
-    }
     ///
     fn find_one_block(&self, hash: &H256) -> Option<Block> {
         let catalyst = |v: &BlockData| v.block.clone();
@@ -85,6 +87,11 @@ pub trait ChainWrapperExt: ChainWrapper {
             }
             curhash = child.block.header().parent();
         }
+    }
+    ///
+    fn find_one_payload(&self, hash: &H256) -> Option<BlockData> {
+        let catalyst = |v: &BlockData| v.clone();
+        self.chain_fetch(hash, catalyst)
     }
     /// Create a new blockchain
     fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self
@@ -135,7 +142,7 @@ pub trait ChainWrapperExt: ChainWrapper {
     }
     fn get_longest_chain(&self) -> Vec<Block> {
         //unimplemented!()
-        let mut all_block: Vec<H256> = vec![];
+        let mut blocks: Vec<H256> = vec![];
         let mut current_hash = self.tip();
         //let mut parent_hash;
         let mut pdata: BlockData;
@@ -145,17 +152,16 @@ pub trait ChainWrapperExt: ChainWrapper {
                 None => break,
                 Some(data) => pdata = data.clone(),
             }
-            all_block.push(current_hash);
+            blocks.push(current_hash);
             current_hash = pdata.block.header().parent();
         }
-        all_block.reverse();
-        log::debug!("finish {:?}!", all_block);
+        blocks.reverse();
+        log::debug!("finish {:?}!", blocks);
 
-        let mut chain: Vec<Block> = vec![];
-        for hash in all_block {
-            chain.push(self.find_one_block(&hash).unwrap().clone());
-        }
-        chain
+        blocks
+            .iter()
+            .map(|hash| self.find_one_block(hash).unwrap().clone())
+            .collect::<Vec<Block>>()
     }
     // TODO: Make parent, however, currently functional since all pos are the same
     fn get_pos_difficulty(&self) -> H256 {
@@ -168,12 +174,12 @@ pub trait ChainWrapperExt: ChainWrapper {
     }
     fn get_pow_difficulty(&self, current_ts: BlockTs, parent: H256) -> H256 {
         let dt = |a: i64, b: i64| (a - b) / self.epoch().time;
-        let pare = dt(
+        let par_epoch = dt(
             self.chain().get(&parent).unwrap().block.header().timestamp,
             self.timestamp(),
         ); // parent epoch
-        let cure = dt(current_ts, self.timestamp()); // current epoch
-        if cure > pare && self.position().depth > 1 {
+        let epoch = dt(current_ts, self.timestamp()); // current epoch
+        if epoch > par_epoch && self.position().depth > 1 {
             let old_diff: H256 = self
                 .chain()
                 .get(&parent)
@@ -194,7 +200,7 @@ pub trait ChainWrapperExt: ChainWrapper {
                 hash = self.chain().get(&hash).unwrap().block.parent();
                 let btime = self.chain().get(&hash).unwrap().block.header().timestamp;
 
-                if dt(btime, self.timestamp()) < pare || btime == self.timestamp() {
+                if dt(btime, self.timestamp()) < par_epoch || btime == self.timestamp() {
                     break;
                 }
             }

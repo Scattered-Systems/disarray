@@ -1,11 +1,9 @@
 tasks:
   - init: |
-      sudo apt update -y && sudo apt upgrade -y && sudo apt -y autoremove
-      sudo apt install -y protobuf-compiler
+      sudo apt update -y && sudo apt upgrade -y && sudo apt -y autoremove && sudo apt install -y protobuf-compiler
       rustup default nightly 
       rustup component add clippy rustfmt --toolchain nightly
       rustup target add wasm32-unknown-unknown --toolchain nightly
-      cargo build --release --workspace
     command: cargo watch -x test --all
 
 

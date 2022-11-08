@@ -1,9 +1,9 @@
-job("Build the workspace (Rust)") {
+job("Rust") {
     startOn {
         gitPush { 
             branchFilter {
                 +"refs/heads/main"
-                +"refs/heads/v*.*.*"
+                +"refs/tags/v*.*.*"
             }
         }
         schedule { cron("0 8 * * *") }
