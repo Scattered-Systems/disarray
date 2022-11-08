@@ -4,9 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use self::{backend::*, utils::*};
+pub use self::utils::*;
 
-pub(crate) mod backend;
+pub mod backend;
 pub mod consensus;
+pub mod contexts;
 pub mod network;
 pub(crate) mod utils;

@@ -10,6 +10,11 @@ pub(crate) mod addressing;
 pub(crate) mod mnhash;
 
 pub(crate) mod constants {
+    ///
+    pub const MAX_INCOMING_CLIENT: usize = 256;
+    ///
+    pub const MAX_EVENT: usize = 1024;
+
     /// Set the difficulty for mining new blocks
     pub const DIFFICULTY_PREFIX: &str = "00";
 
