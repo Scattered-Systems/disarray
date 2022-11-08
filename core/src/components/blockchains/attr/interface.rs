@@ -21,42 +21,44 @@ pub trait GenesisBlock {
     }
 }
 
-pub trait ChainWrapper {
+pub trait CoreChainSpec {
     fn chain(&self) -> &HashMap<H256, BlockData>;
+    fn epoch(&self) -> &Epoch;
+    fn tip(&self) -> H256;
+    fn lead(&self) -> u128;
+    fn length(&self) -> u128;
+    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
+    fn position(&self) -> &Position;
+    fn timestamp(&self) -> i64; // genesis timestamp
+}
+
+pub trait ChainWrapper: CoreChainSpec {
     fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockData) -> T) -> Option<T> {
         self.chain().get(data).map(catalyst)
     }
     fn chain_size(&self) -> usize {
         self.chain().len()
     }
+    fn contains_hash(&self, hash: &H256) -> bool {
+        self.chain().contains_key(hash)
+    }
     fn depth(&self) -> u128 {
         self.position().depth
     }
-    fn epoch(&self) -> &Epoch;
     fn epoch_current(&self, current_ts: BlockTs) -> BlockTs {
         let epoch_time = self.epoch().time;
         let genesis_time = self.timestamp();
         (current_ts - genesis_time) / epoch_time
     }
-    fn tip(&self) -> H256;
-    fn lead(&self) -> u128;
-    fn length(&self) -> u128;
-    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
-    fn position(&self) -> &Position;
-
     fn position_pos(&self) -> u128 {
         self.position().pos
     }
     fn position_pow(&self) -> u128 {
         self.position().pow
     }
-    fn timestamp(&self) -> i64; // genesis timestamp
 }
 
 pub trait ChainWrapperExt: ChainWrapper {
-    fn contains_hash(&self, hash: &H256) -> bool {
-        self.chain().contains_key(hash)
-    }
     ///
     fn find_one_block(&self, hash: &H256) -> Option<Block> {
         let catalyst = |v: &BlockData| v.block.clone();
@@ -85,6 +87,11 @@ pub trait ChainWrapperExt: ChainWrapper {
             }
             curhash = child.block.header().parent();
         }
+    }
+    ///
+    fn find_one_payload(&self, hash: &H256) -> Option<BlockData> {
+        let catalyst = |v: &BlockData| v.clone();
+        self.chain_fetch(hash, catalyst)
     }
     /// Create a new blockchain
     fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self

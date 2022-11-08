@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-use super::{BlockData, ChainWrapper, ChainWrapperExt, Epoch, Position};
+use super::{BlockData, CoreChainSpec, ChainWrapper, ChainWrapperExt, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block};
 use scsys::{
     core::Timestamp,
@@ -71,7 +71,7 @@ impl Blockchain {
     }
 }
 
-impl ChainWrapper for Blockchain {
+impl CoreChainSpec for Blockchain {
     fn chain(&self) -> &HashMap<H256, BlockData> {
         &self.chain
     }
@@ -103,6 +103,10 @@ impl ChainWrapper for Blockchain {
     fn length(&self) -> u128 {
         self.length
     }
+}
+
+impl ChainWrapper for Blockchain {
+
 }
 
 impl ChainWrapperExt for Blockchain {
