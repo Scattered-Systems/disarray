@@ -102,22 +102,18 @@ pub(crate) mod utils {
     /// Insert a PoW block into blockchain
     pub fn insert_pow(bc: &mut Blockchain, block: &Block) -> bool {
         //unimplemented!()
-        if bc.chain.contains_key(&block.hash()) {
+        if bc.is_block(&block.hash()) {
             return false;
         }
-        let header: BlockHeader = block.header.clone();
-        let parenthash: H256 = header.parent;
-        let parentdata: BlockData = match bc.chain.get(&parenthash) {
+        let prev: BlockData = match bc.find_one_payload(&block.header().parent()) {
             None => return false,
-            Some(v) => v.clone(),
+            Some(v) => v,
         };
-        let parentheight = parentdata.height;
-        let newheight = parentheight + 1;
-        let newdata = BlockData::new(block.clone(), newheight);
-        let newhash = block.hash();
+        let data = BlockData::new(block.clone(), prev.height + 1);
+        let hash = block.hash();
         // let mut new_mmr = self.get_mmr(&parenthash);
         // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
-        bc.chain.insert(newhash, newdata);
+        bc.chain.insert(hash, data);
         // self.map.insert(newhash, new_mmr);
         bc.position.pow += 1;
 

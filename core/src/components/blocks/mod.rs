@@ -87,10 +87,18 @@ pub(crate) mod utils {
         Block::new(content, header, block_type, selfish_block)
     }
 
-    pub fn generate_random_block() -> Block {
+    pub fn generate_random_block(class: BlockType, selfish: bool) -> Block {
         let content = super::generate_random_block_content();
         let header = super::generate_random_block_header(content.data.clone());
 
-        Block::new(content, header, BlockType::PoS, true)
+        Block::new(content, header, class, selfish)
+    }
+
+    pub fn generate_random_pos_block(selfish: bool) -> Block {
+        generate_random_block(BlockType::PoS, selfish)
+    }
+
+    pub fn generate_random_pow_block(selfish: bool) -> Block {
+        generate_random_block(BlockType::PoW, selfish)
     }
 }

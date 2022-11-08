@@ -5,11 +5,8 @@
         ... Summary ...
 */
 use super::{BlockData, CoreChainSpec, ChainWrapper, ChainWrapperExt, Epoch, Position};
-use crate::blocks::{generate_genesis_block, Block};
-use scsys::{
-    core::Timestamp,
-    prelude::{Hashable, H160, H256},
-};
+use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
+use scsys::prelude::{rand::{self, Rng}, Hashable, H160, H256, Timestamp};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -60,14 +57,107 @@ impl Blockchain {
     //     mmr_ret.assign(leaf_hashes).unwrap();
     //     mmr_ret
     // }
+    pub fn insert_selfish_pos(&mut self, block: &Block) -> bool {
+        // Insert a block into blockchain as a selfish miner
+        if self.is_block(&block.hash()) {
+            return false;
+        } else {
+            let header: BlockHeader = block.header().clone();
+            let parenthash: H256 = header.parent();
+            let parentdata: BlockData = match self.chain.get(&parenthash) {
+                Some(data) => data.clone(),
+                None => return false,
+            };
+            let parentheight = parentdata.height;
+            let newheight = parentheight + 1;
+            let newdata = BlockData::new(block.clone(), newheight);
+            let newhash = block.hash();
+            // let mut new_mmr = self.get_mmr(&parenthash);
+            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
+            self.chain.insert(newhash, newdata);
+            // self.map.insert(newhash, new_mmr);
+            self.position.pos += 1;
+            if newheight > self.position.depth && block.selfish_block {
+                self.lead += 1;
+                self.position.depth = newheight;
+                self.tip = newhash;
+                return true;
+            } else if !block.selfish_block && newheight > self.length {
+                if self.lead > 0 {
+                    self.lead -= 1;
+                    self.length += 1;
+                    return false;
+                } else {
+                    self.position.depth = newheight;
+                    self.tip = newhash;
+                    self.length = newheight;
+                    return true;
+                }
+            }
+            false
+        }
+    }
+    pub fn insert_unselfish_pos(&mut self, block: &Block) -> bool {
+        if self.chain.contains_key(&block.hash()) {
+            return false; 
+        } else {
+            let pdata: BlockData = match self.find_one_payload(&block.header.parent()) {
+                Some(v) => v,
+                None => return false,
+            };
+            let height = pdata.height + 1;
+            let data = BlockData::new(block.clone(), height);
+            let newhash = block.hash();
+            // let mut new_mmr = self.get_mmr(&parenthash);
+            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
+            self.chain.insert(newhash, data);
+            // self.map.insert(newhash, new_mmr);
+            self.position.pos += 1;
 
-    /// Insert a PoS block into blockchain
+            let mut rng = rand::thread_rng();
+            let p: f64 = rng.gen::<f64>(); // toss a coin
+
+            if height > self.position.depth
+                || (height == self.position.depth && block.selfish_block && p < 1.0)
+            {
+                self.position.depth = height;
+                self.tip = newhash;
+                return true;
+            }
+            false
+        }
+    }
+
+    /// General access for inserting new blocks created from staking
     pub fn insert_pos(&mut self, block: &Block, selfish: bool) -> bool {
-        super::insert_pos(self, block, selfish)
+         if !selfish {
+            self.insert_unselfish_pos(block)
+            
+        } else {
+            self.insert_selfish_pos(block)
+        }
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-        super::insert_pow(self, block)
+         //unimplemented!()
+        if self.is_block(&block.hash()) {
+            return false;
+        } else {
+            let prev: BlockData = match self.find_one_payload(&block.header().parent()) {
+                None => return false,
+                Some(v) => v,
+            };
+            let data = BlockData::new(block.clone(), prev.height + 1);
+            let hash = block.hash();
+            // let mut new_mmr = self.get_mmr(&parenthash);
+            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
+            self.chain.insert(hash, data);
+            // self.map.insert(newhash, new_mmr);
+            self.position.pow += 1;
+    
+            true
+        }
+        
     }
 }
 
