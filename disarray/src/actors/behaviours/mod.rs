@@ -4,14 +4,12 @@
    Description:
        ... Summary ...
 */
-pub use self::{
-    blockchain::{BlockchainMainnet, MainnetEvent},
-    utils::*,
-};
+pub use self::{mainnet::*, testnet::*, utils::*,};
 
-mod blockchain;
+pub(crate) mod mainnet;
+pub(crate) mod testnet;
 
-mod utils {
+pub(crate) mod utils {
     use libp2p::kad::{AddProviderOk, KademliaEvent, PeerRecord, PutRecordOk, QueryResult, Record};
     use std::str::from_utf8;
 

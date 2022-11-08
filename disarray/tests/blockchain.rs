@@ -1,10 +1,22 @@
 #[cfg(test)]
 mod tests {
-    use disarray::{
-        blockchains::{Blockchain, ChainWrapper, ChainWrapperExt},
-        blocks::{generate_random_block, Block, BlockType, CoreBlockWrapperExt, CoreBlockSpec, BlockHeaderSpec},
-    };
-    use scsys::core::Timestamp;
+    use disarray::{blockchains::*, blocks::*};
+    use scsys::prelude::{generate_random_hash, hasher, Timestamp, H256};
+
+    #[test]
+    fn test_block_gen_random() {
+        let a = generate_random_block(BlockType::PoS, false);
+        let b = generate_random_block(BlockType::PoW, false);
+        assert_eq!(&a, &a);
+        assert_ne!(&a, &b)
+    }
+
+    #[test]
+    fn test_block_hash() {
+        let block = generate_random_pos_block(true);
+        let bhash: H256 = hasher(&block).as_slice().to_owned().into();
+        assert_ne!(bhash, generate_random_hash())
+    }
 
     #[test]
     fn test_blockchain_genesis() {
@@ -22,6 +34,6 @@ mod tests {
         let timestamp = Timestamp::timestamp();
         let mut bc = Blockchain::genesis(Block::genesis, timestamp);
         let a = generate_random_block(BlockType::PoW, false);
-        assert!(bc.insert_pow(&a));
+        bc.insert_pow(&a);
     }
 }

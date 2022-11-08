@@ -16,9 +16,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_basic_node() {
-        let a = 0;
-        let b = 0;
-        assert_eq!(&a, &b);
+    fn test_default_node() {
+        let a = Node::default();
+        let b = a.clone();
+        assert_eq!(&a.address, &b.address);
     }
 }

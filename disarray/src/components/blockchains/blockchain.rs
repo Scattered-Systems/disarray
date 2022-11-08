@@ -4,9 +4,12 @@
     Description:
         ... Summary ...
 */
-use super::{BlockData, CoreChainSpec, ChainWrapper, ChainWrapperExt, Epoch, Position};
+use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
-use scsys::prelude::{rand::{self, Rng}, Hashable, H160, H256, Timestamp};
+use scsys::prelude::{
+    rand::{self, Rng},
+    Hashable, Timestamp, H160, H256,
+};
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -99,7 +102,7 @@ impl Blockchain {
     }
     pub fn insert_unselfish_pos(&mut self, block: &Block) -> bool {
         if self.chain.contains_key(&block.hash()) {
-            return false; 
+            return false;
         } else {
             let pdata: BlockData = match self.find_one_payload(&block.header.parent()) {
                 Some(v) => v,
@@ -130,16 +133,15 @@ impl Blockchain {
 
     /// General access for inserting new blocks created from staking
     pub fn insert_pos(&mut self, block: &Block, selfish: bool) -> bool {
-         if !selfish {
+        if !selfish {
             self.insert_unselfish_pos(block)
-            
         } else {
             self.insert_selfish_pos(block)
         }
     }
     /// Insert a PoW block into blockchain
     pub fn insert_pow(&mut self, block: &Block) -> bool {
-         //unimplemented!()
+        //unimplemented!()
         if self.is_block(&block.hash()) {
             return false;
         } else {
@@ -154,10 +156,9 @@ impl Blockchain {
             self.chain.insert(hash, data);
             // self.map.insert(newhash, new_mmr);
             self.position.pow += 1;
-    
+
             true
         }
-        
     }
 }
 
@@ -195,9 +196,7 @@ impl CoreChainSpec for Blockchain {
     }
 }
 
-impl ChainWrapper for Blockchain {
-
-}
+impl ChainWrapper for Blockchain {}
 
 impl ChainWrapperExt for Blockchain {
     fn genesis(blockgen: fn(i64) -> Block, timestamp: i64) -> Self

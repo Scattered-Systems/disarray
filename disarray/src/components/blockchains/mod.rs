@@ -27,43 +27,27 @@ pub(crate) mod utils {
     //     leaf_hashes.push(leaf_hash);
     //     mmr.assign(leaf_hashes).unwrap();
     // }
-
-    /// Ouroboros Praos Proof-of-Stake
-    pub fn insert_pos(bc: &mut Blockchain, block: &Block, selfish: bool) -> bool {
-        //unimplemented!()
-        if !selfish {
-            if bc.chain.contains_key(&block.hash()) {
-                return false; 
+    
+    pub trait OuroborosPraos {
+        fn insert_selfish_pos(&self, blockchain: &mut Blockchain, block: &Block) -> bool {
+            insert_selfish_pos(blockchain, block)
+        }
+        fn insert_unselfish_pos(&self, blockchain: &mut Blockchain, block: &Block) -> bool {
+            insert_unselfish_pos(blockchain, block)
+        }
+        fn insert(&self, blockchain: &mut Blockchain, block: &Block, selfish: bool) -> bool {
+            if !selfish {
+                self.insert_unselfish_pos(blockchain, block)
+            } else {
+                self.insert_selfish_pos(blockchain, block)
             }
-            let pdata: BlockData = match bc.find_one_payload(&block.header.parent()) {
-                Some(v) => v,
-                None => return false,
-            };
-            let height = pdata.height + 1;
-            let data = BlockData::new(block.clone(), height);
-            let newhash = block.hash();
-            // let mut new_mmr = self.get_mmr(&parenthash);
-            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
-            bc.chain.insert(newhash, data);
-            // self.map.insert(newhash, new_mmr);
-            bc.position.pos += 1;
+        }
+    }
 
-            let mut rng = rand::thread_rng();
-            let p: f64 = rng.gen::<f64>(); // toss a coin
-
-            if height > bc.position.depth
-                || (height == bc.position.depth && block.selfish_block && p < 1.0)
-            {
-                bc.position.depth = height;
-                bc.tip = newhash;
-                return true;
-            }
-            false
+    pub fn insert_selfish_pos(bc: &mut Blockchain, block: &Block) -> bool {
+        if bc.chain.contains_key(&block.hash()) {
+            return false;
         } else {
-            // Insert a block into blockchain as a selfish miner
-            if bc.is_block(&block.hash()) {
-                return false;
-            }
             let header: BlockHeader = block.header().clone();
             let parenthash: H256 = header.parent();
             let parentdata: BlockData = match bc.chain.get(&parenthash) {
@@ -97,6 +81,49 @@ pub(crate) mod utils {
                 }
             }
             false
+        }
+        
+    }
+
+    pub fn insert_unselfish_pos(bc: &mut Blockchain, block: &Block) -> bool {
+        if bc.chain.contains_key(&block.hash()) {
+            return false;
+        } else {
+            let pdata: BlockData = match bc.find_one_payload(&block.header.parent()) {
+                Some(v) => v,
+                None => return false,
+            };
+            let height = pdata.height + 1;
+            let data = BlockData::new(block.clone(), height);
+            let newhash = block.hash();
+            // let mut new_mmr = self.get_mmr(&parenthash);
+            // mmr_push_leaf(&mut new_mmr, newhash.as_ref().to_vec().clone());
+            bc.chain.insert(newhash, data);
+            // self.map.insert(newhash, new_mmr);
+            bc.position.pos += 1;
+
+            let mut rng = rand::thread_rng();
+            let p: f64 = rng.gen::<f64>(); // toss a coin
+
+            if height > bc.position.depth
+                || (height == bc.position.depth && block.selfish_block && p < 1.0)
+            {
+                bc.position.depth = height;
+                bc.tip = newhash;
+                return true;
+            }
+            false
+        }
+        
+    }
+
+    /// Ouroboros Praos Proof-of-Stake
+    pub fn insert_pos(bc: &mut Blockchain, block: &Block, selfish: bool) -> bool {
+        //unimplemented!()
+        if !selfish {
+            insert_unselfish_pos(bc, block)
+        } else {
+           insert_selfish_pos(bc, block)
         }
     }
     /// Insert a PoW block into blockchain

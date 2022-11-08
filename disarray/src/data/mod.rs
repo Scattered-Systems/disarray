@@ -4,6 +4,10 @@
    Description:
        ... Summary ...
 */
+pub use self::primitives::*;
 
-pub mod models;
+pub(crate) mod primitives;
 pub mod proofs;
+pub mod states;
+
+

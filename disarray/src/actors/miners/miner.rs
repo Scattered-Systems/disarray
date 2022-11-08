@@ -23,6 +23,8 @@ impl std::fmt::Display for Miner {
     }
 }
 
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
