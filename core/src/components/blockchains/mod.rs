@@ -4,16 +4,16 @@
    Description:
        ... Summary ...
 */
-pub use self::{blockchain::*, epochs::*, interface::*, misc::*, utils::*};
+pub use self::{attr::*, blockchain::*, utils::*};
 
+pub(crate) mod attr;
 pub(crate) mod blockchain;
-pub(crate) mod epochs;
-pub(crate) mod interface;
-pub(crate) mod misc;
 
 pub(crate) mod utils {
-    use super::{BlockData, Blockchain};
-    use crate::blocks::{Block, BlockHeader};
+    use crate::{
+        blockchains::{BlockData, Blockchain},
+        blocks::{Block, BlockHeader},
+    };
     use scsys::prelude::{
         rand::{self, Rng},
         Hashable, H256,

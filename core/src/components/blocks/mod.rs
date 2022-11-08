@@ -3,18 +3,20 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{block::*, classification::*, contents::*, headers::*, interface::*, utils::*};
+pub use self::{attr::*, block::*, utils::*};
 
+pub(crate) mod attr;
 pub(crate) mod block;
-pub(crate) mod classification;
-pub(crate) mod contents;
-pub(crate) mod headers;
-pub(crate) mod interface;
 
 pub(crate) mod utils {
     #![allow(clippy::too_many_arguments)]
-    use super::{Block, BlockContent, BlockDifficulty, BlockHeader, BlockJustification, BlockType};
-    use crate::{transactions::SignedTransaction, BlockHs, BlockId, BlockNc, BlockTs};
+    use crate::{
+        blocks::{
+            Block, BlockContent, BlockDifficulty, BlockHeader, BlockJustification, BlockType,
+        },
+        transactions::SignedTransaction,
+        BlockHs, BlockId, BlockNc, BlockTs,
+    };
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
     use scsys::prelude::{hasher, H256};
     use serde_json::json;

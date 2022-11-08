@@ -4,9 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{misc::*, provider::*, utils::*};
+pub use self::{attr::*, provider::*, utils::*};
 
-pub(crate) mod misc;
+pub(crate) mod attr;
 pub(crate) mod provider;
 
 mod utils {

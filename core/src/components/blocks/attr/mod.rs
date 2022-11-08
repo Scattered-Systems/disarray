@@ -1,17 +1,26 @@
 /*
-   Appellation: headers <blocks>
-   Contributors: FL03 <jo3mccain@icloud.com>
-   Description: ... Summary ...
+    Appellation: attr <blocks>
+    Creator: FL03 <jo3mccain@icloud.com>
+    Description: attributes for blocks in the Disarray mainnet
 */
-pub use self::{difficulty::*, header::BlockHeader, justification::*, utils::*};
 
+pub use self::{
+    classification::*, content::*, difficulty::*, header::*, interface::*, justification::*,
+    utils::*,
+};
+
+pub(crate) mod classification;
+pub(crate) mod content;
 pub(crate) mod difficulty;
 pub(crate) mod header;
+pub(crate) mod interface;
 pub(crate) mod justification;
 
 pub(crate) mod utils {
-    use super::{BlockDifficulty, BlockHeader, BlockJustification};
-    use crate::transactions::SignedTransaction;
+    use crate::{
+        blocks::{BlockContent, BlockDifficulty, BlockHeader, BlockJustification},
+        transactions::{generate_random_signed_transaction, SignedTransaction},
+    };
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
     use scsys::{
         core::Timestamp,
@@ -20,6 +29,13 @@ pub(crate) mod utils {
             rand::{self, Rng},
         },
     };
+
+    pub fn generate_random_block_content() -> BlockContent {
+        BlockContent::new(
+            vec![generate_random_signed_transaction()],
+            vec![generate_random_hash()],
+        )
+    }
 
     pub fn generate_random_block_header(transactions: Vec<SignedTransaction>) -> BlockHeader {
         let mut rng = rand::thread_rng();
