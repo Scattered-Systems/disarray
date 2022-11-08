@@ -10,4 +10,4 @@ attributes:
 components:
 - name: devspace
   container:
-    image: scsys/rust:debian-nightly
+    image: rust
