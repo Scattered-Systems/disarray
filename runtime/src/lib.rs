@@ -11,10 +11,8 @@ pub use disarray_ledger as ledger;
 #[cfg(feature = "network")]
 pub use disarray_network as network;
 
-
 #[doc(inline)]
 pub use crate::{actors::*, components::*, core::*, data::*};
-
 
 pub(crate) mod actors;
 pub(crate) mod components;

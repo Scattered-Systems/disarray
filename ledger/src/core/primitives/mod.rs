@@ -25,8 +25,6 @@ pub(crate) mod types {
     use scsys::prelude::{chrono, H160, H256};
     use std::collections::HashMap;
 
-    
-
     pub type BlockId = i64;
     pub type BlockHs = H256;
     pub type BlockNc = u32;

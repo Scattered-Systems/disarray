@@ -1,14 +1,6 @@
-#[cfg(feature = "network")]
 #[cfg(test)]
 mod tests {
-    use disarray::network::{nodes::*, peers::*, NoiseKeys};
-
-    #[test]
-    fn test_default_node() {
-        let a = Node::default();
-        let b = a.clone();
-        assert_eq!(&a.address, &b.address);
-    }
+    use disarray_network::{peers::*, NoiseKeys};
 
     #[test]
     fn test_peer_default() {

@@ -36,5 +36,3 @@ pub fn create_block_by_mining(
         nonce += 1;
     }
 }
-
-

@@ -7,6 +7,4 @@ pub use self::{server::*, utils::*};
 
 pub(crate) mod server;
 
-pub(crate) mod utils {
-    
-}
+pub(crate) mod utils {}

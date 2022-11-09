@@ -4,6 +4,4 @@
     Description: ... Summary ...
 */
 
-pub struct BaseHandle {
-    
-}
+pub struct BaseHandle {}

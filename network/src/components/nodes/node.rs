@@ -34,7 +34,10 @@ impl std::convert::From<IpAddr> for Node {
 
 impl std::convert::From<&str> for Node {
     fn from(data: &str) -> Self {
-        Self::from(NetworkAddress::from_str(data).expect("Failed to parse the input for a valid ip address"))
+        Self::from(
+            NetworkAddress::from_str(data)
+                .expect("Failed to parse the input for a valid ip address"),
+        )
     }
 }
 

@@ -7,7 +7,7 @@
 use crate::KademliaMS;
 use libp2p::{
     floodsub::{Floodsub, FloodsubEvent},
-    kad::{KademliaEvent},
+    kad::KademliaEvent,
     mdns::{MdnsEvent, TokioMdns},
     NetworkBehaviour,
 };

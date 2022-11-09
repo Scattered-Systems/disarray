@@ -7,6 +7,4 @@ pub use self::{state::*, utils::*};
 
 pub(crate) mod state;
 
-pub(crate) mod utils {
-    
-}
+pub(crate) mod utils {}

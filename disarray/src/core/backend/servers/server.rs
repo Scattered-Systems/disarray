@@ -4,10 +4,6 @@
    Description: ... Summary ...
 */
 
+pub struct ServerContext {}
 
-pub struct ServerContext {
-    
-}
-
-impl ServerContext {
-}
+impl ServerContext {}

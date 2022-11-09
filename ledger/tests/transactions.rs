@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use disarray::ledger::transactions::{Sign, SignedTransaction, Transaction};
+    use disarray_ledger::transactions::{Sign, SignedTransaction, Transaction};
 
     #[test]
     fn test_default_transaction() {

@@ -1,7 +1,6 @@
-#[cfg(feature = "ledger")]
 #[cfg(test)]
 mod tests {
-    use disarray::ledger::{blockchains::*, blocks::*};
+    use disarray_ledger::{blockchains::*, blocks::*};
     use scsys::prelude::{generate_random_hash, hasher, Timestamp, H256};
 
     #[test]

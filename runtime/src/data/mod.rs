@@ -6,5 +6,3 @@
 */
 
 pub mod proofs;
-
-

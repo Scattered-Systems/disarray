@@ -4,6 +4,7 @@
    Description:
 */
 
+pub mod addresses;
 pub mod messages;
 pub mod nodes;
 pub mod peers;

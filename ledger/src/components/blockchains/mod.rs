@@ -27,7 +27,7 @@ pub(crate) mod utils {
     //     leaf_hashes.push(leaf_hash);
     //     mmr.assign(leaf_hashes).unwrap();
     // }
-    
+
     pub trait OuroborosPraos {
         fn insert_selfish_pos(&self, blockchain: &mut Blockchain, block: &Block) -> bool {
             insert_selfish_pos(blockchain, block)
@@ -82,7 +82,6 @@ pub(crate) mod utils {
             }
             false
         }
-        
     }
 
     pub fn insert_unselfish_pos(bc: &mut Blockchain, block: &Block) -> bool {
@@ -114,7 +113,6 @@ pub(crate) mod utils {
             }
             false
         }
-        
     }
 
     /// Ouroboros Praos Proof-of-Stake
@@ -123,7 +121,7 @@ pub(crate) mod utils {
         if !selfish {
             insert_unselfish_pos(bc, block)
         } else {
-           insert_selfish_pos(bc, block)
+            insert_selfish_pos(bc, block)
         }
     }
     /// Insert a PoW block into blockchain

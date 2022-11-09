@@ -1,15 +1,15 @@
 /*
-    Appellation: misc <module>
+    Appellation: addressing <module>
     Creator: FL03 <jo3mccain@icloud.com>
-    Description: ... Summary ...
+    Description: ... summary ...
 */
 use serde::{Deserialize, Serialize};
 use strum::{EnumString, EnumVariantNames};
 
 #[derive(
     Clone,
-    Copy,
     Debug,
+    Default,
     Deserialize,
     EnumString,
     EnumVariantNames,
@@ -20,13 +20,11 @@ use strum::{EnumString, EnumVariantNames};
     PartialOrd,
     Serialize,
 )]
-pub enum Direction {
-    Incoming,
-    Outgoing,
-}
-
-impl Default for Direction {
-    fn default() -> Self {
-        Self::Incoming
-    }
+#[strum(serialize_all = "snake_case")]
+pub enum Addresses {
+    #[default]
+    IpAddress,
+    MacAddress,
+    Mainnet,
+    Postal,
 }

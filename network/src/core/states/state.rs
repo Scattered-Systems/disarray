@@ -7,7 +7,7 @@
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct State<T: ToString> {
-    pub message: T
+    pub message: T,
 }
 
 impl<T: ToString> State<T> {

@@ -29,7 +29,6 @@ impl From<FloodsubEvent> for TestnetBehaviourEvent {
     }
 }
 
-
 impl From<MdnsEvent> for TestnetBehaviourEvent {
     fn from(event: MdnsEvent) -> Self {
         Self::Mdns(event)

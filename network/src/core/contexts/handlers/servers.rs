@@ -3,13 +3,12 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use crate::{signals::ControlSignal, messages::Message};
+use crate::{messages::Message, signals::ControlSignal};
 use mio_extras::channel;
-
 
 #[derive(Clone)]
 pub struct ServerChannels {
-    pub control: channel::Sender<ControlSignal>
+    pub control: channel::Sender<ControlSignal>,
 }
 
 #[derive(Clone)]
@@ -18,10 +17,7 @@ pub struct ServerHandle {
 }
 
 impl ServerHandle {
-    pub fn connect(&self, addr: std::net::SocketAddr) {
-        
-    }
+    pub fn connect(&self, addr: std::net::SocketAddr) {}
 
-    pub fn broadcast(&self, msg: Message) {
-    }
+    pub fn broadcast(&self, msg: Message) {}
 }

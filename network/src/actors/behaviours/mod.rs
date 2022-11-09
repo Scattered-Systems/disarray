@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-pub use self::{mainnet::*, testnet::*, utils::*,};
+pub use self::{mainnet::*, testnet::*, utils::*};
 
 pub(crate) mod mainnet;
 pub(crate) mod testnet;

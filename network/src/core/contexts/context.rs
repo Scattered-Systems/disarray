@@ -22,7 +22,9 @@ impl Context {
 impl std::convert::From<(Direction, std::net::TcpStream)> for Context {
     fn from(data: (Direction, std::net::TcpStream)) -> Self {
         let (direction, stream) = data;
-        let addr = stream.peer_addr().expect("Failed to fetch the peers address");
+        let addr = stream
+            .peer_addr()
+            .expect("Failed to fetch the peers address");
 
         let handle = BaseHandle {};
         Self {
