@@ -4,9 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{primitives::*, states::*, utils::*};
+pub use self::{primitives::*, utils::*};
 
-pub mod backend;
+pub mod consensus;
 pub(crate) mod primitives;
-pub(crate) mod states;
+pub mod states;
 pub(crate) mod utils;

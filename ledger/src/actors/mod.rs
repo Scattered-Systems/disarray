@@ -5,3 +5,6 @@
        ... Summary ...
 */
 
+pub mod miners;
+pub mod stakers;
+pub mod validators;
