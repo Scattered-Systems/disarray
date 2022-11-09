@@ -5,7 +5,7 @@
         ... Summary ...
 */
 
-use scsys::prelude::{Hashable, H160, H256};
+
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct State<T: ToString> {

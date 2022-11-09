@@ -46,7 +46,7 @@ pub(crate) mod utils {
 
     pub fn insert_selfish_pos(bc: &mut Blockchain, block: &Block) -> bool {
         if bc.chain.contains_key(&block.hash()) {
-            return false;
+            false
         } else {
             let header: BlockHeader = block.header().clone();
             let parenthash: H256 = header.parent();
@@ -86,7 +86,7 @@ pub(crate) mod utils {
 
     pub fn insert_unselfish_pos(bc: &mut Blockchain, block: &Block) -> bool {
         if bc.chain.contains_key(&block.hash()) {
-            return false;
+            false
         } else {
             let pdata: BlockData = match bc.find_one_payload(&block.header.parent()) {
                 Some(v) => v,
