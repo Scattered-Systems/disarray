@@ -4,9 +4,6 @@
    Description:
        Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks.
 */
-// #[cfg(test)]
-extern crate hex_literal;
-
 #[doc(inline)]
 pub use crate::{actors::*, components::*, core::*, data::*};
 
