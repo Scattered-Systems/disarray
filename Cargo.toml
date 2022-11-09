@@ -4,6 +4,9 @@ default-members = [
 ]
 members = [
     "disarray",
+    "ledger",
+    "network",
+    "runtime"
 ]
 
 [profile.dev]

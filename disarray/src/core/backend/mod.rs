@@ -4,9 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{context::RPCContext, interface::RPCBackend, server::*, settings::RPCSettings};
+pub use self::{context::*, interface::*, servers::*, settings::*};
 
 pub(crate) mod context;
 pub(crate) mod interface;
-pub(crate) mod server;
+pub(crate) mod servers;
 pub(crate) mod settings;
