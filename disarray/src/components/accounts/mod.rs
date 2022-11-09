@@ -4,9 +4,10 @@
    Description:
        ... Summary ...
 */
-pub use self::{account::*, utils::*};
+pub use self::{account::*, metadata::*, utils::*};
 
 pub(crate) mod account;
+pub(crate) mod metadata;
 
 pub(crate) mod utils {
     use crate::{compute_key_hash, file_to_vec};

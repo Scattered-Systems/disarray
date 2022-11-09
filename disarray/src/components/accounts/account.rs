@@ -3,16 +3,28 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
+use super::AccountMetadata;
+use scsys::prelude::Timestamp;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
 pub struct Account {
     pub address: String,
+    pub metadata: Vec<AccountMetadata>,
+    pub modified: i64, // current time
+    pub timestamp: i64
 }
 
 impl Account {
-    pub fn new(address: String) -> Self {
-        Self { address }
+    pub fn new(address: String, metadata: Vec<AccountMetadata>, modified: i64) -> Self {
+        let timestamp = Timestamp::timestamp();
+        Self { address, metadata, modified, timestamp }
+    }
+}
+
+impl std::convert::From<String> for Account {
+    fn from(data: String) -> Self {
+        Self::new(data, Default::default(), Timestamp::timestamp())
     }
 }
 
@@ -29,7 +41,7 @@ mod tests {
     #[test]
     fn test_default_account() {
         let a = Account::default();
-        let b = Account::new(Default::default());
-        assert_eq!(&a, &b)
+        let b = Account::from(String::new());
+        assert_eq!(&a.address, &b.address)
     }
 }
