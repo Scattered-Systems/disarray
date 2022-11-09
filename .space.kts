@@ -3,7 +3,6 @@ job("Test (crates)") {
         gitPush { 
             branchFilter {
                 +"refs/heads/main"
-                +"refs/heads/v*.*.*"
                 +"refs/tags/v*.*.*"
             }
         }
