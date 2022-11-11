@@ -1,11 +1,13 @@
 [workspace]
 default-members = [
+    "bin/conduit",
     "disarray"
 ]
 exclude = [
     "examples/*"
 ]
 members = [
+    "bin/conduit",
     "disarray",
     "ledger",
     "network",

@@ -1,0 +1,204 @@
+/*
+    Appellation: interface <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... summary ...
+*/
+use futures::future::{self, Ready};
+use samples::World;
+use scsys::{
+    components::networking::Server,
+    prelude::{BoxResult, Timestamp},
+};
+use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
+use tarpc::{
+    context,
+    server::{BaseChannel, Channel},
+};
+use tokio::net::TcpListener;
+use tracing::Instrument;
+
+/*
+    Implement the sample service on the base server for the rpc backend
+    Note:
+        Each defined rpc generates two items within the trait; namely, a function
+        directly servicing the RPC and an associated type representing the future output
+        of the function provided.
+*/
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct RPCServer;
+
+impl samples::World for RPCServer {
+    type HelloFut = Ready<String>;
+
+    fn hello(self, _: context::Context, name: String) -> Self::HelloFut {
+        let msg = format!("Hello, {name}!");
+        future::ready(msg)
+    }
+}
+
+pub async fn simple_rpc_client(name: Option<String>) -> BoxResult {
+    let (client_transport, server_transport) = tarpc::transport::channel::unbounded();
+
+    let server = BaseChannel::with_defaults(server_transport);
+    tokio::spawn(server.execute(RPCServer.serve()));
+
+    // Create a client instance from the provided transport for the given service
+    let client =
+        samples::WorldClient::new(tarpc::client::Config::default(), client_transport).spawn();
+
+    let hello = async move {
+        tokio::select! {
+            a = client.hello(context::current(), format!("Current Time: {}", Timestamp::now())) => { a }
+            b = client.hello(context::current(), format!("Hello, {}", name.unwrap_or_default())) => { b }
+        }
+    }
+    .instrument(tracing::info_span!("Two Hellos"))
+    .await;
+
+    tracing::info!("{:?}", hello);
+
+    tokio::time::sleep(std::time::Duration::from_micros(1)).await;
+    opentelemetry::global::shutdown_tracer_provider();
+    Ok(())
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RPCBackend {
+    pub server: Server,
+}
+
+impl RPCBackend {
+    pub fn new(server: Server) -> Self {
+        Self { server }
+    }
+    pub fn address(&self) -> SocketAddr {
+        self.server.clone().address().into()
+    }
+    pub async fn client(&mut self, name: Option<String>) -> BoxResult<&Self> {
+        simple_rpc_client(name).await?;
+
+        Ok(self)
+    }
+    pub async fn listener(&self) -> BoxResult<TcpListener> {
+        tracing::info!("Listening at {}", self.server.clone().address());
+        let listener = TcpListener::bind(self.address()).await?;
+        Ok(listener)
+    }
+    pub async fn spawn(&mut self) -> BoxResult {
+        loop {
+            let (_, _) = self.listener().await?.accept().await?;
+
+            tokio::spawn(async move {
+                // Process each socket concurrently.
+                simple_rpc_client(None).await.expect("Invalid response");
+            });
+        }
+    }
+    pub async fn run(&mut self) -> BoxResult<&Self> {
+        tracing::info!("Spawning the rpc server...");
+        self.spawn().await?;
+        Ok(self)
+    }
+}
+
+pub(crate) mod samples {
+    use crate::contexts::Context;
+    use clap::Parser;
+    use futures::future::{self, Ready};
+    use scsys::prelude::BoxResult;
+    use std::{net::SocketAddr, time::Duration};
+    use tarpc::{
+        client, context,
+        server::{BaseChannel, Channel},
+        tokio_serde::formats::Json,
+    };
+    use tokio::time::sleep;
+    use tracing::Instrument;
+
+    /// This is the service definition. It looks a lot like a trait definition.
+    /// It defines one RPC, hello, which takes one arg, name, and returns a String.
+    #[tarpc::service]
+    pub trait World {
+        /// Returns a greeting for name.
+        async fn hello(name: String) -> String;
+    }
+
+    #[derive(Clone)]
+    pub struct WorldServer;
+
+    impl World for WorldServer {
+        // Each defined rpc generates two items in the trait, a fn that serves the RPC, and
+        // an associated type representing the future output by the fn.
+
+        type HelloFut = Ready<String>;
+
+        fn hello(self, _: tarpc::context::Context, name: String) -> Self::HelloFut {
+            future::ready(format!("Hello, {name}!"))
+        }
+    }
+
+    #[derive(Parser)]
+    struct Flags {
+        /// Sets the server address to connect to.
+        #[clap(long)]
+        server_addr: SocketAddr,
+        /// Sets the name to say hello to.
+        #[clap(long)]
+        name: String,
+    }
+
+    pub async fn world_client() -> BoxResult<WorldClient> {
+        let (client_transport, server_transport) = tarpc::transport::channel::unbounded();
+
+        let server = BaseChannel::with_defaults(server_transport);
+        tokio::spawn(server.execute(WorldServer.serve()));
+
+        // WorldClient is generated by the #[tarpc::service] attribute. It has a constructor `new`
+        // that takes a config and any Transport as input.
+        let client = WorldClient::new(client::Config::default(), client_transport).spawn();
+        Ok(client)
+    }
+
+    /*
+
+    */
+    pub async fn basic_wc_action() -> BoxResult {
+        let client = world_client().await?;
+        // The client has an RPC method for each RPC defined in the annotated trait. It takes the same
+        // args as defined, with the addition of a Context, which is always the first arg. The Context
+        // specifies a deadline and trace information which can be helpful in debugging requests.
+        let ts = scsys::prelude::Timestamp::default();
+        let hello = client
+            .hello(context::current(), serde_json::to_string(&ts).unwrap())
+            .await?;
+
+        println!("{hello}");
+        Ok(())
+    }
+
+    pub async fn sample_client(ctx: Context) -> BoxResult {
+        let address = ctx.settings.server.address();
+        let name = "".to_string();
+
+        let transport = tarpc::serde_transport::tcp::connect(address, Json::default);
+
+        let client = WorldClient::new(client::Config::default(), transport.await?).spawn();
+
+        let hello = async move {
+            tokio::select! {
+                hello1 = client.hello(context::current(), format!("{}1", name)) => { hello1 }
+                hello2 = client.hello(context::current(), format!("{}2", name)) => { hello2 }
+            }
+        }
+        .instrument(tracing::info_span!("Two Hellos"))
+        .await;
+
+        tracing::info!("{:?}", hello);
+
+        sleep(Duration::from_micros(1)).await;
+        opentelemetry::global::shutdown_tracer_provider();
+
+        Ok(())
+    }
+}

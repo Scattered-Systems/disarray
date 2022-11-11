@@ -8,7 +8,6 @@ job("Publish to Docker Hub") {
         schedule { cron("0 8 * * *") }
     }
     host("Build artifacts and a Docker image") {
-        // assign project secrets to environment variables
         env["HUB_USER"] = Secrets("dockerhub_username")
         env["HUB_TOKEN"] = Secrets("dockerhub_token")
 
