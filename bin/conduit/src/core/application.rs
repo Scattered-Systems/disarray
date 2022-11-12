@@ -4,7 +4,7 @@
     Description: ... summary ...
 */
 use crate::{contexts::Context, rpc::RPCBackend, sessions::Session, states::{Stateful, States}};
-use scsys::prelude::BoxResult;
+use scsys::{components::logging::logger_from_env, prelude::BoxResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -30,29 +30,33 @@ impl<T: Stateful> Application<T> {
             .expect("Failed to terminate the runtime...");
         tracing::info!("Terminating the application and connected services...");
     }
-    ///
+    /// Creates a service handle for toggling the tracing systems implemented
     pub fn with_tracing(&self) -> BoxResult<&Self> {
-        let name = self.ctx.settings.clone().name.unwrap_or_default();
-        crate::rpc::init_tracing(&name)?;
+        // TODO: Introduce a more refined system of tracing logged events
+        // let name = self.ctx.settings.clone().name.unwrap_or_default();
+        // crate::rpc::init_tracing(&name)?;
+        // Initialize the logging systems
+
+        logger_from_env(Some("info"));
         tracing::info!("Successfully initiated the tracing protocol...");
         Ok(self)
     }
-    ///
+    /// Change the state of the application to the valid parameter
     pub fn set_state(&mut self, state: States<T>) -> &Self {
         self.state = state;
         self
     }
-    ///
+    /// Initialize a new backend contexutalized with the proper information
     pub fn setup_backend(&self) -> RPCBackend {
         RPCBackend::new(self.ctx.settings.server.clone())
     }
-    ///
+    /// A simple runner for the application, initializing a host of included systems 
     pub async fn run(&self) -> BoxResult<&Self> {
-        scsys::components::logging::logger_from_env(Some("info"));
-
+        // Create an instance of the backend
         let mut backend = self.setup_backend();
+        // Spawn the rpc services
         backend.spawn().await?;
-
+        // On exit return self, owned and wrapped with the required tags
         Ok(self)
     }
 }

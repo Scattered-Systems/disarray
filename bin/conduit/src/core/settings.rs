@@ -4,7 +4,8 @@
     Description: ... summary ...
 */
 use scsys::{
-    components::networking::Server,
+    actors::ApplicationMode,
+    components::{logging::Logger, networking::Server},
     prelude::{
         collect_config_files,
         config::{Config, Environment},
@@ -18,6 +19,7 @@ pub struct Settings {
     pub mode: Option<String>,
     pub name: Option<String>,
     pub server: Server,
+    pub tracing: Option<Logger>
 }
 
 impl Settings {
@@ -34,11 +36,13 @@ impl Settings {
 impl Default for Settings {
     fn default() -> Self {
         match Self::build() {
-            Err(_) => {
+            Err(e) => {
+                println!("{}", e);
                 Self {
-                    mode: None,
-                    name: None,
-                    server: Server::new("127.0.0.1".to_string(), crate::MAINNET_DEFAULT_PORT)
+                    mode: Some("production".to_string()),
+                    name: Some(String::from("Conduit")),
+                    server: Server::new("127.0.0.1".to_string(), crate::MAINNET_DEFAULT_PORT),
+                    tracing: Some(Default::default())
                 }
             },
             Ok(v) => v
