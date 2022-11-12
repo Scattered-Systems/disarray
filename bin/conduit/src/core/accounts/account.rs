@@ -12,13 +12,18 @@ pub struct Account {
     pub address: String,
     pub metadata: Vec<AccountMetadata>,
     pub modified: i64, // current time
-    pub timestamp: i64
+    pub timestamp: i64,
 }
 
 impl Account {
     pub fn new(address: String, metadata: Vec<AccountMetadata>, modified: i64) -> Self {
         let timestamp = Timestamp::timestamp();
-        Self { address, metadata, modified, timestamp }
+        Self {
+            address,
+            metadata,
+            modified,
+            timestamp,
+        }
     }
 }
 

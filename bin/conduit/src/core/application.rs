@@ -3,8 +3,13 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use crate::{contexts::Context, rpc::RPCBackend, sessions::Session, states::{Stateful, States}};
-use scsys::{components::logging::logger_from_env, prelude::BoxResult};
+use crate::{
+    contexts::Context,
+    rpc::RPCBackend,
+    sessions::Session,
+    states::{Stateful, States},
+};
+use scsys::{prelude::BoxResult};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
@@ -33,11 +38,10 @@ impl<T: Stateful> Application<T> {
     /// Creates a service handle for toggling the tracing systems implemented
     pub fn with_tracing(&self) -> BoxResult<&Self> {
         // TODO: Introduce a more refined system of tracing logged events
-        // let name = self.ctx.settings.clone().name.unwrap_or_default();
-        // crate::rpc::init_tracing(&name)?;
-        // Initialize the logging systems
 
-        logger_from_env(Some("info"));
+        let logger = self.ctx.settings.clone().tracing.unwrap_or_default();
+        logger.setup();
+
         tracing::info!("Successfully initiated the tracing protocol...");
         Ok(self)
     }
@@ -50,7 +54,7 @@ impl<T: Stateful> Application<T> {
     pub fn setup_backend(&self) -> RPCBackend {
         RPCBackend::new(self.ctx.settings.server.clone())
     }
-    /// A simple runner for the application, initializing a host of included systems 
+    /// A simple runner for the application, initializing a host of included systems
     pub async fn run(&self) -> BoxResult<&Self> {
         // Create an instance of the backend
         let mut backend = self.setup_backend();

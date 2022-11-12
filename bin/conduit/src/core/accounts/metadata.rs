@@ -13,16 +13,14 @@ pub enum AccountMetadata<T: Serialize = String> {
         id: String,
         key: String,
         label: String,
-        data: std::collections::HashMap<String, String>
+        data: std::collections::HashMap<String, String>,
     },
     #[strum(disabled)]
     Data(T),
-    None
+    None,
 }
 
-impl<T: Serialize> AccountMetadata<T> {
-    
-}
+impl<T: Serialize> AccountMetadata<T> {}
 
 impl<T: Serialize> Default for AccountMetadata<T> {
     fn default() -> Self {

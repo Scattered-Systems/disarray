@@ -73,7 +73,7 @@ impl RPCBackend {
         Self { server }
     }
     pub fn address(&self) -> SocketAddr {
-        self.server.clone().address().into()
+        self.server.clone().address()
     }
     pub async fn client(&mut self, name: Option<String>) -> BoxResult<&Self> {
         simple_rpc_client(name).await?;

@@ -14,6 +14,7 @@ version = "0.1.0"
 [dependencies]
 clap = { features = ["derive"], version = "4.0.22" }
 futures = "0.3.25"
+hex = "0.4.3"
 opentelemetry = { features = ["rt-tokio"], version = "0.18.0" }
 opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
 scsys = { features = ["full"], git = "https://github.com/scattered-systems/scsys", version = "0.1.26" }

@@ -1,5 +1,6 @@
 [package]
 authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
+build = "build.rs"
 categories = ["development-tools", "network-programming"]
 description = "Disarray is an all-in-one toolkit for designing optimized Ethereum Native, zk-SNARK blockchains"
 edition = "2021"
@@ -12,10 +13,10 @@ repository = "https://github.com/scattered-systems/disarray"
 version = "0.1.20" # TODO - Update the cargo package version
 
 [features]
-default = ["core"]
-full = ["core"]
+default = ["core", "ledger", "network", "runtime"]
+full = ["core", "ledger", "network", "runtime"]
 
-core = ["ledger", "network", "runtime"]
+core = ["disarray-core/default", "disarray-core/full"]
 
 ledger = ["disarray-ledger"]
 network = ["disarray-network"]
@@ -25,21 +26,22 @@ runtime = ["disarray-runtime"]
 crate-type = ["cdylib", "rlib"]
 test = true
 
+[dev-dependencies]
+env_logger = "0.9.1"
+
 [build-dependencies]
-substrate-wasm-builder = "4.0.0"
 
 [dependencies]
-algae = { default-features = false, features = ["merkle"], version = "0.1.13" }
-hex = "0.4.3"
-hex-literal = "0.3.4"
-scsys = { features = ["full"], version = "0.1.26" }
+scsys = { features = ["full"], git = "https://github.com/scattered-systems/scsys", version = "0.1.26" }
 serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
 strum = { features = ["derive"], version = "0.24.1" }
-tarpc = "0.31.0"
-tokio = { features = ["full"], version = "1.21.2" }
-tracing = "0.1.37"
-tracing-subscriber = "0.3.16"
+
+[dependencies.disarray-core]
+features = ["full"]
+optional = true
+path = "../core"
+version = "0.1.20"
 
 [dependencies.disarray-ledger]
 optional = true
@@ -55,7 +57,3 @@ version = "0.1.20"
 optional = true
 path = "../runtime"
 version = "0.1.20"
-
-[dev-dependencies]
-env_logger = "0.9.1"
-

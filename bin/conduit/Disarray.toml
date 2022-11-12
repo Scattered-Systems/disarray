@@ -1,5 +1,5 @@
 mode = "development"
-name = "Conduit"
+name = "Disarray"
 
 [logger]
 level = "info"

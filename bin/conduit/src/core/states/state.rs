@@ -3,7 +3,10 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use crate::states::{reqres::{Request, Response}, Stateful};
+use crate::states::{
+    reqres::{Request, Response},
+    Stateful,
+};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use strum::{EnumString, EnumVariantNames};

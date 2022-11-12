@@ -5,8 +5,6 @@
         ... Summary ...
 */
 
-
-
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct State<T: ToString> {
     pub message: T,

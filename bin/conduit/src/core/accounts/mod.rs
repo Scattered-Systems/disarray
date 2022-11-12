@@ -1,6 +1,6 @@
 /*
    Appellation: accounts <module>
-   Contributors: FL03 <jo3mccain@icloud.com> (https://gitlab.com/FL03)
+   Contributors: FL03 <jo3mccain@icloud.com>
    Description:
        ... Summary ...
 */
@@ -10,7 +10,7 @@ pub(crate) mod account;
 pub(crate) mod metadata;
 
 pub(crate) mod utils {
-    use crate::{compute_key_hash, file_to_vec};
+    use disarray::{compute_key_hash, file_to_vec};
     use scsys::prelude::{
         ring::signature::{Ed25519KeyPair, KeyPair},
         H160,
