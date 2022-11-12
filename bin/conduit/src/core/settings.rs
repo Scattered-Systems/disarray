@@ -22,8 +22,9 @@ pub struct Settings {
 
 impl Settings {
     pub fn build() -> ConfigResult<Self> {
+        let cfname_pattern = format!("**/{}", crate::CONFIG_FILENAME);
         let builder = Config::builder()
-            .add_source(collect_config_files("**/Conduit.toml", true))
+            .add_source(collect_config_files(cfname_pattern.as_str(), true))
             .add_source(Environment::default().separator("__"));
 
         builder.build()?.try_deserialize()
@@ -33,8 +34,14 @@ impl Settings {
 impl Default for Settings {
     fn default() -> Self {
         match Self::build() {
-            Ok(v) => v,
-            Err(e) => panic!("Configuration Error: {}", e),
+            Err(_) => {
+                Self {
+                    mode: None,
+                    name: None,
+                    server: Server::new("127.0.0.1".to_string(), crate::MAINNET_DEFAULT_PORT)
+                }
+            },
+            Ok(v) => v
         }
     }
 }
