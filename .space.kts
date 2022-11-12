@@ -71,6 +71,7 @@ job("Publish (crates)") {
                 apt-get update -y && apt-get upgrade -y
                 apt-get install -y protobuf-compiler
                 rustup default nightly && rustup target add wasm32-unknown-unknown --toolchain nightly
+                cargo publish --all-features --color always --jobs 1 --token ${'$'}TOKEN --verbose -p disarray-core
                 cargo publish --all-features --color always --jobs 1 --token ${'$'}TOKEN --verbose -p disarray-ledger
                 cargo publish --all-features --color always --jobs 1 --token ${'$'}TOKEN --verbose -p disarray-network
                 cargo publish --all-features --color always --jobs 1 --token ${'$'}TOKEN --verbose -p disarray-runtime
