@@ -1,8 +1,10 @@
 [workspace]
 default-members = [
+    "bin/conduit",
     "disarray"
 ]
 members = [
+    "bin/conduit",
     "disarray",
     "ledger",
     "network",

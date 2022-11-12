@@ -160,7 +160,7 @@ pub trait ChainWrapperExt: ChainWrapper {
 
         blocks
             .iter()
-            .map(|hash| self.find_one_block(hash).unwrap().clone())
+            .map(|hash| self.find_one_block(hash).unwrap())
             .collect::<Vec<Block>>()
     }
     // TODO: Make parent, however, currently functional since all pos are the same

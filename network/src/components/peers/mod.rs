@@ -30,7 +30,7 @@ mod tests {
     fn test_auth_peer() {
         let kp = Peer::generate_ed25519();
         let nk = Peer::generate_noise_keys();
-        let peer = Peer::from(kp.clone());
+        let peer = Peer::from(kp);
         let a = peer.authenticate(nk.clone());
         let b = authorize_peer(nk, peer.keypair());
         assert!(a.is_ok());

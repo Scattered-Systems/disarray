@@ -8,3 +8,15 @@ updates:
     directory: /disarray
     schedule:
       interval: daily
+  - package-ecosystem: cargo
+    directory: /ledger
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /network
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /runtime
+    schedule:
+      interval: daily

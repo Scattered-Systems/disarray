@@ -49,7 +49,7 @@ impl std::convert::From<String> for Node {
 
 impl std::convert::From<(&str, u16)> for Node {
     fn from(data: (&str, u16)) -> Self {
-        let p = String::new();
+        let _p = String::new();
         Self::from(format!("/ip4/{}/tcp/{}", data.0, data.1))
     }
 }

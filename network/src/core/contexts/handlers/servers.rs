@@ -17,7 +17,7 @@ pub struct ServerHandle {
 }
 
 impl ServerHandle {
-    pub fn connect(&self, addr: std::net::SocketAddr) {}
+    pub fn connect(&self, _addr: std::net::SocketAddr) {}
 
-    pub fn broadcast(&self, msg: Message) {}
+    pub fn broadcast(&self, _msg: Message) {}
 }

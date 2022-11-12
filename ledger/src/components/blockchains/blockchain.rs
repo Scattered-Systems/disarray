@@ -63,7 +63,7 @@ impl Blockchain {
     pub fn insert_selfish_pos(&mut self, block: &Block) -> bool {
         // Insert a block into blockchain as a selfish miner
         if self.is_block(&block.hash()) {
-            return false;
+            false
         } else {
             let header: BlockHeader = block.header().clone();
             let parenthash: H256 = header.parent();
@@ -102,7 +102,7 @@ impl Blockchain {
     }
     pub fn insert_unselfish_pos(&mut self, block: &Block) -> bool {
         if self.chain.contains_key(&block.hash()) {
-            return false;
+            false
         } else {
             let pdata: BlockData = match self.find_one_payload(&block.header.parent()) {
                 Some(v) => v,
@@ -143,7 +143,7 @@ impl Blockchain {
     pub fn insert_pow(&mut self, block: &Block) -> bool {
         //unimplemented!()
         if self.is_block(&block.hash()) {
-            return false;
+            false
         } else {
             let prev: BlockData = match self.find_one_payload(&block.header().parent()) {
                 None => return false,
