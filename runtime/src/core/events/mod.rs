@@ -24,6 +24,7 @@ pub(crate) mod variants {
     #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
     pub enum Events<T: Eventful = Event> {
         GenericEvent(T),
+        GenesisEvent(T),
         Idle,
     }
 
