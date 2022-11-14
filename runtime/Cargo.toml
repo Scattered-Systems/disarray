@@ -28,6 +28,8 @@ serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
 strum = { features = ["derive"], version = "0.24.1" }
 tokio = { features = ["full"], version = "1.21.2" }
+tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
 wasmer = "2.3.0"
 
 [dev-dependencies]
