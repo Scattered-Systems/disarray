@@ -4,8 +4,9 @@
    Description:
        ... Summary ...
 */
-pub use self::{primitives::*, states::*, utils::*};
+pub use self::{primitives::*, procs::*, states::*, utils::*};
 
 pub(crate) mod primitives;
+pub(crate) mod procs;
 pub(crate) mod states;
 pub(crate) mod utils;
