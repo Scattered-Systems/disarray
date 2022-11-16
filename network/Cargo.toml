@@ -21,7 +21,7 @@ crate-type = ["cdylib", "rlib"]
 test = true
 
 [dependencies]
-algae = { default-features = false, features = ["merkle"], version = "0.1.13" }
+algae = { features = ["full"], version = "0.1.14" }
 crossbeam = "0.8.2"
 disarray-ledger = { path = "../ledger", version = "0.1.20" }
 log = "0.4.17"

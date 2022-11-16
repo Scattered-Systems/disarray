@@ -6,11 +6,34 @@
 */
 use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
+use algae::mmr::mmr::MerkleMountainRange;
 use scsys::prelude::{
     rand::{self, Rng},
-    Hashable, Timestamp, H160, H256,
+    Hashable, Timestamp, H160, H256, hasher
 };
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+pub struct MMRStore<T>(Vec<T>);
+
+impl<T> MMRStore<T> {
+    pub fn new(data: Vec<T>) -> Self {
+        Self(data)
+    }
+}
+
+impl<T> Hashable for MMRStore<T> where T: Serialize {
+    fn hash(&self) -> H256 {
+        hasher(&self).as_slice().to_owned().into()
+    }
+}
+
+impl<T> std::fmt::Display for MMRStore<T> where T: Serialize {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
+}
 
 #[derive(Debug)]
 pub struct Blockchain {
@@ -19,6 +42,7 @@ pub struct Blockchain {
     pub lead: u128,
     pub length: u128,
     pub map: HashMap<H256, HashMap<H256, H160>>,
+    pub mmr: MerkleMountainRange<MMRStore<H256>>,
     pub position: Position,
     pub timestamp: i64, // The time of creation (genesis_timestamp)
     pub tip: H256,
@@ -35,7 +59,7 @@ impl Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
+        let mmr: MerkleMountainRange<MMRStore<H256>> = MerkleMountainRange::default();
         let map = HashMap::new();
 
         Self {
@@ -44,22 +68,24 @@ impl Blockchain {
             lead: 0,
             length: 0,
             map,
+            mmr,
             position: Position::default(),
             timestamp: genesis.header.timestamp,
             tip: hash,
         }
     }
 
-    // pub fn get_mmr(&self, hash: &H256) -> MerkleMountainRange<Sha256, Vec<Hash>> {
+    // pub fn get_mmr(&self, hash: &H256) -> MerkleMountainRange<MMRStore<H256>> {
     //     let mmr_ref = self.map.get(hash).unwrap();
-    //     let leaf_hashes = mmr_ref
+    //     let leaf_hashes = mmr_ref.get(k)
     //         .get_leaf_hashes(0, mmr_ref.get_leaf_count().unwrap() + 1)
     //         .unwrap()
     //         .clone();
-    //     let mut mmr_ret = MerkleMountainRange::<Sha256, Vec<Hash>>::new(Vec::new());
+    //     let mut mmr_ret = MerkleMountainRange::<MMRStore<H256>>::default();
     //     mmr_ret.assign(leaf_hashes).unwrap();
     //     mmr_ret
     // }
+
     pub fn insert_selfish_pos(&mut self, block: &Block) -> bool {
         // Insert a block into blockchain as a selfish miner
         if self.is_block(&block.hash()) {
@@ -212,7 +238,7 @@ impl ChainWrapperExt for Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        // let mmr: MerkleMountainRange<Sha256, Vec<Vec<u8>>> = MerkleMountainRange::new(Vec::new());
+        let mmr= MerkleMountainRange::default();
         let map = HashMap::new();
 
         Self {
@@ -221,6 +247,7 @@ impl ChainWrapperExt for Blockchain {
             lead: 0,
             length: 0,
             map,
+            mmr,
             position: Position::default(),
             timestamp: genesis.header.timestamp,
             tip: hash,

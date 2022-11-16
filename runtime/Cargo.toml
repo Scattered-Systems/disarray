@@ -19,7 +19,7 @@ test = true
 
 
 [dependencies]
-algae = { default-features = false, features = ["merkle"], version = "0.1.13" }
+algae = { features = ["full"], version = "0.1.14" }
 async-trait = "0.1.58"
 hex = "0.4.3"
 hex-literal = "0.3.4"
