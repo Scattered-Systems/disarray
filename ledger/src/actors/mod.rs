@@ -29,6 +29,70 @@ pub(crate) mod misc {
         PartialOrd,
         Serialize,
     )]
+    pub enum ContextUpdateSignal {
+        // it means external pow block comes
+        NewBlock,
+    }
+
+    impl std::fmt::Display for ContextUpdateSignal {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", serde_json::to_string(&self).unwrap())
+        }
+    }
+
+    impl Default for ContextUpdateSignal {
+        fn default() -> Self {
+            Self::NewBlock
+        }
+    }
+
+    #[derive(
+        Clone,
+        Debug,
+        Deserialize,
+        EnumString,
+        EnumVariantNames,
+        Eq,
+        Hash,
+        Hashable,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+    )]
+    pub enum ControlSignal {
+        Start(u64), // the number controls the lambda of interval between block generation
+        Exit,
+        
+    }
+
+    impl std::fmt::Display for ControlSignal {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", serde_json::to_string(&self).unwrap())
+        }
+    }
+
+    impl Default for ControlSignal {
+        fn default() -> Self {
+            Self::Exit
+        }
+    }
+
+
+    #[derive(
+        Clone,
+        Debug,
+        Deserialize,
+        EnumString,
+        EnumVariantNames,
+        Eq,
+        Hash,
+        Hashable,
+        Ord,
+        PartialEq,
+        PartialOrd,
+        Serialize,
+    )]
     pub enum OperatingModes {
         Paused,
         Run(usize),
