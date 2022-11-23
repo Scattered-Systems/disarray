@@ -3,10 +3,17 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-pub use self::{interface::*, state::*, utils::*};
+pub use self::{specs::*, state::*, utils::*};
 
-pub(crate) mod interface;
 pub(crate) mod state;
+
+pub(crate) mod specs {
+    use crate::BlockState;
+
+    pub trait BlockchainStateWrapper {
+        fn blockstate(&self) -> BlockState;
+    }
+}
 
 pub(crate) mod utils {
     use crate::{

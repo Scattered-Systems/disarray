@@ -6,47 +6,40 @@
 */
 use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
-use algae::mmr::MerkleMountainRange;
+use ckb_merkle_mountain_range::{util::MemMMR, Merge};
 use rand::Rng;
-use scsys::prelude::{hasher, H160, H256, Hashable, Timestamp};
-use serde::{Deserialize, Serialize};
+use scsys::prelude::{Hashable, Timestamp, H256};
 use std::collections::HashMap;
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct MMRStore<T>(Vec<T>);
+/// A simple mechanism for merging hashes for compatability with ckb-merkle-mountian-range
+pub struct Merger;
 
-impl<T> MMRStore<T> {
-    pub fn new(data: Vec<T>) -> Self {
-        Self(data)
+impl Merge for Merger {
+    type Item = H256;
+
+    fn merge(
+        left: &Self::Item,
+        right: &Self::Item,
+    ) -> ckb_merkle_mountain_range::Result<Self::Item> {
+        let lhs = left.0;
+        let rhs = right.0;
+        let mut hasher = blake3::Hasher::default();
+        hasher.update(&lhs);
+        hasher.update(&rhs);
+        let tmp = hasher.finalize();
+        let res = tmp.as_bytes();
+        Ok(res.into())
     }
 }
 
-impl<T> Hashable for MMRStore<T>
-where
-    T: Serialize,
-{
-    fn hash(&self) -> H256 {
-        hasher(&self).as_slice().to_owned().into()
-    }
-}
-
-impl<T> std::fmt::Display for MMRStore<T>
-where
-    T: Serialize,
-{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
-    }
-}
-
-#[derive(Debug)]
+#[derive()]
+/// Formally implements the ledger powering the network
 pub struct Blockchain {
     pub chain: HashMap<H256, BlockData>,
     pub epoch: Epoch,
     pub lead: u128,
     pub length: u128,
-    pub map: HashMap<H256, HashMap<H256, H160>>,
-    pub mmr: MerkleMountainRange<MMRStore<H256>>,
+    pub map: HashMap<H256, MemMMR<H256, Merger>>,
     pub position: Position,
     pub timestamp: i64, // The time of creation (genesis_timestamp)
     pub tip: H256,
@@ -63,32 +56,40 @@ impl Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        let mmr: MerkleMountainRange<MMRStore<H256>> = MerkleMountainRange::default();
-        let map = HashMap::new();
-
+        let mmr = MemMMR::default();
+        let mut map = HashMap::new();
+        map.insert(hash.clone(), mmr);
         Self {
             chain: HashMap::from([(hash, data)]),
             epoch: Epoch::default(),
             lead: 0,
             length: 0,
             map,
-            mmr,
             position: Position::default(),
             timestamp: genesis.header.timestamp,
             tip: hash,
         }
     }
+    pub fn enumerate_chain(&self) -> Vec<(u64, H256)> {
+        let mut index = 0;
+        let mut tmp = Vec::new();
+        for k in self.chain.keys() {
+            tmp.push((index, k.clone()));
+            index += 1;
+        }
+        tmp
+    }
 
-    // pub fn get_mmr(&self, hash: &H256) -> MerkleMountainRange<MMRStore<H256>> {
-    //     let mmr_ref = self.map.get(hash).unwrap();
-    //     let leaf_hashes = mmr_ref.get(k)
-    //         .get_leaf_hashes(0, mmr_ref.get_leaf_count().unwrap() + 1)
-    //         .unwrap()
-    //         .clone();
-    //     let mut mmr_ret = MerkleMountainRange::<MMRStore<H256>>::default();
-    //     mmr_ret.assign(leaf_hashes).unwrap();
-    //     mmr_ret
-    // }
+    pub fn get_mmr(&self, hash: &H256) -> MemMMR<H256, Merger> {
+        let leaves = self.enumerate_chain();
+        let mmr_ref = self.map.get(hash).unwrap();
+        let proof = mmr_ref.gen_proof(vec![0, self.lead as u64]).unwrap();
+        let new_root =
+            proof.calculate_root_with_new_leaf(leaves, 0, hash.clone(), mmr_ref.mmr_size() + 1);
+        let mut mmr_ret = MemMMR::<H256, Merger>::default();
+        mmr_ret.push(new_root.unwrap()).unwrap();
+        mmr_ret
+    }
 
     pub fn insert_selfish_pos(&mut self, block: &Block) -> bool {
         // Insert a block into blockchain as a selfish miner
@@ -205,7 +206,7 @@ impl CoreChainSpec for Blockchain {
         self.tip
     }
 
-    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>> {
+    fn map(&self) -> &HashMap<H256, MemMMR<H256, Merger>> {
         &self.map
     }
 
@@ -242,16 +243,15 @@ impl ChainWrapperExt for Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        let mmr = MerkleMountainRange::default();
-        let map = HashMap::new();
-
+        let mmr = MemMMR::default();
+        let mut map = HashMap::new();
+        map.insert(hash.clone(), mmr);
         Self {
             chain: HashMap::from([(hash, data)]),
             epoch: Epoch::default(),
             lead: 0,
             length: 0,
             map,
-            mmr,
             position: Position::default(),
             timestamp: genesis.header.timestamp,
             tip: hash,

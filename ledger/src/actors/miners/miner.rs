@@ -7,12 +7,12 @@
 use crate::blockchains::*;
 use std::sync::{Arc, Mutex};
 
-#[derive(Clone, Debug, Default)]
+#[derive(Default)]
 pub struct MinerContext {
-    pub blockchain: Arc<Mutex<Blockchain>>
+    pub blockchain: Arc<Mutex<Blockchain>>,
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Default)]
 pub struct Miner {
     pub ctx: MinerContext,
 }
@@ -22,7 +22,6 @@ impl Miner {
         Self { ctx }
     }
 }
-
 
 #[cfg(test)]
 mod tests {

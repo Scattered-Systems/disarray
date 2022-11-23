@@ -4,22 +4,57 @@
    Description:
        ... Summary ...
 */
-pub use self::{attr::*, blockchain::*, utils::*};
+pub use self::{attr::*, blockchain::*, blockstore::*, utils::*};
 
 pub(crate) mod attr;
 pub(crate) mod blockchain;
+
+pub(crate) mod blockstore {
+    use scsys::prelude::*;
+    use serde::{Deserialize, Serialize};
+
+    #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+    pub struct BlockStore<T>(Vec<T>);
+
+    impl<T> BlockStore<T> {
+        pub fn new(data: Vec<T>) -> Self {
+            Self(data)
+        }
+    }
+
+    impl<T> Hashable for BlockStore<T>
+    where
+        T: Serialize + ToString,
+    {
+        fn hash(&self) -> H256 {
+            hasher(&self).into()
+        }
+    }
+
+    impl<T> std::fmt::Display for BlockStore<T>
+    where
+        T: Serialize,
+    {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{}", serde_json::to_string(&self).unwrap())
+        }
+    }
+}
 
 pub(crate) mod utils {
     use crate::{
         blockchains::{BlockData, Blockchain, ChainWrapperExt},
         blocks::{Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec},
     };
+    use ckb_merkle_mountain_range::util::MemMMR;
     use rand::Rng;
     use scsys::prelude::{Hashable, H256};
 
-    // pub fn mmr_push_leaf(mmr: &mut MerkleMountainRange<Sha256, Vec<Hash>>, leaf_hash: Hash) {
+    use super::Merger;
+
+    // pub fn mmr_push_leaf(mmr: &mut MemMMR<H256, Merger>, leaf_hash: H256) {
     //     let mut leaf_hashes: Vec<Vec<u8>> = mmr
-    //         .get_leaf_hashes(0, mmr.get_leaf_count().unwrap() + 1)
+    //         .get_leaf_hashes(mmr.get_leaf_count().unwrap() + 1)
     //         .unwrap()
     //         .clone();
     //     leaf_hashes.push(leaf_hash);
