@@ -25,7 +25,9 @@ impl Miner {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::blockchains::*;
+    use crate::{blockchains::*, states::State, Lock};
+    use crate::miners::{Pools};
+    use crate::handles::server::ServerHandle;
 
     #[test]
     fn test_default() {
@@ -33,9 +35,11 @@ mod tests {
         let chain = Blockchain::default();
         let cc: ControlChannel = r;
         let mode = Default::default();
-        let pools = Default::default();
-        let server = Default::default();
-        let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, state);
+        let pools = Pools::default();
+        let server = ServerHandle::default();
+        let state = State::default();
+        let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, &state);
+        let miner = Miner::new(ctx);
         assert!(true)
     }
 }

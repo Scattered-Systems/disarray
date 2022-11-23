@@ -72,9 +72,9 @@ mod tests {
         let chain = Blockchain::default();
         let cc: ControlChannel = r;
         let mode = Default::default();
-        let pools = Default::default();
+        let pools = Pools::default();
         let server = ServerHandle::default();
-        let state = Default::default();
+        let state = State::default();
         let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, &state);
         assert!(true)
     }
