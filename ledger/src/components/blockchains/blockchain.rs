@@ -6,11 +6,9 @@
 */
 use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
-use algae::mmr::mmr::MerkleMountainRange;
-use scsys::prelude::{
-    rand::{self, Rng},
-    Hashable, Timestamp, H160, H256, hasher
-};
+use algae::mmr::MerkleMountainRange;
+use rand::Rng;
+use scsys::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -23,13 +21,19 @@ impl<T> MMRStore<T> {
     }
 }
 
-impl<T> Hashable for MMRStore<T> where T: Serialize {
+impl<T> Hashable for MMRStore<T>
+where
+    T: Serialize,
+{
     fn hash(&self) -> H256 {
         hasher(&self).as_slice().to_owned().into()
     }
 }
 
-impl<T> std::fmt::Display for MMRStore<T> where T: Serialize {
+impl<T> std::fmt::Display for MMRStore<T>
+where
+    T: Serialize,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
@@ -238,7 +242,7 @@ impl ChainWrapperExt for Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        let mmr= MerkleMountainRange::default();
+        let mmr = MerkleMountainRange::default();
         let map = HashMap::new();
 
         Self {
@@ -257,7 +261,7 @@ impl ChainWrapperExt for Blockchain {
 
 impl Default for Blockchain {
     fn default() -> Self {
-        Self::new(Timestamp::timestamp())
+        Self::new(Timestamp::ts())
     }
 }
 

@@ -8,5 +8,4 @@ pub trait Consentual: ToString {
     type Proof: ToString;
 
     fn agreement(&self) -> bool;
-    
 }

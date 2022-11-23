@@ -12,7 +12,7 @@ use crate::{
     },
     BlockTs,
 };
-use scsys::crypto::hash::{Hashable, H160, H256};
+use scsys::prelude::{Hashable, H160, H256};
 use std::collections::{HashMap, HashSet};
 
 pub trait GenesisBlock {

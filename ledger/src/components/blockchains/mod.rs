@@ -14,10 +14,8 @@ pub(crate) mod utils {
         blockchains::{BlockData, Blockchain, ChainWrapperExt},
         blocks::{Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec},
     };
-    use scsys::prelude::{
-        rand::{self, Rng},
-        Hashable, H256,
-    };
+    use rand::Rng;
+    use scsys::prelude::{Hashable, H256};
 
     // pub fn mmr_push_leaf(mmr: &mut MerkleMountainRange<Sha256, Vec<Hash>>, leaf_hash: Hash) {
     //     let mut leaf_hashes: Vec<Vec<u8>> = mmr

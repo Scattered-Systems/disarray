@@ -13,7 +13,7 @@ pub(crate) mod utils {
         blocks::calculate_block_hash, transactions::SignedTransaction, BlockHs, BlockId, BlockNc,
         BlockTs, DIFFICULTY_PREFIX,
     };
-    
+
     /// Mines a new block<Dt> where Dt represents transaction data
     pub fn create_block_by_mining(
         id: BlockId,

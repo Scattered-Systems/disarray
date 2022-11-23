@@ -13,10 +13,8 @@ pub(crate) mod utils {
         transactions::{verify_signedtxn, SignedTransaction},
         StateMap,
     };
-    use scsys::prelude::{
-        ring::signature::{Ed25519KeyPair, KeyPair},
-        H160, H256,
-    };
+    use ring::signature::{Ed25519KeyPair, KeyPair};
+    use scsys::prelude::{H160, H256};
     use std::io::{BufRead, BufReader};
 
     /// Creates a vector of accounts from the provided collection of keys

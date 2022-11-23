@@ -4,11 +4,12 @@
    Description:
        ... Summary ...
 */
+use scsys::{prelude::*, Hashable};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Hashable, PartialEq, Serialize)]
 pub struct Miner {
-    pub address: String
+    pub address: String,
 }
 
 impl Miner {
@@ -22,8 +23,6 @@ impl std::fmt::Display for Miner {
         write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {

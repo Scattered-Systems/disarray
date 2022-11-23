@@ -34,10 +34,7 @@ pub(crate) mod utils {
         self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
         VerificationAlgorithm, ED25519,
     };
-    use scsys::prelude::{
-        generate_random_hash,
-        random_keypair,
-    };
+    use scsys::prelude::{generate_random_hash, random_keypair};
 
     pub fn validate_transaction_signature(
         trx: &Transaction,

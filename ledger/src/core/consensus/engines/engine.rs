@@ -5,5 +5,5 @@
 */
 
 pub struct ConsensusEngine {
-    pub mode: String
+    pub mode: String,
 }

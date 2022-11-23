@@ -5,10 +5,7 @@
 */
 use super::validate_transaction_signature;
 use ring::signature::{self, Ed25519KeyPair};
-use scsys::prelude::{
-    hasher,
-    Hashable, H160, H256,
-};
+use scsys::prelude::{hasher, Hashable, H160, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

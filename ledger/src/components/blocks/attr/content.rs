@@ -5,7 +5,7 @@
 */
 use crate::transactions::SignedTransaction;
 use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-use scsys::crypto::hash::{Hashable, H256};
+use scsys::prelude::{Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

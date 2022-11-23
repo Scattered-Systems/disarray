@@ -11,10 +11,8 @@ pub(crate) mod metadata;
 
 pub(crate) mod utils {
     use disarray::{compute_key_hash, file_to_vec};
-    use scsys::prelude::{
-        ring::signature::{Ed25519KeyPair, KeyPair},
-        H160,
-    };
+    use ring::signature::{Ed25519KeyPair, KeyPair};
+    use scsys::prelude::H160;
 
     /// Creates a vector of accounts from the provided collection of keys
     pub fn create_ico_accounts(keys: Vec<Ed25519KeyPair>) -> Vec<H160> {

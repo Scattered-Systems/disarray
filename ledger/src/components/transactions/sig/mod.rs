@@ -10,7 +10,7 @@ pub(crate) mod signed;
 
 pub(crate) mod utils {
     use crate::transactions::Transaction;
-    use scsys::prelude::ring::signature::{Ed25519KeyPair, Signature};
+    use ring::signature::{Ed25519KeyPair, Signature};
 
     /// Create digital signature of a transaction
     pub fn sign(t: &Transaction, key: &Ed25519KeyPair) -> Signature {

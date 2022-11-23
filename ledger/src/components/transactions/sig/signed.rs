@@ -5,7 +5,7 @@
        ... Summary ...
 */
 use crate::transactions::{Sign, Transaction};
-use scsys::crypto::hash::{hasher, Hashable, H256};
+use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
