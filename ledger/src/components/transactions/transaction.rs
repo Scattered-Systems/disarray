@@ -4,9 +4,9 @@
     Description: ... summary ...
 */
 use super::validate_transaction_signature;
+use ring::signature::{self, Ed25519KeyPair};
 use scsys::prelude::{
     hasher,
-    ring::signature::{self, Ed25519KeyPair},
     Hashable, H160, H256,
 };
 use serde::{Deserialize, Serialize};

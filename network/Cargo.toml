@@ -55,6 +55,9 @@ features = [
     "tcp",
     "tcp-tokio",
     "tokio",
+    "wasm-bindgen",
+    "wasm-ext",
+    "wasm-ext-websocket",
     "websocket"
 ]
 version = "0.49.0"

@@ -3,23 +3,40 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{interface::*, sig::*, spam::*, transaction::*, utils::*};
+pub use self::{sig::*, spam::*, specs::*, transaction::*, utils::*};
 
-pub(crate) mod interface;
 pub(crate) mod sig;
 pub(crate) mod spam;
 pub(crate) mod transaction;
 
+pub(crate) mod specs {
+    use crate::{BlockNc, BlockTs};
+    use scsys::prelude::H160;
+    use std::string::ToString;
+
+    pub trait Transactable<T: ToString> {
+        fn message(&self) -> &T;
+        fn nonce(&self) -> BlockNc;
+        fn recv(&self) -> H160;
+        fn timestamp(&self) -> BlockTs;
+        fn value(&self) -> usize;
+    }
+
+    pub trait TransactionWrapper<T: ToString>: Transactable<T> {}
+
+    pub trait TransactionWrapperExt<T: ToString>: TransactionWrapper<T> {}
+}
+
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
+    use rand::{self, Rng};
+    use ring::signature::{
+        self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
+        VerificationAlgorithm, ED25519,
+    };
     use scsys::prelude::{
         generate_random_hash,
-        rand::{self, Rng},
         random_keypair,
-        ring::signature::{
-            self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
-            VerificationAlgorithm, ED25519,
-        },
     };
 
     pub fn validate_transaction_signature(

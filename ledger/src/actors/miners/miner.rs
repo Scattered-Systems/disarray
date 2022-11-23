@@ -8,12 +8,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Miner {
-    pub name: String
+    pub address: String
 }
 
 impl Miner {
-    pub fn new(name: String) -> Self {
-        Self { name }
+    pub fn new(address: String) -> Self {
+        Self { address }
     }
 }
 
