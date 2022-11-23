@@ -4,29 +4,27 @@
    Description:
        ... Summary ...
 */
-pub use self::{attr::*, blockchain::*, utils::*};
+pub use self::{blockchain::*, misc::*, misc::*, utils::*};
 
-pub(crate) mod attr;
 pub(crate) mod blockchain;
+pub mod clients;
+pub(crate) mod misc;
 
 pub(crate) mod utils {
     use crate::{
         blockchains::{BlockData, Blockchain, ChainWrapperExt},
         blocks::{Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec},
     };
-    use scsys::prelude::{
-        rand::{self, Rng},
-        Hashable, H256,
-    };
+    use ckb_merkle_mountain_range::util::MemMMR;
+    use rand::Rng;
+    use scsys::prelude::{Hashable, H256};
 
-    // pub fn mmr_push_leaf(mmr: &mut MerkleMountainRange<Sha256, Vec<Hash>>, leaf_hash: Hash) {
-    //     let mut leaf_hashes: Vec<Vec<u8>> = mmr
-    //         .get_leaf_hashes(0, mmr.get_leaf_count().unwrap() + 1)
-    //         .unwrap()
-    //         .clone();
-    //     leaf_hashes.push(leaf_hash);
-    //     mmr.assign(leaf_hashes).unwrap();
-    // }
+    use super::Merger;
+
+    pub fn mmr_push_leaf(mmr: &mut MemMMR<H256, Merger>, leaf_hash: H256) {
+        mmr.push(leaf_hash)
+            .expect("Failed to add the leaf to the merkle mountain range...");
+    }
 
     pub trait OuroborosPraos {
         fn insert_selfish_pos(&self, blockchain: &mut Blockchain, block: &Block) -> bool {

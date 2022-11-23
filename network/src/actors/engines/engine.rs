@@ -3,7 +3,7 @@
     Creator: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::engines::{CoreEngineSpec, CoreEngineWrapper, CoreEngineWrapperExt};
+use super::{CoreEngineSpec, CoreEngineWrapper, CoreEngineWrapperExt};
 use scsys::prelude::Timestamp;
 use serde::{Deserialize, Serialize};
 
@@ -20,7 +20,7 @@ impl Engine {
 
 impl Default for Engine {
     fn default() -> Self {
-        Self::new(Timestamp::timestamp())
+        Self::new(Timestamp::ts())
     }
 }
 

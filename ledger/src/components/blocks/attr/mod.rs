@@ -22,13 +22,8 @@ pub(crate) mod utils {
         transactions::{generate_random_signed_transaction, SignedTransaction},
     };
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-    use scsys::{
-        core::Timestamp,
-        prelude::{
-            generate_random_hash,
-            rand::{self, Rng},
-        },
-    };
+    use rand::Rng;
+    use scsys::prelude::{generate_random_hash, Timestamp};
 
     pub fn generate_random_block_content() -> BlockContent {
         BlockContent::new(
@@ -49,7 +44,7 @@ pub(crate) mod utils {
             generate_random_hash(),
             rng.gen(),
             root,
-            Timestamp::timestamp(),
+            Timestamp::ts(),
         )
     }
 }

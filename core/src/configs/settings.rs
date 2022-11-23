@@ -4,13 +4,10 @@
     Description: ... summary ...
 */
 use crate::{DEFAULT_CNF_PATTERN, DEFAULT_PORT_MAINNET, DEFAULT_SYSTEM_NAME, LOCALHOST};
-use scsys::{
-    components::{logging::Logger, networking::Server},
-    prelude::{
-        collect_config_files,
-        config::{Config, Environment},
-        ConfigResult,
-    },
+use scsys::prelude::{
+    collect_config_files,
+    config::{Config, Environment},
+    ConfigResult, Logger, Server,
 };
 use serde::{Deserialize, Serialize};
 

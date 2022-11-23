@@ -20,7 +20,7 @@ mod tests {
 
     #[test]
     fn test_blockchain_genesis() {
-        let timestamp = Timestamp::timestamp();
+        let timestamp = Timestamp::ts();
         let a = Blockchain::genesis(Block::genesis, timestamp);
         let b = Blockchain::new(timestamp);
         assert!(a.contains_hash(a.chain.keys().last().unwrap()));
@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn test_blockchain_insert() {
-        let timestamp = Timestamp::timestamp();
+        let timestamp = Timestamp::ts();
         let mut bc = Blockchain::genesis(Block::genesis, timestamp);
         let a = generate_random_block(BlockType::PoW, false);
         bc.insert_pow(&a);

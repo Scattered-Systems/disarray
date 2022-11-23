@@ -3,20 +3,25 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-pub use self::{interface::*, state::*, utils::*};
+pub use self::{specs::*, state::*, utils::*};
 
-pub(crate) mod interface;
 pub(crate) mod state;
+
+pub(crate) mod specs {
+    use crate::BlockState;
+
+    pub trait BlockchainStateWrapper {
+        fn blockstate(&self) -> BlockState;
+    }
+}
 
 pub(crate) mod utils {
     use crate::{
         transactions::{verify_signedtxn, SignedTransaction},
         StateMap,
     };
-    use scsys::prelude::{
-        ring::signature::{Ed25519KeyPair, KeyPair},
-        H160, H256,
-    };
+    use ring::signature::{Ed25519KeyPair, KeyPair};
+    use scsys::prelude::{H160, H256};
     use std::io::{BufRead, BufReader};
 
     /// Creates a vector of accounts from the provided collection of keys

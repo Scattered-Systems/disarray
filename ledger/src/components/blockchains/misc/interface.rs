@@ -6,13 +6,15 @@
 */
 use super::{BlockData, Epoch, Position};
 use crate::{
+    blockchains::Merger,
     blocks::{
         generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec, Resistable,
         Verifiable,
     },
     BlockTs,
 };
-use scsys::crypto::hash::{Hashable, H160, H256};
+use ckb_merkle_mountain_range::util::MemMMR;
+use scsys::prelude::{Hashable, H160, H256};
 use std::collections::{HashMap, HashSet};
 
 pub trait GenesisBlock {
@@ -27,7 +29,7 @@ pub trait CoreChainSpec {
     fn tip(&self) -> H256;
     fn lead(&self) -> u128;
     fn length(&self) -> u128;
-    fn map(&self) -> &HashMap<H256, HashMap<H256, H160>>;
+    fn map(&self) -> &HashMap<H256, MemMMR<H256, Merger>>;
     fn position(&self) -> &Position;
     fn timestamp(&self) -> i64; // genesis timestamp
 }

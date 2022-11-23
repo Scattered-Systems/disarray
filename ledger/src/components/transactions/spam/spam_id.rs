@@ -4,7 +4,7 @@
    Description: ... Summary ...
 */
 use crate::transactions::SignedTransaction;
-use scsys::crypto::hash::H256;
+use scsys::prelude::H256;
 use serde::{Deserialize, Serialize};
 
 /// Implements a spad-id for malicious transactions

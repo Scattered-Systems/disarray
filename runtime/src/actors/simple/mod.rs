@@ -21,6 +21,6 @@ impl Processable for SimpleProc {
 }
 
 pub async fn simple_proc() {
-    let tmp = Timestamp::default();
+    let _tmp = Timestamp::default();
     tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 }

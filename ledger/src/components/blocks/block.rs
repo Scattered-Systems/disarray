@@ -6,11 +6,11 @@
 use super::{
     BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
 };
-use scsys::prelude::{hasher, Hashable, H256};
+use scsys::{prelude::*, Hashable};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, Hashable, PartialEq, Serialize)]
 pub struct Block {
     pub content: BlockContent,
     pub header: BlockHeader,
@@ -31,12 +31,6 @@ impl Block {
             block_type,
             selfish_block,
         }
-    }
-}
-
-impl Hashable for Block {
-    fn hash(&self) -> H256 {
-        hasher(self).as_slice().to_owned().into()
     }
 }
 

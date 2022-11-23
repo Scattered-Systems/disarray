@@ -5,10 +5,8 @@
 */
 use futures::future::{self, Ready};
 use samples::World;
-use scsys::{
-    components::networking::Server,
-    prelude::{BoxResult, Timestamp},
-};
+use scsys::prelude::{BoxResult, Server, Timestamp};
+use scsys::Temporal;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tarpc::{
@@ -49,7 +47,7 @@ pub async fn simple_rpc_client(name: Option<String>) -> BoxResult {
 
     let hello = async move {
         tokio::select! {
-            a = client.hello(context::current(), format!("Current Time: {}", Timestamp::now())) => { a }
+            a = client.hello(context::current(), format!("Current Time: {}", Timestamp::datetime())) => { a }
             b = client.hello(context::current(), format!("Hello, {}", name.unwrap_or_default())) => { b }
         }
     }

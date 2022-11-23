@@ -17,7 +17,7 @@ pub struct Account {
 
 impl Account {
     pub fn new(address: String, metadata: Vec<AccountMetadata>, modified: i64) -> Self {
-        let timestamp = Timestamp::timestamp();
+        let timestamp = Timestamp::ts();
         Self {
             address,
             metadata,
@@ -29,7 +29,7 @@ impl Account {
 
 impl std::convert::From<String> for Account {
     fn from(data: String) -> Self {
-        Self::new(data, Default::default(), Timestamp::timestamp())
+        Self::new(data, Default::default(), Timestamp::ts())
     }
 }
 

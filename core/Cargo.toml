@@ -5,7 +5,7 @@ description = "This crate implements basic, blockchain-centric features used thr
 edition = "2021"
 homepage = "https://github.com/scattered-systems/disarray/wiki"
 keywords = ["scsys"]
-license = "MIT"
+license = "Apache-2.0"
 name = "disarray-core"
 readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
@@ -24,7 +24,7 @@ test = true
 [build-dependencies]
 
 [dependencies]
-scsys = { features = ["full"], git = "https://github.com/scattered-systems/scsys", version = "0.1.26" }
+scsys = { features = ["full"], version = "0.1.33" }
 serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
 strum = { features = ["derive"], version = "0.24.1" }
