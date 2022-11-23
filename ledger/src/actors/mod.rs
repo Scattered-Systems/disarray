@@ -4,13 +4,35 @@
    Description:
        ... Summary ...
 */
-pub use self::misc::*;
+pub use self::{locks::*, misc::*};
 
 pub mod miners;
 pub mod stakers;
 pub mod validators;
 
 pub type ControlChannel = crossbeam::channel::Receiver<ControlSignal>;
+
+pub(crate) mod locks {
+    use std::sync::{Arc, Mutex};
+
+    /// Utility for creating uniform, thread-safe locks
+    pub struct Lock<T>(pub Arc<Mutex<T>>);
+
+    impl<T> Lock<T> {
+        pub fn new(data: T) -> Self {
+            Self(Arc::new(Mutex::from(data)))
+        }
+    }
+
+    impl<T> std::convert::From<&T> for Lock<T>
+    where
+        T: Clone,
+    {
+        fn from(data: &T) -> Self {
+            Self(Arc::new(Mutex::from(data.clone())))
+        }
+    }
+}
 
 pub(crate) mod misc {
     use scsys::{prelude::*, Hashable};

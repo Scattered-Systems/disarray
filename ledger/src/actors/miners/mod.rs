@@ -4,9 +4,38 @@
    Description:
        ... Summary ...
 */
-pub use self::miner::*;
+pub use self::{channels::*, context::*, miner::*, signals::*, utils::*};
 
+pub(crate) mod channels;
+pub(crate) mod context;
 pub(crate) mod miner;
+
+pub(crate) mod signals {
+    use crate::ContextUpdateSignal;
+    use crossbeam::channel::{unbounded, Receiver, Sender};
+
+    /// Bootstrap's a channel reciever and sender together under one structure
+    pub struct SignalPack<T = ContextUpdateSignal> {
+        pub receiver: Receiver<T>,
+        pub sender: Sender<T>,
+    }
+
+    impl<T> SignalPack<T> {
+        pub fn new(receiver: Receiver<T>, sender: Sender<T>) -> Self {
+            Self { receiver, sender }
+        }
+        pub fn unbounded() -> Self {
+            let (sender, recv) = unbounded();
+            Self::new(recv, sender)
+        }
+    }
+
+    impl<T> Default for SignalPack<T> {
+        fn default() -> Self {
+            Self::unbounded()
+        }
+    }
+}
 
 pub(crate) mod utils {
     use crate::{

@@ -8,12 +8,13 @@ use crossbeam::channel as cbchannel;
 use mio_extras::channel;
 use scsys::prelude::Message;
 
-enum ControlSignal {
+pub enum ControlSignal {
     ConnectNewPeer(ConnectRequest),
     BroadcastMessage(Message),
+    Idle,
 }
 
-struct ConnectRequest {
+pub struct ConnectRequest {
     addr: std::net::SocketAddr,
     result_chan: cbchannel::Sender<std::io::Result<Handle>>,
 }
@@ -24,6 +25,9 @@ pub struct ServerHandle {
 }
 
 impl ServerHandle {
+    pub fn new(control_chan: channel::Sender<ControlSignal>) -> Self {
+        Self { control_chan }
+    }
     pub fn connect(&self, addr: std::net::SocketAddr) -> std::io::Result<Handle> {
         let (sender, receiver) = cbchannel::unbounded();
         let request = ConnectRequest {
@@ -40,5 +44,12 @@ impl ServerHandle {
         self.control_chan
             .send(ControlSignal::BroadcastMessage(msg))
             .unwrap();
+    }
+}
+
+impl Default for ServerHandle {
+    fn default() -> Self {
+        let (s, _) = mio_extras::channel::channel();
+        Self::new(s)
     }
 }

@@ -3,10 +3,10 @@
     Creator: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use scsys::messages::Message;
 use log::{trace, warn};
 use mio;
 use mio_extras::channel;
+use scsys::messages::Message;
 use std::convert::TryInto;
 use std::io::{Read, Write};
 use std::sync::mpsc;
@@ -227,7 +227,10 @@ impl Handle {
         // TODO: return result
         let buffer = bincode::serialize(&msg).unwrap();
         if self.write_queue.send(buffer).is_err() {
-            warn!("Failed to send write request for peer {}, channel detached", self.addr);
+            warn!(
+                "Failed to send write request for peer {}, channel detached",
+                self.addr
+            );
         }
     }
 }
