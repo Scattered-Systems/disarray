@@ -122,10 +122,16 @@ impl Miner {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::blockchains::*;
 
     #[test]
     fn test_default_miner() {
-        // let a = Miner::default();
+        let (s, r) = crossbeam::channel::unbounded();
+        let chain = Blockchain::default();
+        let cc: ControlChannel = r;
+        let mode = Default::default();
+        // let pools = Default::default();
+        // let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, state);
         assert!(true)
     }
 }
