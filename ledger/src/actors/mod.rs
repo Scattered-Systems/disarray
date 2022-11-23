@@ -10,7 +10,10 @@ pub mod miners;
 pub mod stakers;
 pub mod validators;
 
+pub type ControlChannel = crossbeam::channel::Receiver<ControlSignal>;
+
 pub(crate) mod misc {
+    use crossbeam::channel::Receiver;
     use scsys::{prelude::*, Hashable};
     use serde::{Deserialize, Serialize};
     use strum::{EnumString, EnumVariantNames};
@@ -63,7 +66,15 @@ pub(crate) mod misc {
     pub enum ControlSignal {
         Start(u64), // the number controls the lambda of interval between block generation
         Exit,
-        
+    }
+
+    impl ControlSignal {
+        pub fn start(data: u64) -> Self {
+            Self::Start(data)
+        }
+        pub fn exit() -> Self {
+            Self::Exit
+        }
     }
 
     impl std::fmt::Display for ControlSignal {
@@ -77,7 +88,6 @@ pub(crate) mod misc {
             Self::Exit
         }
     }
-
 
     #[derive(
         Clone,

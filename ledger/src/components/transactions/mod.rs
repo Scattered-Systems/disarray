@@ -9,6 +9,13 @@ pub(crate) mod sig;
 pub(crate) mod spam;
 pub(crate) mod transaction;
 
+pub(crate) mod types {
+    use super::*;
+
+    pub type Transactions = Vec<Transaction>;
+    pub type SignedTransactions = Vec<SignedTransaction>;
+}
+
 pub(crate) mod specs {
     use crate::{BlockNc, BlockTs};
     use scsys::prelude::H160;
