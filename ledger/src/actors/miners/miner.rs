@@ -51,6 +51,7 @@ impl std::convert::From<ControlChannel> for Channels {
     }
 }
 
+/// Utility for creating uniform, thread-safe locks
 pub struct Lock<T>(pub Arc<Mutex<T>>);
 
 impl<T> Lock<T> {
