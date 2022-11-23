@@ -13,7 +13,6 @@ pub mod validators;
 pub type ControlChannel = crossbeam::channel::Receiver<ControlSignal>;
 
 pub(crate) mod misc {
-    use crossbeam::channel::Receiver;
     use scsys::{prelude::*, Hashable};
     use serde::{Deserialize, Serialize};
     use strum::{EnumString, EnumVariantNames};

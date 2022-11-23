@@ -4,11 +4,9 @@
    Description:
        ... Summary ...
 */
+use crate::{blockchains::*, ContextUpdateSignal, ControlChannel, OperatingModes, SignedTransactions};
+use crate::handles::server::ServerHandle;
 use crate::states::State;
-use crate::{
-    blockchains::*, ContextUpdateSignal, ControlChannel, ControlSignal, OperatingModes,
-    SignedTransactions,
-};
 use crossbeam::channel::{unbounded, Receiver, Sender, TryRecvError};
 use scsys::prelude::H256;
 use std::sync::{Arc, Mutex};
@@ -84,6 +82,7 @@ pub struct MinerContext {
     pub channels: Channels,
     pub mode: OperatingModes,
     pub pools: Pools,
+    pub server: ServerHandle,
     pub state: Lock<State>,
 }
 
@@ -93,6 +92,7 @@ impl MinerContext {
         control: ControlChannel,
         mode: OperatingModes,
         pools: Pools,
+        server: ServerHandle,
         state: &State,
     ) -> Self {
         let channels = Channels::from(control);
@@ -102,6 +102,7 @@ impl MinerContext {
             channels,
             mode,
             pools,
+            server,
             state,
         }
     }
