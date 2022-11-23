@@ -8,7 +8,7 @@ use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Posi
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
 use algae::mmr::MerkleMountainRange;
 use rand::Rng;
-use scsys::prelude::*;
+use scsys::prelude::{hasher, H160, H256, Hashable, Timestamp};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
