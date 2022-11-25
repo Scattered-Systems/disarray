@@ -15,6 +15,7 @@ pub(crate) mod signals {
     use crossbeam::channel::{unbounded, Receiver, Sender};
 
     /// Bootstrap's a channel reciever and sender together under one structure
+    #[derive(Clone)]
     pub struct SignalPack<T = ContextUpdateSignal> {
         pub receiver: Receiver<T>,
         pub sender: Sender<T>,

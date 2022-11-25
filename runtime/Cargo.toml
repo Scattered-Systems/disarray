@@ -30,5 +30,5 @@ tracing-subscriber = "0.3.16"
 wasmer = "3.0.0"
 
 [dev-dependencies]
-env_logger = "0.9.1"
+env_logger = "0.10.0"
 

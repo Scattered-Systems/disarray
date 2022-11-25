@@ -7,6 +7,7 @@ use super::SignalPack;
 use crate::{ContextUpdateSignal, ControlChannel};
 
 /// Handles the channels for the given context
+#[derive(Clone)]
 pub struct Channels {
     pub controller: ControlChannel,
     pub update: SignalPack<ContextUpdateSignal>,
@@ -30,9 +31,9 @@ mod tests {
 
     #[test]
     fn test_channels() {
-        let (s, r) = crossbeam::channel::unbounded();
+        let (_, r) = crossbeam::channel::unbounded();
 
-        let a = Channels::from(r);
+        let _a = Channels::from(r);
         assert!(true)
     }
 }

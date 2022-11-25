@@ -6,12 +6,42 @@
 */
 use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
-use ckb_merkle_mountain_range::{util::MemMMR, Merge};
+
+use ckb_merkle_mountain_range::{Merge, MMRStore, MMR};
 use rand::Rng;
 use scsys::prelude::{Hashable, Timestamp, H256};
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+pub type ChainMMR = MMR<H256, Merger, BlockStore<H256>>;
+
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
+pub struct BlockStore<T: Clone = H256>(pub Vec<T>);
+
+impl<T: Clone> MMRStore<T> for BlockStore<T> {
+    fn get_elem(&self, pos: u64) -> ckb_merkle_mountain_range::Result<Option<T>> {
+        Ok(Some(self.0[pos as usize].clone()))
+    }
+
+    fn append(&mut self, pos: u64, elems: Vec<T>) -> ckb_merkle_mountain_range::Result<()> {
+        let mut data = elems.clone();
+        let mut tmp = Vec::new();
+        for i in (std::ops::Range { start: 0, end: self.0.len() }) {
+            if i == pos as usize {
+                tmp.append(&mut data);
+            }
+            else {
+                tmp.push(self.0[i].clone())
+            }
+        }
+
+        Ok(())
+    }
+}
+
 /// A simple mechanism for merging hashes for compatability with ckb-merkle-mountian-range
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, Serialize, PartialOrd)]
 pub struct Merger;
 
 impl Merge for Merger {
@@ -39,7 +69,7 @@ pub struct Blockchain {
     pub epoch: Epoch,
     pub lead: u128,
     pub length: u128,
-    pub map: HashMap<H256, MemMMR<H256, Merger>>,
+    pub map: HashMap<H256, ChainMMR>,
     pub position: Position,
     pub timestamp: i64, // The time of creation (genesis_timestamp)
     pub tip: H256,
@@ -56,7 +86,7 @@ impl Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        let mmr = MemMMR::default();
+        let mmr = MMR::new(0, BlockStore::default());
         let mut map = HashMap::new();
         map.insert(hash.clone(), mmr);
         Self {
@@ -80,13 +110,13 @@ impl Blockchain {
         tmp
     }
 
-    pub fn get_mmr(&self, hash: &H256) -> MemMMR<H256, Merger> {
+    pub fn get_mmr(&self, hash: &H256) -> ChainMMR {
         let leaves = self.enumerate_chain();
         let mmr_ref = self.map.get(hash).unwrap();
         let proof = mmr_ref.gen_proof(vec![0, self.lead as u64]).unwrap();
         let new_root =
             proof.calculate_root_with_new_leaf(leaves, 0, hash.clone(), mmr_ref.mmr_size() + 1);
-        let mut mmr_ret = MemMMR::<H256, Merger>::default();
+        let mut mmr_ret = MMR::new(0, BlockStore::default());
         mmr_ret.push(new_root.unwrap()).unwrap();
         mmr_ret
     }
@@ -206,7 +236,7 @@ impl CoreChainSpec for Blockchain {
         self.tip
     }
 
-    fn map(&self) -> &HashMap<H256, MemMMR<H256, Merger>> {
+    fn map(&self) -> &HashMap<H256, ChainMMR> {
         &self.map
     }
 
@@ -243,7 +273,7 @@ impl ChainWrapperExt for Blockchain {
         let data = BlockData::new(genesis.clone(), 0);
         let hash: H256 = genesis.hash();
 
-        let mmr = MemMMR::default();
+        let mmr = MMR::new(0, Default::default());
         let mut map = HashMap::new();
         map.insert(hash.clone(), mmr);
         Self {
@@ -258,6 +288,28 @@ impl ChainWrapperExt for Blockchain {
         }
     }
 }
+
+// impl Clone for Blockchain {
+//     fn clone(&self) -> Self {
+//         let mut map = HashMap::new();
+//         for k in self.map.keys() {
+//             let mmr = self.map.get(k).unwrap();
+//             let store = mmr.get_root();
+//             map.insert(k.clone(), MMR::new(mmr.mmr_size(), mmr.store));
+//         }
+        
+//         Self { 
+//             chain: self.chain.clone(), 
+//             epoch: self.epoch.clone(), 
+//             lead: self.lead.clone(), 
+//             length: self.length.clone(), 
+//             map: map, 
+//             position: self.position.clone(), 
+//             timestamp: self.timestamp.clone(), 
+//             tip: self.tip.clone() 
+//         }
+//     }
+// }
 
 impl Default for Blockchain {
     fn default() -> Self {

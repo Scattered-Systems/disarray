@@ -6,8 +6,8 @@
 */
 use libp2p::{
     floodsub::{Floodsub, FloodsubEvent},
-    mdns::{MdnsEvent, TokioMdns},
-    NetworkBehaviour,
+    mdns::{self, tokio::Behaviour as TokioMdns},
+    swarm::NetworkBehaviour,
 };
 
 /// Create the standard behaviour for blockchain networks, building on top of Kademlia and MDNS
@@ -20,7 +20,7 @@ pub struct TestnetBehaviour {
 
 pub enum TestnetBehaviourEvent {
     Fsub(FloodsubEvent),
-    Mdns(MdnsEvent),
+    Mdns(mdns::Event),
 }
 
 impl From<FloodsubEvent> for TestnetBehaviourEvent {
@@ -29,8 +29,8 @@ impl From<FloodsubEvent> for TestnetBehaviourEvent {
     }
 }
 
-impl From<MdnsEvent> for TestnetBehaviourEvent {
-    fn from(event: MdnsEvent) -> Self {
+impl From<mdns::Event> for TestnetBehaviourEvent {
+    fn from(event: mdns::Event) -> Self {
         Self::Mdns(event)
     }
 }

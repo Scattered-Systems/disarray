@@ -32,6 +32,12 @@ pub(crate) mod locks {
             Self(Arc::new(Mutex::from(data.clone())))
         }
     }
+
+    impl<T> Clone for Lock<T> {
+        fn clone(&self) -> Self {
+        Self(Arc::clone(&self.0))
+    }
+    }
 }
 
 pub(crate) mod misc {

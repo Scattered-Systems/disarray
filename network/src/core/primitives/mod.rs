@@ -34,7 +34,6 @@ pub(crate) mod types {
     pub use libp2p::{
         dns::{GenDnsConfig, TokioDnsConfig},
         noise::{AuthenticKeypair as AuthenticNoiseKeypair, NoiseError},
-        tcp::{GenTcpConfig, GenTcpTransport, TokioTcpTransport},
     };
 
     /// Type alias for [libp2p::noise::AuthenticKeypair<libp2p::noise::X25519Spec>]
