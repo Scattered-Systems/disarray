@@ -43,5 +43,5 @@ typenum = "1.15.0"
 
 
 [dev-dependencies]
-env_logger = "0.9.1"
+env_logger = "0.10.0"
 
