@@ -10,8 +10,8 @@ pub trait Transporter {
     fn config_mplex(&self) -> mplex::MplexConfig {
         mplex::MplexConfig::new()
     }
-    fn config_tcp(&self, delay: Option<bool>) -> tcp::GenTcpConfig {
-        tcp::GenTcpConfig::default().nodelay(delay.unwrap_or(false))
+    fn config_tcp(&self, delay: Option<bool>) -> tcp::Config {
+        tcp::Config::default().nodelay(delay.unwrap_or(false))
     }
     fn keypair(&self) -> &PeerKp;
     fn noise_keys(&self) -> &NoiseKeys;
@@ -34,7 +34,7 @@ pub trait TransportWrapperExt: TransportWrapper {
         self.auth().is_ok()
     }
     fn quickstart_tcp(&self) -> BoxedTransport {
-        tcp::TokioTcpTransport::new(self.config_tcp(None))
+        tcp::tokio::Transport::new(self.config_tcp(None))
             .upgrade(self.version())
             .authenticate(
                 self.auth()

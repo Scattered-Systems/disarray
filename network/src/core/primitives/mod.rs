@@ -33,11 +33,11 @@ pub(crate) mod types {
 
     pub use libp2p::{
         dns::{GenDnsConfig, TokioDnsConfig},
-        noise::{AuthenticKeypair as AuthenticNoiseKeypair, NoiseError},
+        noise::{AuthenticKeypair, NoiseError},
     };
 
     /// Type alias for [libp2p::noise::AuthenticKeypair<libp2p::noise::X25519Spec>]
-    pub type AuthNoiseKeys = AuthenticNoiseKeypair<NoiseSpec>;
+    pub type AuthNoiseKeys = AuthenticKeypair<NoiseSpec>;
     /// Type alias for a boxed transport
     pub type BoxedTransport = Boxed<(PeerId, StreamMuxerBox)>;
     /// Type alias for [libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>]

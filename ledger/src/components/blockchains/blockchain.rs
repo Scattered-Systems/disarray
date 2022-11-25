@@ -13,9 +13,11 @@ use scsys::prelude::{Hashable, Timestamp, H256};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+///
 pub type ChainMMR = MMR<H256, Merger, BlockStore<H256>>;
 
 
+///
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct BlockStore<T: Clone = H256>(pub Vec<T>);
 

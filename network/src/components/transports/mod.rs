@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-pub use self::{misc::*, transport::*, utils::*};
+pub use self::{builder::*, misc::*, transport::*, utils::*};
 
 pub(crate) mod misc;
 pub(crate) mod transport;

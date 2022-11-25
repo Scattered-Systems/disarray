@@ -4,45 +4,43 @@
     Description:
         ... Summary ...
 */
-use super::{TransportWrapper, TransportWrapperExt, Transporter};
-use crate::{NoiseKeys, PeerKp};
+use crate::{BoxedTransport, AuthNoiseKeys};
 
-#[derive(Clone)]
-pub struct Transport {
-    pub key: PeerKp,
-    pub noise: NoiseKeys,
-}
+use libp2p::{core::upgrade, mplex, noise, tcp, Transport};
 
-impl Transport {
-    pub fn new(key: PeerKp, noise: NoiseKeys) -> Self {
-        Self { key, noise }
+pub struct Transporter(pub BoxedTransport);
+
+impl Transporter {
+    pub fn setup(dh_keys: AuthNoiseKeys, delay: bool) -> BoxedTransport {
+        tcp::tokio::Transport::new(tcp::Config::default().nodelay(delay))
+            .upgrade(upgrade::Version::V1)
+            .authenticate(noise::NoiseConfig::xx(dh_keys).into_authenticated())
+            .multiplex(mplex::MplexConfig::new())
+            .boxed()
     }
 }
 
-impl Transporter for Transport {
-    fn keypair(&self) -> &PeerKp {
-        &self.key
-    }
-    fn noise_keys(&self) -> &NoiseKeys {
-        &self.noise
+impl std::convert::From<AuthNoiseKeys> for Transporter {
+    fn from(value: AuthNoiseKeys) -> Self {
+        Self::from(Self::setup(value, false))
     }
 }
 
-impl TransportWrapper for Transport {}
-
-impl TransportWrapperExt for Transport {}
-
-impl std::convert::From<&[u8]> for Transport {
-    fn from(data: &[u8]) -> Self {
-        Self::from(
-            PeerKp::from_protobuf_encoding(data)
-                .expect("Failed to load the transport from the given bytes"),
-        )
+impl std::convert::From<BoxedTransport> for Transporter {
+    fn from(value: BoxedTransport) -> Self {
+        Self(value)
     }
 }
 
-impl std::convert::From<PeerKp> for Transport {
-    fn from(data: PeerKp) -> Self {
-        Self::new(data, NoiseKeys::new())
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_transporter() {
+
+        assert!(true)
     }
 }
