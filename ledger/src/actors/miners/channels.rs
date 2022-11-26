@@ -5,6 +5,7 @@
 */
 use super::SignalPack;
 use crate::{ContextUpdateSignal, ControlChannel};
+use std::convert::From;
 
 /// Handles the channels for the given context
 #[derive(Clone)]
@@ -19,7 +20,7 @@ impl Channels {
     }
 }
 
-impl std::convert::From<ControlChannel> for Channels {
+impl From<ControlChannel> for Channels {
     fn from(data: ControlChannel) -> Self {
         Self::new(data, Default::default())
     }

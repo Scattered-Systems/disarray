@@ -4,33 +4,15 @@
    Description:
        ... Summary ...
 */
-use crate::handles::server::ServerHandle;
-use crate::states::State;
 use crate::{
-    blockchains::*, ContextUpdateSignal, ControlChannel, Lock, OperatingModes, SignedTransactions,
+    blockchains::*, 
+    handles::server::ServerHandle,
+    miners::Pools,
+    states::State, ControlChannel, Lock, OperatingModes, 
 };
-use scsys::prelude::H256;
-use std::sync::Arc;
+use std::convert::From;
 
 use super::Channels;
-
-#[derive(Clone)]
-pub struct Pools {
-    pub mempool: Lock<SignedTransactions>,
-    pub transpool: Lock<Vec<H256>>,
-}
-
-impl Pools {
-    pub fn new(mempool: Lock<SignedTransactions>, transpool: Lock<Vec<H256>>) -> Self {
-        Self { mempool, transpool }
-    }
-}
-
-impl Default for Pools {
-    fn default() -> Self {
-        Self::new(Lock::new(Default::default()), Lock::new(Default::default()))
-    }
-}
 
 #[derive(Clone,)]
 pub struct MinerContext {
@@ -83,7 +65,7 @@ impl PartialEq for MinerContext {
     }
 }
 
-impl std::convert::From<&MinerContext> for MinerContext {
+impl From<&MinerContext> for MinerContext {
     fn from(data: &MinerContext) -> Self {
         Self { 
             blockchain: data.blockchain.clone(), 
@@ -96,7 +78,7 @@ impl std::convert::From<&MinerContext> for MinerContext {
     }
 }
 
-impl std::convert::From<Blockchain> for MinerContext {
+impl From<Blockchain> for MinerContext {
     fn from(data: Blockchain) -> Self {
         let (_, r) = crossbeam::channel::unbounded();
         let cc: ControlChannel = r;

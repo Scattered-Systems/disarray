@@ -26,7 +26,7 @@ impl Miner {
 mod tests {
     use super::*;
     use crate::{blockchains::*, states::State, Lock};
-    use crate::miners::{Pools};
+    use crate::miners::Pools;
     use crate::handles::server::ServerHandle;
 
     #[test]
