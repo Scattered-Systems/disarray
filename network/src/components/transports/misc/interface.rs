@@ -6,7 +6,7 @@
 use crate::{BoxedTransport, NoiseKeys, NoiseResult, PeerId, PeerKp};
 use libp2p::{core::upgrade, mplex, noise, tcp, Transport};
 
-pub trait Transporter {
+pub trait TransportSpec {
     fn config_mplex(&self) -> mplex::MplexConfig {
         mplex::MplexConfig::new()
     }
@@ -23,7 +23,7 @@ pub trait Transporter {
     }
 }
 
-pub trait TransportWrapper: Transporter {
+pub trait TransportWrapper: TransportSpec {
     fn auth(&self) -> NoiseResult<noise::NoiseAuthenticated<noise::XX, noise::X25519Spec, ()>> {
         noise::NoiseAuthenticated::xx(self.keypair())
     }

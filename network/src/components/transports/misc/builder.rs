@@ -4,7 +4,7 @@
     Description:
         ... Summary ...
 */
-use super::interface::{TransportWrapper, TransportWrapperExt, Transporter};
+use crate::transports::*;
 use crate::{NoiseKeys, PeerKp};
 
 #[derive(Clone)]
@@ -19,14 +19,14 @@ impl TransportBuilder {
     }
 }
 
-impl Transporter for TransportBuilder {
-    fn keypair(&self) -> &PeerKp {
-        &self.key
-    }
-    fn noise_keys(&self) -> &NoiseKeys {
-        &self.noise
-    }
-}
+// impl Transporter for TransportBuilder {
+//     fn keypair(&self) -> &PeerKp {
+//         &self.key
+//     }
+//     fn noise_keys(&self) -> &NoiseKeys {
+//         &self.noise
+//     }
+// }
 
 impl std::convert::From<&[u8]> for TransportBuilder {
     fn from(data: &[u8]) -> Self {
