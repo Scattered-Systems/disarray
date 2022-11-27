@@ -5,10 +5,10 @@
 */
 use super::validate_transaction_signature;
 use ring::signature::{self, Ed25519KeyPair};
-use scsys::prelude::{hasher, Hashable, H160, H256};
+use scsys::{prelude::*, Hashable, };
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Default, Deserialize, Eq, Hash, Hashable, PartialEq, Serialize)]
 pub struct Transaction {
     pub nonce: usize,
     pub recv: H160,
@@ -29,14 +29,29 @@ impl Transaction {
     }
 }
 
+impl std::fmt::Debug for Transaction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", serde_json::to_string_pretty(&self).unwrap())
+    }
+}
+
 impl std::fmt::Display for Transaction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 
-impl Hashable for Transaction {
-    fn hash(&self) -> H256 {
-        hasher(self).as_slice().to_owned().into()
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_transaction_default() {
+        let rng = ring::rand::SystemRandom::new();
+        let pkcs8_bytes = Ed25519KeyPair::generate_pkcs8(&rng).ok().unwrap();
+        let kp = Ed25519KeyPair::from_pkcs8(pkcs8_bytes.as_ref()).ok().unwrap();
+        let a = Transaction::default();
+        let sig = a.sign(&kp);
+        assert!(a.validate(&kp, &sig))
     }
 }

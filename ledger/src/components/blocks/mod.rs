@@ -3,9 +3,10 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{attr::*, block::*, utils::*};
+pub use self::{block::*, layers::*, misc::*, utils::*};
 
-pub(crate) mod attr;
+pub(crate) mod layers;
+pub(crate) mod misc;
 pub(crate) mod block;
 
 pub(crate) mod utils {

@@ -10,7 +10,7 @@ use crate::{
 use scsys::prelude::{hasher, Hashable, H256};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct BlockHeader {
     pub difficulty: BlockDifficulty,
     pub justification: BlockJustification,

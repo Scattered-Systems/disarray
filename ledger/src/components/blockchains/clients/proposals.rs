@@ -4,7 +4,7 @@
     Description:
 */
 use crate::{
-    blockchains::{Blockchain, ChainWrapperExt, CoreChainSpec},
+    blockchains::{Blockchain, ChainWrapperExt, CoreChainSpec, ChainWrapper},
     blocks::BlockHeader,
 };
 use scsys::{prelude::*, Hashable};
@@ -19,22 +19,34 @@ pub struct Proposal {
 }
 
 impl Proposal {
-    pub fn new(blockchain: &Blockchain) -> Self {
-        let depth = blockchain.position.depth as usize;
-        let header = blockchain.find_one_block(&blockchain.tip()).unwrap().header;
+    pub fn new(depth: usize, header: BlockHeader) -> Self {
         Self { depth, header }
     }
 }
 
 impl Default for Proposal {
     fn default() -> Self {
-        Self::new(&Default::default())
+        Self::new(0, Default::default())
     }
 }
 
 impl std::fmt::Display for Proposal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", serde_json::to_string(&self).unwrap())
+    }
+}
+
+impl std::convert::From<&Blockchain> for Proposal {
+    fn from(chain: &Blockchain) -> Self {
+        let depth = chain.depth() as usize;
+        let header = chain.find_one_block(&chain.tip()).unwrap().header;
+        Self::new(depth, header)
+    }
+}
+
+impl std::convert::From<&Proposal> for Proposal {
+    fn from(data: &Proposal) -> Self {
+        data.clone()
     }
 }
 

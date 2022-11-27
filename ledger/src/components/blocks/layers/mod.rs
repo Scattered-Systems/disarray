@@ -1,20 +1,8 @@
-/*
-    Appellation: attr <blocks>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description: attributes for blocks in the Disarray mainnet
-*/
 
-pub use self::{
-    classification::*, content::*, difficulty::*, header::*, interface::*, justification::*,
-    utils::*,
-};
+pub use self::{content::*, header::*, utils::*};
 
-pub(crate) mod classification;
 pub(crate) mod content;
-pub(crate) mod difficulty;
 pub(crate) mod header;
-pub(crate) mod interface;
-pub(crate) mod justification;
 
 pub(crate) mod utils {
     use crate::{
