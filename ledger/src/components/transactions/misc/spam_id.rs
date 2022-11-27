@@ -22,9 +22,9 @@ impl SpamId {
 
 impl std::convert::From<&SignedTransaction> for SpamId {
     fn from(t: &SignedTransaction) -> Self {
-        let hash: H256 = t.sign.pubk.clone().into();
+        let hash: H256 = t.sig.pubk.clone().into();
         SpamId {
-            nonce: t.transaction.nonce,
+            nonce: t.trx.nonce,
             pubk: hash.to_string(),
         }
     }

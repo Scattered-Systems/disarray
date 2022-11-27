@@ -42,14 +42,14 @@ impl State {
         let mut parent_state = self.state_per_block.get(&parent_hash).unwrap().clone();
         let txns = block.content.data.clone();
         for txn in txns {
-            let sender: H160 = compute_key_hash(txn.sign.pubk).into();
-            let recv = txn.transaction.recv;
+            let sender: H160 = compute_key_hash(txn.sig.pubk).into();
+            let recv = txn.trx.recv;
             // todo: add txn check, if the account exists or amount is enough
 
             let (s_nonce, s_amount) = *parent_state.get(&sender).unwrap();
             let (r_nonce, r_amount) = *parent_state.get(&recv).unwrap();
-            parent_state.insert(sender, (s_nonce + 1, s_amount - txn.transaction.value));
-            parent_state.insert(recv, (r_nonce, r_amount + txn.transaction.value));
+            parent_state.insert(sender, (s_nonce + 1, s_amount - txn.trx.value));
+            parent_state.insert(recv, (r_nonce, r_amount + txn.trx.value));
         }
         self.state_per_block.insert(block.hash(), parent_state);
     }

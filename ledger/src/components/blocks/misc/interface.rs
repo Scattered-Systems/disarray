@@ -57,13 +57,13 @@ pub trait CoreBlockWrapper: CoreBlockSpec {
         let txns = self.transactions().clone();
         log::info!("***** Print txns in block {:?} *****", self.hash());
         for txn in txns {
-            let sender = compute_key_hash(txn.sign.pubk);
-            let recv = txn.transaction.recv;
+            let sender = compute_key_hash(txn.sig.pubk);
+            let recv = txn.trx.recv;
             log::info!(
                 "{:?} sends {:?} value {:?}",
                 sender,
                 recv,
-                txn.transaction.value
+                txn.trx.value
             );
         }
         log::info!("*************************************");

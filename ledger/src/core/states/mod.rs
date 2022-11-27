@@ -59,10 +59,10 @@ pub(crate) mod utils {
     pub fn transaction_check(current_state: &mut StateMap, tx: &SignedTransaction) -> bool {
         if verify_signedtxn(tx) {
             let copy = tx.clone();
-            let pubk = copy.sign.pubk.clone();
-            let nonce = copy.transaction.nonce;
-            let value = copy.transaction.value;
-            let recv = copy.transaction.recv;
+            let pubk = copy.sig.pubk.clone();
+            let nonce = copy.trx.nonce;
+            let value = copy.trx.value;
+            let recv = copy.trx.recv;
 
             let sender: H160 = compute_key_hash(pubk).into();
             let (s_nonce, s_amount) = *current_state.get(&sender).unwrap();

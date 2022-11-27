@@ -3,36 +3,13 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{sig::*, spam::*, specs::*, transaction::*, utils::*};
+pub use self::{misc::*, signed::*, specs::*, transaction::*, utils::*};
 
-pub(crate) mod sig;
-pub(crate) mod spam;
+pub(crate) mod misc;
+pub(crate) mod signed;
 pub(crate) mod transaction;
 
-pub(crate) mod types {
-    use super::*;
 
-    pub type Transactions = Vec<Transaction>;
-    pub type SignedTransactions = Vec<SignedTransaction>;
-}
-
-pub(crate) mod specs {
-    use crate::{BlockNc, BlockTs};
-    use scsys::prelude::H160;
-    use std::string::ToString;
-
-    pub trait Transactable<T: ToString> {
-        fn message(&self) -> &T;
-        fn nonce(&self) -> BlockNc;
-        fn recv(&self) -> H160;
-        fn timestamp(&self) -> BlockTs;
-        fn value(&self) -> usize;
-    }
-
-    pub trait TransactionWrapper<T: ToString>: Transactable<T> {}
-
-    pub trait TransactionWrapperExt<T: ToString>: TransactionWrapper<T> {}
-}
 
 pub(crate) mod utils {
     use super::{Sign, SignedTransaction, Transaction};
@@ -42,6 +19,12 @@ pub(crate) mod utils {
         VerificationAlgorithm, ED25519,
     };
     use scsys::prelude::{generate_random_hash, random_keypair};
+
+
+    /// Create digital signature of a transaction
+    pub fn sign<T: ToString>(data: &T, key: &Ed25519KeyPair) -> Signature {
+        key.sign(data.to_string().as_bytes())
+    }
 
     pub fn validate_transaction_signature(
         trx: &Transaction,
@@ -72,9 +55,9 @@ pub(crate) mod utils {
     }
 
     pub fn verify_signedtxn(t: &SignedTransaction) -> bool {
-        let transaction = t.transaction.clone();
-        let pubk = t.sign.pubk.clone();
-        let sig = t.sign.sig.clone();
+        let transaction = t.trx.clone();
+        let pubk = t.sig.pubk.clone();
+        let sig = t.sig.sig.clone();
         let serialized: Vec<u8> = serde_json::to_vec(&transaction).unwrap();
         let bytes: &[u8] = &serialized;
         match VerificationAlgorithm::verify(

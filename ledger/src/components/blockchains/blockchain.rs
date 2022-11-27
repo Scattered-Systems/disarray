@@ -4,65 +4,16 @@
     Description:
         ... Summary ...
 */
-use super::{BlockData, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position};
+use super::*;
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
 
-use ckb_merkle_mountain_range::{Merge, MMRStore, MMR};
+use ckb_merkle_mountain_range::MMR;
 use rand::Rng;
 use scsys::prelude::{Hashable, Timestamp, H256};
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 ///
 pub type ChainMMR = MMR<H256, Merger, BlockStore<H256>>;
-
-
-///
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
-pub struct BlockStore<T: Clone = H256>(pub Vec<T>);
-
-impl<T: Clone> MMRStore<T> for BlockStore<T> {
-    fn get_elem(&self, pos: u64) -> ckb_merkle_mountain_range::Result<Option<T>> {
-        Ok(Some(self.0[pos as usize].clone()))
-    }
-
-    fn append(&mut self, pos: u64, elems: Vec<T>) -> ckb_merkle_mountain_range::Result<()> {
-        let mut data = elems.clone();
-        let mut tmp = Vec::new();
-        for i in (std::ops::Range { start: 0, end: self.0.len() }) {
-            if i == pos as usize {
-                tmp.append(&mut data);
-            }
-            else {
-                tmp.push(self.0[i].clone())
-            }
-        }
-
-        Ok(())
-    }
-}
-
-/// A simple mechanism for merging hashes for compatability with ckb-merkle-mountian-range
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, Serialize, PartialOrd)]
-pub struct Merger;
-
-impl Merge for Merger {
-    type Item = H256;
-
-    fn merge(
-        left: &Self::Item,
-        right: &Self::Item,
-    ) -> ckb_merkle_mountain_range::Result<Self::Item> {
-        let lhs = left.0;
-        let rhs = right.0;
-        let mut hasher = blake3::Hasher::default();
-        hasher.update(&lhs);
-        hasher.update(&rhs);
-        let tmp = hasher.finalize();
-        let res = tmp.as_bytes();
-        Ok(res.into())
-    }
-}
 
 #[derive()]
 /// Formally implements the ledger powering the network
@@ -78,27 +29,22 @@ pub struct Blockchain {
 }
 
 impl Blockchain {
-    pub fn new(timestamp: i64) -> Self {
-        let genesis = generate_genesis_block(timestamp);
-        log::info!(
-            "Created the genesis block with the timestamp: {}",
-            genesis.header.timestamp
-        );
-
-        let data = BlockData::new(genesis.clone(), 0);
-        let hash: H256 = genesis.hash();
-
-        let mmr = MMR::new(0, BlockStore::default());
+    pub fn new(data: BlockData, hash: H256, timestamp: i64) -> Self {
+        let (lead, length) = (0, 0);
+        let chain = HashMap::from([(hash, data)]);
+        let epoch = Epoch::default();
+        let position = Position::default();
+        let mmr = MMR::new(0, Default::default());
         let mut map = HashMap::new();
         map.insert(hash.clone(), mmr);
         Self {
-            chain: HashMap::from([(hash, data)]),
-            epoch: Epoch::default(),
-            lead: 0,
-            length: 0,
+            chain,
+            epoch,
+            lead,
+            length,
             map,
-            position: Position::default(),
-            timestamp: genesis.header.timestamp,
+            position,
+            timestamp,
             tip: hash,
         }
     }
@@ -313,9 +259,22 @@ impl ChainWrapperExt for Blockchain {
 //     }
 // }
 
+impl std::convert::From<i64> for Blockchain {
+    fn from(data: i64) -> Self {
+        let genesis = generate_genesis_block(data);
+        log::info!(
+            "Created the genesis block with the timestamp: {}",
+            genesis.header.timestamp
+        );
+        
+        let (data, hash, timestamp) = (BlockData::new(genesis.clone(), 0), genesis.hash(), genesis.header.timestamp);
+        Self::new(data, hash, timestamp)
+    }
+}
+
 impl Default for Blockchain {
     fn default() -> Self {
-        Self::new(Timestamp::ts())
+        Self::from(Timestamp::ts())
     }
 }
 
