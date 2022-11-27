@@ -9,10 +9,8 @@ pub(crate) mod misc;
 pub(crate) mod signed;
 pub(crate) mod transaction;
 
-
-
 pub(crate) mod utils {
-    use super::{Sign, SignedTransaction, Transaction};
+    use super::{sign, Sign, SignedTransaction, Transaction};
     use rand::{self, Rng};
     use ring::signature::{
         self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
@@ -20,12 +18,7 @@ pub(crate) mod utils {
     };
     use scsys::prelude::{generate_random_hash, random_keypair};
 
-
-    /// Create digital signature of a transaction
-    pub fn sign<T: ToString>(data: &T, key: &Ed25519KeyPair) -> Signature {
-        key.sign(data.to_string().as_bytes())
-    }
-
+    /// Validate the authenticity of a transaction's signature
     pub fn validate_transaction_signature(
         trx: &Transaction,
         key: &Ed25519KeyPair,
@@ -79,11 +72,8 @@ pub(crate) mod utils {
     pub fn generate_random_signed_transaction() -> SignedTransaction {
         let transaction = generate_random_transaction();
         let pubk = random_keypair();
-        let sig = super::sign(&transaction, &pubk);
-        let sign = Sign {
-            pubk: pubk.public_key().as_ref().to_vec(),
-            sig: sig.as_ref().to_vec(),
-        };
+        let sig = sign(&pubk, &transaction);
+        let sign = Sign::new(pubk.public_key().as_ref().to_vec(), sig.as_ref().to_vec());
         SignedTransaction::new(sign, transaction)
     }
 }

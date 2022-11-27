@@ -42,4 +42,3 @@ impl std::convert::From<PeerKp> for TransportBuilder {
         Self::new(data, NoiseKeys::new())
     }
 }
-

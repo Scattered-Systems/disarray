@@ -20,18 +20,21 @@ impl Miner {
     pub fn new(ctx: MinerContext) -> Self {
         Self { ctx }
     }
+    pub fn valid(&self) -> bool {
+        true
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{blockchains::*, states::State, Lock};
+    use crate::handles::servers::ServerHandle;
     use crate::miners::Pools;
-    use crate::handles::server::ServerHandle;
+    use crate::{blockchains::*, states::State, Lock};
 
     #[test]
     fn test_default() {
-        let (s, r) = crossbeam::channel::unbounded();
+        let (_, r) = crossbeam::channel::unbounded();
         let chain = Blockchain::default();
         let cc: ControlChannel = r;
         let mode = Default::default();
@@ -40,6 +43,6 @@ mod tests {
         let state = State::default();
         let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, &state);
         let miner = Miner::new(ctx);
-        assert!(true)
+        assert!(miner.valid())
     }
 }

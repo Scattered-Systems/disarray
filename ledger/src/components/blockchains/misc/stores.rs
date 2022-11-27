@@ -19,11 +19,13 @@ impl<T: Clone> MMRStore<T> for BlockStore<T> {
     fn append(&mut self, pos: u64, elems: Vec<T>) -> ckb_merkle_mountain_range::Result<()> {
         let mut data = elems.clone();
         let mut tmp = Vec::new();
-        for i in (std::ops::Range { start: 0, end: self.0.len() }) {
+        for i in (std::ops::Range {
+            start: 0,
+            end: self.0.len(),
+        }) {
             if i == pos as usize {
                 tmp.append(&mut data);
-            }
-            else {
+            } else {
                 tmp.push(self.0[i].clone())
             }
         }

@@ -5,16 +5,14 @@
        ... Summary ...
 */
 use crate::{
-    blockchains::*, 
-    handles::server::ServerHandle,
-    miners::Pools,
-    states::State, ControlChannel, Lock, OperatingModes, 
+    blockchains::*, handles::servers::ServerHandle, miners::Pools, states::State, ControlChannel,
+    Lock, OperatingModes,
 };
 use std::convert::From;
 
 use super::Channels;
 
-#[derive(Clone,)]
+#[derive(Clone)]
 pub struct MinerContext {
     pub blockchain: Lock<Blockchain>,
     pub channels: Channels,
@@ -55,7 +53,7 @@ impl Default for MinerContext {
         let pools = Pools::default();
         let server = ServerHandle::default();
         let state = State::default();
-       Self::new(Lock::new(chain), cc, mode, pools, server, &state)
+        Self::new(Lock::new(chain), cc, mode, pools, server, &state)
     }
 }
 
@@ -67,14 +65,7 @@ impl PartialEq for MinerContext {
 
 impl From<&MinerContext> for MinerContext {
     fn from(data: &MinerContext) -> Self {
-        Self { 
-            blockchain: data.blockchain.clone(), 
-            channels: data.channels.clone(), 
-            mode: data.mode.clone(), 
-            pools: data.pools.clone(), 
-            server: data.server.clone(), 
-            state: data.state.clone()
-        }
+        data.clone()
     }
 }
 

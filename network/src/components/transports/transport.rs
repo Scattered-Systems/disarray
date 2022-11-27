@@ -51,15 +51,12 @@ impl std::convert::From<AuthNoiseKeys> for Transporter {
 //     }
 // }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_transporter() {
-
         assert!(true)
     }
 }

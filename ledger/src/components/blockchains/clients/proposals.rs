@@ -4,7 +4,7 @@
     Description:
 */
 use crate::{
-    blockchains::{Blockchain, ChainWrapperExt, CoreChainSpec, ChainWrapper},
+    blockchains::{Blockchain, ChainWrapper, ChainWrapperExt, CoreChainSpec},
     blocks::BlockHeader,
 };
 use scsys::{prelude::*, Hashable};
@@ -57,6 +57,7 @@ mod tests {
     #[test]
     pub fn test_proposal_defaults() {
         let a = Proposal::default();
-        assert!(true);
+        let b = Proposal::from(&a);
+        assert_eq!(a, b);
     }
 }

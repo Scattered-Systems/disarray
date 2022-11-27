@@ -59,12 +59,7 @@ pub trait CoreBlockWrapper: CoreBlockSpec {
         for txn in txns {
             let sender = compute_key_hash(txn.sig.pubk);
             let recv = txn.trx.recv;
-            log::info!(
-                "{:?} sends {:?} value {:?}",
-                sender,
-                recv,
-                txn.trx.value
-            );
+            log::info!("{:?} sends {:?} value {:?}", sender, recv, txn.trx.value);
         }
         log::info!("*************************************");
         self

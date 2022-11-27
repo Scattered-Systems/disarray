@@ -35,8 +35,8 @@ pub(crate) mod locks {
 
     impl<T> Clone for Lock<T> {
         fn clone(&self) -> Self {
-        Self(Arc::clone(&self.0))
-    }
+            Self(Arc::clone(&self.0))
+        }
     }
 }
 

@@ -49,13 +49,11 @@ impl Blockchain {
         }
     }
     pub fn enumerate_chain(&self) -> Vec<(u64, H256)> {
-        let mut index = 0;
-        let mut tmp = Vec::new();
-        for k in self.chain.keys() {
-            tmp.push((index, k.clone()));
-            index += 1;
-        }
-        tmp
+        self.chain
+            .keys()
+            .enumerate()
+            .map(|(i, k)| (i as u64, k.clone()))
+            .collect()
     }
 
     pub fn get_mmr(&self, hash: &H256) -> ChainMMR {
@@ -245,16 +243,16 @@ impl ChainWrapperExt for Blockchain {
 //             let store = mmr.get_root();
 //             map.insert(k.clone(), MMR::new(mmr.mmr_size(), mmr.store));
 //         }
-        
-//         Self { 
-//             chain: self.chain.clone(), 
-//             epoch: self.epoch.clone(), 
-//             lead: self.lead.clone(), 
-//             length: self.length.clone(), 
-//             map: map, 
-//             position: self.position.clone(), 
-//             timestamp: self.timestamp.clone(), 
-//             tip: self.tip.clone() 
+
+//         Self {
+//             chain: self.chain.clone(),
+//             epoch: self.epoch.clone(),
+//             lead: self.lead.clone(),
+//             length: self.length.clone(),
+//             map: map,
+//             position: self.position.clone(),
+//             timestamp: self.timestamp.clone(),
+//             tip: self.tip.clone()
 //         }
 //     }
 // }
@@ -266,8 +264,12 @@ impl std::convert::From<i64> for Blockchain {
             "Created the genesis block with the timestamp: {}",
             genesis.header.timestamp
         );
-        
-        let (data, hash, timestamp) = (BlockData::new(genesis.clone(), 0), genesis.hash(), genesis.header.timestamp);
+
+        let (data, hash, timestamp) = (
+            BlockData::new(genesis.clone(), 0),
+            genesis.hash(),
+            genesis.header.timestamp,
+        );
         Self::new(data, hash, timestamp)
     }
 }

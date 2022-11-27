@@ -6,10 +6,13 @@
 */
 use crate::KademliaMS;
 
-use libp2p::{floodsub::{Floodsub, FloodsubEvent}, kad::KademliaEvent, swarm::NetworkBehaviour};
-use libp2p::mdns::Event as MdnsEvent;
 use libp2p::mdns::tokio::Behaviour as TokioMdns;
-
+use libp2p::mdns::Event as MdnsEvent;
+use libp2p::{
+    floodsub::{Floodsub, FloodsubEvent},
+    kad::KademliaEvent,
+    swarm::NetworkBehaviour,
+};
 
 /// Create the standard behaviour for blockchain networks, building on top of Kademlia and MDNS
 #[derive(NetworkBehaviour)]
@@ -44,10 +47,9 @@ impl From<MdnsEvent> for MainnetBehaviourEvent {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use super::*; 
+    use super::*;
 
     #[tokio::test]
     async fn test_mainnet() {

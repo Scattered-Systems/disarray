@@ -5,9 +5,9 @@
 */
 pub use self::{block::*, layers::*, misc::*, utils::*};
 
+pub(crate) mod block;
 pub(crate) mod layers;
 pub(crate) mod misc;
-pub(crate) mod block;
 
 pub(crate) mod utils {
     #![allow(clippy::too_many_arguments)]
@@ -54,7 +54,6 @@ pub(crate) mod utils {
     ) -> Block {
         // let mmr_root: parent_mmr.get_merkle_root().unwrap(),
         let mt = MerkleTree::create(data);
-        let block_type = BlockType::PoW;
         let content = BlockContent::new(data.to_vec(), transaction_ref.to_vec());
         let header = BlockHeader::new(
             difficulty,
@@ -66,7 +65,7 @@ pub(crate) mod utils {
             timestamp,
         );
 
-        Block::new(content, header, block_type, selfish_block)
+        Block::new(BlockType::PoW, content, header, selfish_block)
     }
 
     pub fn generate_genesis_block(initial_time: i64) -> Block {
@@ -85,14 +84,14 @@ pub(crate) mod utils {
             Default::default(),
             initial_time,
         );
-        Block::new(content, header, block_type, selfish_block)
+        Block::new(block_type, content, header, selfish_block)
     }
 
     pub fn generate_random_block(class: BlockType, selfish: bool) -> Block {
         let content = super::generate_random_block_content();
         let header = super::generate_random_block_header(content.data.clone());
 
-        Block::new(content, header, class, selfish)
+        Block::new(class, content, header, selfish)
     }
 
     pub fn generate_random_pos_block(selfish: bool) -> Block {

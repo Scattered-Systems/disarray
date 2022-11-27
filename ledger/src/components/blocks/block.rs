@@ -12,23 +12,23 @@ use serde_json::Value;
 
 #[derive(Clone, Debug, Deserialize, Eq, Hash, Hashable, PartialEq, Serialize)]
 pub struct Block {
+    pub classification: BlockType,
     pub content: BlockContent,
     pub header: BlockHeader,
-    pub block_type: BlockType,
     pub selfish_block: bool,
 }
 
 impl Block {
     pub fn new(
+        classification: BlockType,
         content: BlockContent,
         header: BlockHeader,
-        block_type: BlockType,
         selfish_block: bool,
     ) -> Self {
         Self {
+            classification,
             content,
             header,
-            block_type,
             selfish_block,
         }
     }

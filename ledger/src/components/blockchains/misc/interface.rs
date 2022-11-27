@@ -5,11 +5,11 @@
         ... Summary ...
 */
 use super::{BlockData, Epoch, Position};
+use crate::blocks::*;
 use crate::{
     blockchains::{BlockStore, Merger},
     BlockTs,
 };
-use crate::blocks::*;
 use ckb_merkle_mountain_range::MMR;
 use scsys::prelude::{Hashable, H256};
 use std::collections::{HashMap, HashSet};

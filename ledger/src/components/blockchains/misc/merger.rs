@@ -1,7 +1,7 @@
 /*
     Appellation: merger <blockchain>
     Contrib: FL03 <jo3mccain@icloud.com>
-    Description: 
+    Description:
 */
 use ckb_merkle_mountain_range::Merge;
 use scsys::prelude::H256;
