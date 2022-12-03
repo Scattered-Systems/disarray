@@ -5,12 +5,10 @@ RUN apt-get update -y && apt-get upgrade -y && rustup update
 RUN apt-get install -y \
     protobuf-compiler
 
-RUN rustup default nightly && \
-    rustup target add wasm32-unknown-unknown wasm32-wasi
+RUN rustup install nightly && \
+    rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly
 
 FROM builder-base as builder
-
-ADD .config /config
 
 ADD . /app
 WORKDIR /app
@@ -18,12 +16,23 @@ WORKDIR /app
 COPY . .
 RUN cargo build --release --workspace
 
-FROM builder as testing
-
-RUN cargo test --all --all-features --release --verbose
-
 FROM debian:buster-slim as runner-base
 
-COPY --from=builder /app/target/release/conduit /bin/conduit
+RUN mkdir config
+VOLUME [ "/config" ]
 
-CMD [ "conduit" ]
+FROM runner-base as runner
+
+COPY --chown=55 .config/Disarray.toml /config/Disarray.toml
+COPY --from=builder /app/target/release/disarray /bin/disarray
+
+FROM runner
+
+ENV MAINNET_PORT=9090 \
+    RUST_LOG="info"
+
+EXPOSE 80
+EXPOSE ${MAINNET_PORT}
+
+ENTRYPOINT [ "disarray" ]
+CMD [ "-h" ]
