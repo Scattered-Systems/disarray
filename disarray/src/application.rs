@@ -5,13 +5,13 @@
 */
 use crate::{contexts::Context, rpc::RPCBackend, sessions::Session, states::States};
 use scsys::prelude::{BoxResult, Stateful};
-use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct Application<T: Stateful> {
     pub ctx: Context,
     pub session: Session,
-    pub state: States<T>,
+    pub state: Arc<States<T>>,
 }
 
 impl<T: Stateful> Application<T> {
@@ -33,9 +33,7 @@ impl<T: Stateful> Application<T> {
     /// Creates a service handle for toggling the tracing systems implemented
     pub fn with_tracing(&self) -> BoxResult<&Self> {
         // TODO: Introduce a more refined system of tracing logged events
-
-        let mut logger = self.ctx.settings.clone().tracing.unwrap_or_default();
-        logger.setup(None);
+        self.ctx.settings.clone().logger.setup(None);
         tracing_subscriber::fmt::init();
 
         tracing::info!("Successfully initiated the tracing protocol...");
@@ -43,7 +41,7 @@ impl<T: Stateful> Application<T> {
     }
     /// Change the state of the application to the valid parameter
     pub fn set_state(&mut self, state: States<T>) -> &Self {
-        self.state = state;
+        self.state = Arc::new(state);
         self
     }
     /// Initialize a new backend contexutalized with the proper information
@@ -63,6 +61,10 @@ impl<T: Stateful> Application<T> {
 
 impl<T: Stateful> std::fmt::Display for Application<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string_pretty(&self).unwrap())
+        let data = serde_json::json!({
+            "ctx": self.ctx,
+            "session": self.session
+        });
+        write!(f, "{}", serde_json::to_string(&data).unwrap())
     }
 }

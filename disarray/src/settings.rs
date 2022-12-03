@@ -64,7 +64,7 @@ impl Default for Settings {
     fn default() -> Self {
         let d = Settings {
             logger: Default::default(),
-            server: Server::new("127.0.0.1".to_string(), 8080),
+            server: Server::new("127.0.0.1".to_string(), 9090),
         };
         Self::build().unwrap_or(d)
     }
