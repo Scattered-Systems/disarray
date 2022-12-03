@@ -1,6 +1,7 @@
 # Disarray
 
-[![Clippy Analysis](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml)
+[![Docker](https://github.com/Scattered-Systems/disarray/actions/workflows/docker.yml/badge.svg)](https://github.com/Scattered-Systems/disarray/actions/workflows/docker.yml)
+[![Clippy](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml)
 [![Rust](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml)
 
 
