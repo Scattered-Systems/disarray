@@ -1,9 +1,8 @@
 # Disarray
 
+[![Clippy](https://github.com/scattered-systems/disarray/actions/workflows/clippy.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/clippy.yml)
 [![Docker](https://github.com/Scattered-Systems/disarray/actions/workflows/docker.yml/badge.svg)](https://github.com/Scattered-Systems/disarray/actions/workflows/docker.yml)
-[![Clippy](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust-clippy.yml)
 [![Rust](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml/badge.svg)](https://github.com/scattered-systems/disarray/actions/workflows/rust.yml)
-
 
 Disarray leverages a malleable core building off the component architecture being introduced in the WebAssembley Stack to deliver a high-preformant,
 post-quantum multi-chian supporting both PoS and PoW workloads as acceptable means of generating new blocks. This chain serves as the technical foudnation 
