@@ -1,22 +1,30 @@
 version: 2
 updates:
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: daily
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /disarray
+    directory: /lib/disarray
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /ledger
+    directory: /lib/ledger
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /network
+    directory: /lib/network
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /runtime
+    directory: /lib/runtime
+    schedule:
+      interval: daily
+  - package-ecosystem: github-actions
+    directory: /lib/sdk
     schedule:
       interval: daily

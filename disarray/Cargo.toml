@@ -1,53 +1,39 @@
 [package]
-authors = ["FL03 <jo3mccain@icloud.com>", "Scattered-Systems (https://scattered-systems.com)"]
-build = "build.rs"
-categories = ["development-tools", "network-programming"]
-description = "Disarray a hybrid multi-chain engineered as a high-preformant execution layer for our portals"
+authors = ["FL03 <jo3mccain@icloud.com> (https://github.com/FL03)"]
+categories = []
+description = "Disarray is a hybrid blockchain network"
 edition = "2021"
-homepage = "https://scattered-systems.github.io/disarray"
-keywords = ["async", "scsys"]
+keywords = []
 license = "Apache-2.0"
 name = "disarray"
-readme = "README.md"
 repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.21" # TODO - Update the cargo package version
-
-[features]
-default = ["core", "ledger", "network", "runtime"]
-full = ["core", "ledger", "network", "runtime"]
-
-core = ["disarray-core/default", "disarray-core/full"]
-
-ledger = ["disarray-ledger"]
-network = ["disarray-network"]
-runtime = ["disarray-runtime"]
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-test = true
-
-[dev-dependencies]
-scsys = { features = ["full"], version = "0.1.33" }
+version = "0.1.21"
 
 [build-dependencies]
 
-[dependencies.disarray-core]
+[dependencies]
+clap = { features = ["derive"], version = "4.0.22" }
+futures = "0.3.25"
+hex = "0.4.3"
+opentelemetry = { features = ["rt-tokio"], version = "0.18.0" }
+opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
+rand = { features = [], version = "0.8.5" }
+ring = { features = ["wasm32_c"], version = "0.16.20" }
+scsys = { features = ["full"], version = "0.1.33" }
+serde = { features = ["derive"], version = "1.0.147" }
+serde_json = "1.0.87"
+strum = { features = ["derive"], version = "0.24.1" }
+tarpc = { features = ["full"], version = "0.31.0" }
+tokio = { features = ["full"], version = "1.21.2" }
+tower = "0.4.13"
+tower-http = { features = ["full"], version = "0.3.4" }
+tracing = "0.1.36"
+tracing-opentelemetry = "0.18.0"
+tracing-subscriber = { features = ["env-filter"], version = "0.3.15" }
+
+[dependencies.disarray-sdk]
 features = ["full"]
-optional = true
-path = "../core"
+path = "../lib/sdk"
 version = "0.1.21"
 
-[dependencies.disarray-ledger]
-optional = true
-path = "../ledger"
-version = "0.1.21"
-
-[dependencies.disarray-network]
-optional = true
-path = "../network"
-version = "0.1.21"
-
-[dependencies.disarray-runtime]
-optional = true
-path = "../runtime"
-version = "0.1.21"
+[dev-dependencies]
