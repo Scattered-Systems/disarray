@@ -1,8 +1,7 @@
 /*
-   Appellation: connections <module>
-   Creator: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Appellation: connections <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use serde::{Deserialize, Serialize};
 

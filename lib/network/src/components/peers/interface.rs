@@ -1,6 +1,6 @@
 /*
     Appellation: interface <peer>
-    Creator: FL03 <jo3mccain@icloud.com>
+    Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
 use crate::{AuthNoiseKeys, NoiseKeys, NoiseResult, PeerId, PeerKp};

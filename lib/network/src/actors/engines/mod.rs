@@ -1,6 +1,6 @@
 /*
     Appellation: engines <module>
-    Creator: FL03 <jo3mccain@icloud.com>
+    Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
 pub use self::{engine::*, specs::*, utils::*};

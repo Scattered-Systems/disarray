@@ -1,8 +1,7 @@
 /*
     Appellation: builder <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
-        ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use crate::transports::*;
 use crate::{NoiseKeys, PeerKp};
@@ -16,6 +15,12 @@ pub struct TransportBuilder {
 impl TransportBuilder {
     pub fn new(key: PeerKp, noise: NoiseKeys) -> Self {
         Self { key, noise }
+    }
+    fn dh_keys(&self) -> crate::AuthNoiseKeys {
+        self.noise.clone().into_authentic(&self.key).ok().unwrap()
+    }
+    pub fn build(&self) -> Transporter {
+        Transporter::new(false, self.dh_keys())
     }
 }
 

@@ -1,6 +1,6 @@
 /*
     Appellation: message <module>
-    Creator: FL03 <jo3mccain@icloud.com>
+    Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
 extern crate disarray_ledger;

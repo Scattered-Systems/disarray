@@ -1,7 +1,7 @@
 /*
     Appellation: peer <module>
-    Creator: FL03 <jo3mccain@icloud.com>
-    Description:
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 
     TODO:
         - Peer { id, keypair } Find a more convienent type aliases for storing and operability

@@ -1,8 +1,7 @@
 /*
-   Appellation: behaviours <module>
-   Creator: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Appellation: behaviours <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 pub use self::{mainnet::*, testnet::*, utils::*};
 

@@ -1,8 +1,7 @@
 /*
    Appellation: node <module>
-   Creator: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 use crate::{peers::Peer, NetworkAddress};
 use std::{net::IpAddr, str::FromStr};

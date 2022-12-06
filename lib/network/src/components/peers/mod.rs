@@ -1,8 +1,7 @@
 /*
-   Appellation: peers <module>
-   Creator: FL03 <jo3mccain@icloud.com>
-   Description:
-       ... Summary ...
+    Appellation: peers <module>
+    Contrib: FL03 <jo3mccain@icloud.com>
+    Description: ... Summary ...
 */
 pub use self::{attr::*, interface::*, peer::*, utils::*};
 
