@@ -9,12 +9,46 @@ post-quantum multi-chian supporting both PoS and PoW workloads as acceptable mea
 for more rigorous services, Aether and Chaos, implementing optimized surfaces for executing a variety of different commands contexutalized and proxied 
 according to the active Flow module.
 
+## Features
+
+## Roadmap
+
+## Getting Started
+
+Make sure you have docker installed on the target system
+
+### Docker  
+
+#### *Pull the image*
+
+```bash
+docker pull scsys/flow:latest
+```
+
+#### *Build the image locally (optional)*
+
+```bash
+docker buildx build --tag scsys/flow:latest .
+```
+
+#### *Run the image*
+
+```bash
+docker run -p 9090:9090 scsys/flow:latest
+```
+
+## Usage
+
+```bash
+```
+
 ## Contributors
 
-### Building from the source
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-    git clone https://github.com/scattered-systems/disarray
-    cargo test --all-features
+Please make sure to update tests as appropriate.
 
-### Roadmap
+## License
 
+* [Apache-2.0](https://choosealicense.com/licenses/apache-2.0/)
+* [MIT](https://choosealicense.com/licenses/mit/)

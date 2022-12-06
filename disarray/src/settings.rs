@@ -14,31 +14,29 @@ pub struct Settings {
 }
 
 impl Settings {
+    pub fn new(port: Option<usize>) -> Self {
+        let logger = Logger::default();
+        let server = Server::new("127.0.0.1".to_string(), port.unwrap_or(9090));
+        Self { logger, server }
+    }
     pub fn build() -> ConfigResult<Self> {
-        let mut builder = Config::builder()
-            .add_source(Environment::default().separator("__"))
+        let mut builder = Config::builder().add_source(Environment::default().separator("__"));
+        // Setup some defaults for the configuration
+        builder = builder
             .set_default("logger.level", "info")?
             .set_default("server.host", "127.0.0.1")?
             .set_default("server.port", 9090)?;
-        match try_collect_config_files("**/Disarray.toml", false) {
-            Err(_) => {}
-            Ok(v) => {
-                builder = builder.add_source(v);
-            }
-        }
-        match std::env::var("RUST_LOG") {
-            Err(_) => {}
-            Ok(v) => {
-                builder = builder.set_override("logger.level", Some(v))?;
-            }
-        };
 
-        match std::env::var("SERVER_PORT") {
-            Err(_) => {}
-            Ok(v) => {
-                builder = builder.set_override("server.port", v)?;
-            }
-        };
+        if let Ok(f) = try_collect_config_files("**/Disarray.toml", false) {
+            builder = builder.add_source(f);
+        }
+
+        if let Ok(lvl) = std::env::var("RUST_LOG") {
+            builder = builder.set_override("logger.level", level)?;
+        }
+        if let Ok(port) = std::env::var("SERVER_PORT") {
+            builder = builder.set_override("server.port", port)?;
+        }
 
         builder.build()?.try_deserialize()
     }
@@ -62,11 +60,7 @@ impl Configurable for Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        let d = Settings {
-            logger: Default::default(),
-            server: Server::new("127.0.0.1".to_string(), 9090),
-        };
-        Self::build().unwrap_or(d)
+        Self::build().unwrap_or_else(|| Self::new(None))
     }
 }
 

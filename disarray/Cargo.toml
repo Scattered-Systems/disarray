@@ -19,7 +19,7 @@ opentelemetry = { features = ["rt-tokio"], version = "0.18.0" }
 opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
 rand = { features = [], version = "0.8.5" }
 ring = { features = ["wasm32_c"], version = "0.16.20" }
-scsys = { features = ["full"], version = "0.1.33" }
+scsys = { features = ["full"], version = "0.1.36" }
 serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
 strum = { features = ["derive"], version = "0.24.1" }

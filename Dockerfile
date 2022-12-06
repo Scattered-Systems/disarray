@@ -10,11 +10,11 @@ RUN rustup install nightly && \
 
 FROM builder-base as builder
 
-ADD . /app
-WORKDIR /app
+ADD . /workspace
+WORKDIR /workspace
 
 COPY . .
-RUN cargo build --release --workspace
+RUN cargo build --release -v --workspace
 
 FROM debian:buster-slim as runner-base
 
@@ -28,8 +28,8 @@ VOLUME [ "/config" ]
 
 FROM runner-base as runner
 
-COPY --chown=55 .config/Disarray.toml /config/Disarray.toml
-COPY --from=builder /app/target/release/disarray /bin/disarray
+COPY --chown=55 Disarray.toml /config/Disarray.toml
+COPY --from=builder /workspace/target/release/disarray /bin/disarray
 
 FROM runner
 

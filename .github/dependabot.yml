@@ -9,11 +9,19 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/disarray
+    directory: /disarray
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /lib/core
     schedule:
       interval: daily
   - package-ecosystem: cargo
     directory: /lib/ledger
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
+    directory: /lib/minis
     schedule:
       interval: daily
   - package-ecosystem: cargo
@@ -24,7 +32,7 @@ updates:
     directory: /lib/runtime
     schedule:
       interval: daily
-  - package-ecosystem: github-actions
+  - package-ecosystem: cargo
     directory: /lib/sdk
     schedule:
       interval: daily

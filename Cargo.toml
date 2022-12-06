@@ -4,10 +4,7 @@ default-members = [
 ]
 members = [
     "disarray",
-    "lib/ledger",
-    "lib/network",
-    "lib/runtime",
-    "lib/sdk"
+    "lib/*"
 ]
 
 [profile.dev]
