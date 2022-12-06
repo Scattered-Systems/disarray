@@ -14,7 +14,7 @@ pub struct Settings {
 }
 
 impl Settings {
-    pub fn new(port: Option<usize>) -> Self {
+    pub fn new(port: Option<u16>) -> Self {
         let logger = Logger::default();
         let server = Server::new("127.0.0.1".to_string(), port.unwrap_or(9090));
         Self { logger, server }
@@ -32,7 +32,7 @@ impl Settings {
         }
 
         if let Ok(lvl) = std::env::var("RUST_LOG") {
-            builder = builder.set_override("logger.level", level)?;
+            builder = builder.set_override("logger.level", lvl)?;
         }
         if let Ok(port) = std::env::var("SERVER_PORT") {
             builder = builder.set_override("server.port", port)?;
@@ -60,7 +60,7 @@ impl Configurable for Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self::build().unwrap_or_else(|| Self::new(None))
+        Self::build().unwrap_or_else(|_| Self::new(None))
     }
 }
 
