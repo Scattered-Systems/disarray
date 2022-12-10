@@ -24,24 +24,25 @@ Make sure you have docker installed on the target system
 #### *Pull the image*
 
 ```bash
-docker pull scsys/flow:latest
+docker pull scsys/disarray:latest
 ```
 
 #### *Build the image locally (optional)*
 
 ```bash
-docker buildx build --tag scsys/flow:latest .
+docker buildx build --tag disarray:latest .
 ```
 
 #### *Run the image*
 
 ```bash
-docker run -p 9090:9090 scsys/flow:latest
+docker run -p 9090:9090 scsys/disarray:latest
 ```
 
 ### Usage
 
 ```bash
+cargo run -- system --on
 ```
 
 ## Contributors
