@@ -185,8 +185,8 @@ pub(crate) mod samples {
 
         let hello = async move {
             tokio::select! {
-                hello1 = client.hello(context::current(), format!("{}1", name)) => { hello1 }
-                hello2 = client.hello(context::current(), format!("{}2", name)) => { hello2 }
+                hello1 = client.hello(context::current(), format!("{name}1")) => { hello1 }
+                hello2 = client.hello(context::current(), format!("{name}2")) => { hello2 }
             }
         }
         .instrument(tracing::info_span!("Two Hellos"))

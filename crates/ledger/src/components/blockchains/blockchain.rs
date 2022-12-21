@@ -60,8 +60,7 @@ impl Blockchain {
         let leaves = self.enumerate_chain();
         let mmr_ref = self.map.get(hash).unwrap();
         let proof = mmr_ref.gen_proof(vec![0, self.lead as u64]).unwrap();
-        let new_root =
-            proof.calculate_root_with_new_leaf(leaves, 0, *hash, mmr_ref.mmr_size() + 1);
+        let new_root = proof.calculate_root_with_new_leaf(leaves, 0, *hash, mmr_ref.mmr_size() + 1);
         let mut mmr_ret = MMR::new(0, BlockStore::default());
         mmr_ret.push(new_root.unwrap()).unwrap();
         mmr_ret

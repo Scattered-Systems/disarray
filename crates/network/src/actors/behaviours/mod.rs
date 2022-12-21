@@ -27,7 +27,7 @@ pub(crate) mod utils {
                 }
                 QueryResult::GetRecord(Err(e)) => {
                     info!("{:?}", &e);
-                    eprintln!("Failed to get record: {:?}", e);
+                    eprintln!("Failed to get record: {e:?}");
                 }
                 QueryResult::PutRecord(Ok(PutRecordOk { key })) => {
                     info!("{:?}", &key);
@@ -38,7 +38,7 @@ pub(crate) mod utils {
                 }
                 QueryResult::PutRecord(Err(e)) => {
                     info!("{:?}", e);
-                    eprintln!("Failed to put record: {:?}", e);
+                    eprintln!("Failed to put record: {e:?}");
                 }
                 QueryResult::StartProviding(Ok(AddProviderOk { key })) => {
                     info!("{:?}", key);
@@ -49,7 +49,7 @@ pub(crate) mod utils {
                 }
                 QueryResult::StartProviding(Err(e)) => {
                     info!("{:?}", e);
-                    eprintln!("Failed to put provider record: {:?}", e);
+                    eprintln!("Failed to put provider record: {e:?}");
                 }
                 _ => {}
             }

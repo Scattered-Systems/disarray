@@ -48,7 +48,6 @@ impl From<MdnsEvent> for MainnetBehaviourEvent {
 
 #[cfg(test)]
 mod tests {
-    
 
     #[tokio::test]
     async fn test_mainnet() {

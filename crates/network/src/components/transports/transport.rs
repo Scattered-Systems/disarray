@@ -52,7 +52,6 @@ impl std::convert::From<AuthNoiseKeys> for Transporter {
 
 #[cfg(test)]
 mod tests {
-    
 
     #[test]
     fn test_transporter() {

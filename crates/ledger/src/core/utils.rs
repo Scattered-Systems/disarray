@@ -10,7 +10,7 @@ use std::io::{self, BufRead, BufReader};
 pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {
     let mut res: String = String::default();
     for c in hash {
-        res.push_str(&format!("{:b}", c));
+        res.push_str(&format!("{c:b}"));
     }
     res.into_bytes()
 }

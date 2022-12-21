@@ -24,7 +24,6 @@ impl System {
         tracing::debug!("System processing...");
         if self.up {
             tracing::info!("Success: Booting up the application...");
-            
         }
         self.commands()?;
         Ok(self)
