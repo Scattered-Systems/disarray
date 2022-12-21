@@ -40,7 +40,7 @@ impl Transporter {
 
 impl std::convert::From<AuthNoiseKeys> for Transporter {
     fn from(value: AuthNoiseKeys) -> Self {
-        Self::from(Self::new(false, value))
+        Self::new(false, value)
     }
 }
 
@@ -52,7 +52,7 @@ impl std::convert::From<AuthNoiseKeys> for Transporter {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    
 
     #[test]
     fn test_transporter() {

@@ -17,7 +17,7 @@ pub(crate) mod utils {
         if let KademliaEvent::OutboundQueryProgressed { result, .. } = message {
             match result {
                 QueryResult::GetProviders(Ok(v)) => {
-                    info!("{:?}", v.clone());
+                    info!("{:?}", v);
                 }
                 QueryResult::GetProviders(Err(e)) => {
                     info!("{:?}", &e);

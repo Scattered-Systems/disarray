@@ -17,7 +17,7 @@ impl<T: Clone> MMRStore<T> for BlockStore<T> {
     }
 
     fn append(&mut self, pos: u64, elems: Vec<T>) -> ckb_merkle_mountain_range::Result<()> {
-        let mut data = elems.clone();
+        let mut data = elems;
         let mut tmp = Vec::new();
         for i in (std::ops::Range {
             start: 0,

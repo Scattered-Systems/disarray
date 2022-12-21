@@ -51,3 +51,7 @@ version = "0.1.21"
 optional = true
 path = "../runtime"
 version = "0.1.21"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]

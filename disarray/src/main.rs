@@ -46,6 +46,7 @@ impl<T: Stateful> Disarray<T> {
             state,
         }
     }
+    /// Gracefully shutdown the async runtime, tokio
     pub async fn graceful_shutdown(&self) {
         tokio::signal::ctrl_c()
             .await

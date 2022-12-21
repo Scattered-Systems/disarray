@@ -13,6 +13,10 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
+    directory: /xtask
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
     directory: /crates/core
     schedule:
       interval: daily

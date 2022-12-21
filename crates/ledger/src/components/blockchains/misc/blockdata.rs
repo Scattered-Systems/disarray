@@ -34,7 +34,7 @@ mod tests {
     pub fn test_blockdata_defaults() {
         let block = generate_random_block(BlockType::PoS, true);
         let a = BlockData::new(block.clone(), 1);
-        let b = BlockData::new(block.clone(), 1);
+        let b = BlockData::new(block, 1);
         assert_eq!(&a, &b);
     }
 }

@@ -68,3 +68,7 @@ features = [
     "websocket"
 ]
 version = "0.50.0"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]

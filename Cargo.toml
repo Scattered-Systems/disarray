@@ -3,11 +3,11 @@ default-members = [
     "disarray"
 ]
 exclude = [
+    "cli",
     "xtask"
 ]
 members = [
     "disarray",
-    "cli",
     "crates/core",
     "crates/ledger",
     "crates/minis",

@@ -36,7 +36,7 @@ impl Blockchain {
         let position = Position::default();
         let mmr = MMR::new(0, Default::default());
         let mut map = HashMap::new();
-        map.insert(hash.clone(), mmr);
+        map.insert(hash, mmr);
         Self {
             chain,
             epoch,
@@ -52,7 +52,7 @@ impl Blockchain {
         self.chain
             .keys()
             .enumerate()
-            .map(|(i, k)| (i as u64, k.clone()))
+            .map(|(i, k)| (i as u64, *k))
             .collect()
     }
 
@@ -61,7 +61,7 @@ impl Blockchain {
         let mmr_ref = self.map.get(hash).unwrap();
         let proof = mmr_ref.gen_proof(vec![0, self.lead as u64]).unwrap();
         let new_root =
-            proof.calculate_root_with_new_leaf(leaves, 0, hash.clone(), mmr_ref.mmr_size() + 1);
+            proof.calculate_root_with_new_leaf(leaves, 0, *hash, mmr_ref.mmr_size() + 1);
         let mut mmr_ret = MMR::new(0, BlockStore::default());
         mmr_ret.push(new_root.unwrap()).unwrap();
         mmr_ret
@@ -83,7 +83,7 @@ impl Blockchain {
             let newdata = BlockData::new(block.clone(), newheight);
             let newhash = block.hash();
             let mut new_mmr = self.get_mmr(&block.header.parent());
-            new_mmr.push(newhash.clone()).unwrap();
+            new_mmr.push(newhash).unwrap();
             self.chain.insert(newhash, newdata);
             self.map.insert(newhash, new_mmr);
             self.position.pos += 1;
@@ -119,7 +119,7 @@ impl Blockchain {
             let data = BlockData::new(block.clone(), height);
             let newhash = block.hash();
             let mut new_mmr = self.get_mmr(&block.header.parent());
-            new_mmr.push(newhash.clone()).unwrap();
+            new_mmr.push(newhash).unwrap();
             self.chain.insert(newhash, data);
             self.map.insert(newhash, new_mmr);
             self.position.pos += 1;
@@ -221,7 +221,7 @@ impl ChainWrapperExt for Blockchain {
 
         let mmr = MMR::new(0, Default::default());
         let mut map = HashMap::new();
-        map.insert(hash.clone(), mmr);
+        map.insert(hash, mmr);
         Self {
             chain: HashMap::from([(hash, data)]),
             epoch: Epoch::default(),
