@@ -34,20 +34,7 @@ impl Setup {
         };
         Ok(self)
     }
-    fn commands(&self) -> BoxResult<&Self> {
-        if let Some(linux) = self.linux.clone() {
-            match linux as i64 {
-                0 => {
-                    command("sudo", vec!["apt", "update", "-y"])?;
-                    command("sudo", vec!["apt", "upgrade", "-y"])?;
-                    command("sudo", vec!["apt", "install", "-y", "protobuf-compiler"])?;
-                },
-                _ => {
-                    tracing::info!("Apologies, this linux variant isn't covered; please try again or implement the methods...");
-                }
-            }
-        }
-        
+    fn langspace(&self) -> BoxResult<&Self> {
         command("rustup", vec!["default", "nightly"])?;
         command(
             "rustup",
@@ -72,8 +59,24 @@ impl Setup {
                     "nightly",
                 ],
             )?;
-            command("npm", vec!["install", "-g", "wasm-pack"])?;
-        };
+        }
+        Ok(self)
+    }
+    fn commands(&self) -> BoxResult<&Self> {
+        if let Some(linux) = self.linux.clone() {
+            match linux as i64 {
+                0 => {
+                    command("sudo", vec!["apt", "update", "-y"])?;
+                    command("sudo", vec!["apt", "upgrade", "-y"])?;
+                    command("sudo", vec!["apt", "install", "-y", "protobuf-compiler"])?;
+                },
+                _ => {
+                    tracing::info!("Apologies, this linux variant isn't covered; please try again or implement the methods...");
+                }
+            }
+        }
+        self.langspace()?;
+        command("npm", vec!["install", "-g", "wasm-pack"])?;
         Ok(self)
     }
     pub fn handler(&self) -> BoxResult<&Self> {
