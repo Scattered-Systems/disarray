@@ -13,26 +13,26 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/core
+    directory: /crates/core
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/ledger
+    directory: /crates/ledger
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/minis
+    directory: /crates/minis
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/network
+    directory: /crates/network
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/runtime
+    directory: /crates/runtime
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/sdk
+    directory: /crates/sdk
     schedule:
       interval: daily

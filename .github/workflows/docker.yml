@@ -1,28 +1,52 @@
 name: Docker
 
 on:
+  pull_request:
+    branches: [ "main", "master", "prod*", "nightly*" ]
+    tags: [ "v*.*.*" ]
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master", "prod*" ]
     tags: [ "v*.*.*" ]
   schedule:
     - cron: "30 9 * * 5"
   workflow_dispatch:
 
 env:
-  DOCKERHUB_USERNAME: scsys
+  IMAGE_HANDLE: scsys
+  REGISTRY: hub.docker.com
   IMAGE_NAME: scsys/disarray
   IMAGE_TAG: latest
 
-
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        workdir:
+          - .
+        image: 
+          - disarray
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the Docker image
+        run: docker buildx build --tag ${{ env.IMAGE_HANDLE }}/${{ matrix.image }} ${{ matrix.workdir }}
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dockerfile:
+          - Dockerfile
+        image: 
+          - disarray
     steps:
     - uses: actions/checkout@v3
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@v5
       with:
-        name: ${{ env.IMAGE_NAME }}
-        username: ${{ env.DOCKERHUB_USERNAME }}
+        dockerfile: ${{ matrix.dockerfile }}
+        name: ${{ env.IMAGE_HANDLE }}/${{ matrix.image }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-        dockerfile: Dockerfile
+        snapshot: true
+        username: ${{ secrets.DOCKERHUB_USERNAME }}

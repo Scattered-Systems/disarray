@@ -2,9 +2,18 @@
 default-members = [
     "disarray"
 ]
+exclude = [
+    "xtask"
+]
 members = [
     "disarray",
-    "lib/*"
+    "cli",
+    "crates/core",
+    "crates/ledger",
+    "crates/minis",
+    "crates/network",
+    "crates/runtime",
+    "crates/sdk"
 ]
 
 [profile.dev]

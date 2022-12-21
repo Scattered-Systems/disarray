@@ -33,7 +33,7 @@ tracing-subscriber = { features = ["env-filter"], version = "0.3.15" }
 
 [dependencies.disarray-sdk]
 features = ["full"]
-path = "../lib/sdk"
+path = "../crates/sdk"
 version = "0.1.21"
 
 [dev-dependencies]
