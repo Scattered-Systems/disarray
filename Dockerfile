@@ -27,6 +27,7 @@ FROM runner-base as runner
 
 COPY --chown=55 .config /config
 VOLUME [ "/config" ]
+
 COPY --from=builder /workspace/target/release/disarray /bin/disarray
 
 FROM runner
