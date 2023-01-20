@@ -5,7 +5,7 @@
 */
 use futures::future::{self, Ready};
 use samples::World;
-use scsys::prelude::{BoxResult, Server, Timestamp};
+use scsys::prelude::{AsyncResult, Server, Timestamp};
 use scsys::Temporal;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
@@ -35,7 +35,7 @@ impl samples::World for RPCServer {
     }
 }
 
-pub async fn simple_rpc_client(name: Option<String>) -> BoxResult {
+pub async fn simple_rpc_client(name: Option<String>) -> AsyncResult {
     let (client_transport, server_transport) = tarpc::transport::channel::unbounded();
 
     let server = BaseChannel::with_defaults(server_transport);
@@ -73,17 +73,17 @@ impl RPCBackend {
     pub fn address(&self) -> SocketAddr {
         self.server.clone().address()
     }
-    pub async fn client(&mut self, name: Option<String>) -> BoxResult<&Self> {
+    pub async fn client(&mut self, name: Option<String>) -> AsyncResult<&Self> {
         simple_rpc_client(name).await?;
 
         Ok(self)
     }
-    pub async fn listener(&self) -> BoxResult<TcpListener> {
+    pub async fn listener(&self) -> AsyncResult<TcpListener> {
         tracing::info!("Listening at {}", self.server.clone().address());
         let listener = TcpListener::bind(self.address()).await?;
         Ok(listener)
     }
-    pub async fn spawn(&mut self) -> BoxResult {
+    pub async fn spawn(&mut self) -> AsyncResult {
         loop {
             let (_, _) = self.listener().await?.accept().await?;
 
@@ -93,7 +93,7 @@ impl RPCBackend {
             });
         }
     }
-    pub async fn run(&mut self) -> BoxResult<&Self> {
+    pub async fn run(&mut self) -> AsyncResult<&Self> {
         tracing::info!("Spawning the rpc server...");
         self.spawn().await?;
         Ok(self)
@@ -104,7 +104,7 @@ pub(crate) mod samples {
     use crate::contexts::Context;
     use clap::Parser;
     use futures::future::{self, Ready};
-    use scsys::prelude::BoxResult;
+    use scsys::prelude::AsyncResult;
     use std::{net::SocketAddr, time::Duration};
     use tarpc::{
         client, context,
@@ -146,7 +146,7 @@ pub(crate) mod samples {
         name: String,
     }
 
-    pub async fn world_client() -> BoxResult<WorldClient> {
+    pub async fn world_client() -> AsyncResult<WorldClient> {
         let (client_transport, server_transport) = tarpc::transport::channel::unbounded();
 
         let server = BaseChannel::with_defaults(server_transport);
@@ -161,7 +161,7 @@ pub(crate) mod samples {
     /*
 
     */
-    pub async fn basic_wc_action() -> BoxResult {
+    pub async fn basic_wc_action() -> AsyncResult {
         let client = world_client().await?;
         // The client has an RPC method for each RPC defined in the annotated trait. It takes the same
         // args as defined, with the addition of a Context, which is always the first arg. The Context
@@ -175,7 +175,7 @@ pub(crate) mod samples {
         Ok(())
     }
 
-    pub async fn sample_client(ctx: Context) -> BoxResult {
+    pub async fn sample_client(ctx: Context) -> AsyncResult {
         let address = ctx.settings.server.address();
         let name = "".to_string();
 

@@ -21,7 +21,7 @@ pub(crate) mod utils {
         StateMap,
     };
     use ring::signature::{Ed25519KeyPair, KeyPair};
-    use scsys::prelude::{H160, H256};
+    use decanter::prelude::{H160, H256};
     use std::io::{BufRead, BufReader};
 
     /// Creates a vector of accounts from the provided collection of keys

@@ -18,10 +18,12 @@ test = true
 
 
 [dependencies]
-async-trait = "0.1.58"
-scsys = { features = ["full"], version = "0.1.33" }
-serde = { features = ["derive"], version = "1.0.147" }
-serde_json = "1.0.87"
+decanter = { features = ["derive"], version = "0.1.2" }
+scsys = { features = ["full"], version = "0.1.40" }
+
+async-trait = "0.1"
+serde = { features = ["derive"], version = "1" }
+serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
 tokio = { features = ["full"], version = "1.21.2" }
 tracing = "0.1.37"
@@ -34,3 +36,7 @@ env_logger = "0.10.0"
 [package.metadata.docs.rs]
 all-features = true
 rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

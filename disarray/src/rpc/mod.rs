@@ -7,12 +7,13 @@ pub use self::{interface::*, services::*, utils::*};
 
 pub(crate) mod interface;
 pub(crate) mod services;
+
 pub(crate) mod utils {
-    use scsys::prelude::BoxResult;
+    use scsys::prelude::AsyncResult;
     use tracing_subscriber::{fmt::format::FmtSpan, prelude::*};
 
     /// Initializes an OpenTelemetry tracing subscriber with a Jaeger backend.
-    pub fn init_tracing(service_name: &str) -> BoxResult {
+    pub fn init_tracing(service_name: &str) -> AsyncResult {
         std::env::set_var("OTEL_BSP_MAX_EXPORT_BATCH_SIZE", "12");
 
         let tracer = opentelemetry_jaeger::new_agent_pipeline()

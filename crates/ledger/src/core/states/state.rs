@@ -5,7 +5,8 @@
         ... Summary ...
 */
 use crate::{blocks::Block, compute_key_hash, BlockState, StateMap};
-use scsys::prelude::{Hashable, H160, H256};
+use decanter::prelude::{Hash, Hashable, H160, H256};
+use scsys::prelude::Stateful;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct State {

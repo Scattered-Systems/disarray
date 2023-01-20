@@ -8,9 +8,15 @@
 extern crate hex_literal;
 
 #[doc(inline)]
-pub use crate::{actors::*, components::*, core::*, data::*};
+pub use crate::{actors::*, blockchain::*, core::*, misc::*, utils::*};
 
 pub(crate) mod actors;
-pub(crate) mod components;
+pub(crate) mod blockchain;
 pub(crate) mod core;
-pub(crate) mod data;
+pub(crate) mod misc;
+pub(crate) mod utils;
+
+pub mod blocks;
+pub mod clients;
+pub mod proofs;
+pub mod transactions;

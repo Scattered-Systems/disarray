@@ -30,7 +30,7 @@ mod tests {
     use super::*;
     use crate::handles::servers::ServerHandle;
     use crate::miners::Pools;
-    use crate::{blockchains::*, states::State, Lock};
+    use crate::{states::State, Blockchain, Lock};
 
     #[test]
     fn test_default() {

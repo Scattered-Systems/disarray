@@ -22,7 +22,8 @@ pub(crate) mod constants {
 
 pub(crate) mod types {
     use crate::transactions::{SignedTransaction, Transaction};
-    use scsys::prelude::{chrono, H160, H256};
+    use decanter::prelude::{H160, H256};
+    use scsys::prelude::chrono;
     use std::collections::HashMap;
 
     pub type BlockId = i64;
@@ -30,9 +31,6 @@ pub(crate) mod types {
     pub type BlockNc = u32;
     pub type BlockTs = i64;
     pub type BlockTz = chrono::Utc;
-
-    /// Simplistic wrapper for implementing transaction data
-    pub type BlockData<Dt = String> = Vec<Dt>;
     ///
     pub type BlockState = HashMap<H256, StateMap>;
     /// Type alias for a vector of signed transactions
