@@ -10,9 +10,7 @@
 #[cfg(feature = "ledger")]
 pub use disarray_ledger as ledger;
 #[cfg(feature = "network")]
-pub use disarray_network as network;
-#[cfg(feature = "runtime")]
-pub use disarray_runtime as runtime;
+pub use disarray_network as net;
 
 pub mod prelude {
     pub use super::*;
@@ -20,7 +18,5 @@ pub mod prelude {
     #[cfg(feature = "ledger")]
     pub use super::ledger::*;
     #[cfg(feature = "network")]
-    pub use super::network::*;
-    #[cfg(feature = "runtime")]
-    pub use super::runtime::*;
+    pub use super::net::*;
 }

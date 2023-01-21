@@ -3,9 +3,10 @@
     Contributors: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use super::handlers::BaseHandle;
 use serde::{Deserialize, Serialize};
 use strum::{EnumString, EnumVariantNames};
+
+pub struct BaseHandle {}
 
 #[derive(
     Clone,

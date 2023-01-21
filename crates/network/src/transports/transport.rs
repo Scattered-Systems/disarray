@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::behaviours::MainnetBehaviour;
+use crate::behaviours::mainnet::MainnetBehaviour;
 use crate::{AuthNoiseKeys, BoxedTransport, PeerId};
 
 use libp2p::{core::upgrade, mplex, noise, swarm::Swarm, tcp, Transport};

@@ -4,7 +4,7 @@
    Description:
        ... Summary ...
 */
-use scsys::prelude::H256;
+use decanter::prelude::H256;
 use std::io::{self, BufRead, BufReader};
 
 pub fn convert_hash_into_binary(hash: &[u8]) -> Vec<u8> {

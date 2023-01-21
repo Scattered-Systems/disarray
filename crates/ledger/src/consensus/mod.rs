@@ -12,7 +12,7 @@ pub(crate) mod options;
 pub(crate) mod specs {
     pub trait Consentual: ToString {
         type Proof: ToString;
-    
+
         fn agreement(&self) -> bool;
     }
 }

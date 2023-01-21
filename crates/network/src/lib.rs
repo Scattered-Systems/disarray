@@ -13,7 +13,6 @@ pub(crate) mod utils;
 
 pub mod behaviours;
 pub mod contexts;
-pub mod engines;
 pub mod messages;
 pub mod nodes;
 pub mod peers;

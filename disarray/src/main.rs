@@ -11,7 +11,7 @@ pub(crate) mod settings;
 pub(crate) mod states;
 
 pub mod cli;
-pub mod runtime;
+pub mod rt;
 
 use acme::prelude::{AppSpec, AsyncSpawnable};
 use scsys::prelude::{AsyncResult, Locked};

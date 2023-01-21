@@ -13,14 +13,13 @@ repository.workspace = true
 version.workspace = true
 
 [features]
-default = ["core", "ledger", "network", "runtime"]
+default = ["core", "ledger", "network"]
 
 
 core = []
 
 ledger = ["disarray-ledger"]
 network = ["disarray-network"]
-runtime = ["disarray-runtime"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -34,7 +33,6 @@ scsys = { features = ["full"], version = "0.1.33" }
 [dependencies]
 disarray-ledger = { features = [], optional = true, path = "../ledger", version = "0.1.21" }
 disarray-network = { features = [], optional = true, path = "../network", version = "0.1.21" }
-disarray-runtime = { features = [], optional = true, path = "../runtime", version = "0.1.21" }
 
 [package.metadata.docs.rs]
 all-features = true

@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: attributes supporting the blockchain
 */
-pub use self::{blockdata::*, chains::*, epoch::*, merger::*, mnhash::*, position::*, stores::*,};
+pub use self::{blockdata::*, chains::*, epoch::*, merger::*, mnhash::*, position::*, stores::*};
 
 pub(crate) mod blockdata;
 pub(crate) mod chains;

@@ -47,10 +47,12 @@ scsys = { features = ["full"], version = "0.1.41" }
 disarray-ledger = { path = "../ledger", version = "0.1.21" }
 disarray-minis = { optional = true, path = "../minis", version = "0.1.21" }
 
-crossbeam = "0.8.2"
-log = "0.4.17"
-mio = { features = ["os-ext", "os-poll", "net"], version = "0.8.5" }
-mio-extras = "2.0.6"
+async-trait = "0.1"
+crossbeam = "0.8"
+log = "0.4"
+futures = "0.3"
+mio = { features = ["os-ext", "os-poll", "net"], version = "0.8" }
+mio-extras = "2"
 serde.workspace = true
 serde_json.workspace = true
 smart-default.workspace = true

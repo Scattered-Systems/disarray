@@ -4,7 +4,7 @@
     Description:
 */
 use crate::BlockTs;
-use decanter::prelude::{hasher, H256, Hashable};
+use decanter::prelude::{hasher, Hashable, H256};
 use scsys::prelude::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 

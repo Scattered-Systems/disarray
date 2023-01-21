@@ -11,7 +11,7 @@ on:
     branches: [ "main", "master", "prod" ]
     tags: [ "v*.*.*" ]
   release:
-    types: [created, published]
+    types: [published]
   schedule:
     - cron: "30 9 * * *"
   workflow_dispatch:
@@ -49,9 +49,7 @@ jobs:
           key: ${{ env.cache-name }}
           path: |
             ~/target/CACHEDIR.TAG
-            ~/target/release/disarray*
-            ~/target/release/*.rlib
-            ~/target/release/*.so
+            ~/target/release/
   features:
     if: ${{ github.event.inputs.publish }}
     name: Publish (features)
@@ -63,7 +61,6 @@ jobs:
           - disarray-ledger
           - disarray-minis
           - disarray-network
-          - disarray-runtime
     steps:
       - uses: actions/checkout@v3
       - name: Publish (${{matrix.package}})

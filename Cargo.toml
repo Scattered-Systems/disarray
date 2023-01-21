@@ -24,11 +24,7 @@ exclude = [
 ]
 members = [
     "disarray",
-    "crates/ledger",
-    "crates/minis",
-    "crates/network",
-    "crates/runtime",
-    "crates/sdk"
+    "crates/*",
 ]
 
 [profile.dev]
