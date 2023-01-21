@@ -7,6 +7,4 @@ pub use self::{mainnet::*, utils::*};
 
 pub(crate) mod mainnet;
 
-pub(crate) mod utils {
-    
-}
+pub(crate) mod utils {}

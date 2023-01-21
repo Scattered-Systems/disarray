@@ -32,7 +32,7 @@ async fn main() -> AsyncResult {
 pub struct Application {
     pub channels: AppChannels,
     pub ctx: Arc<Context>,
-    pub runtime: Arc<runtime::Runtime>,
+    pub runtime: Arc<rt::Runtime>,
     pub state: Locked<State>,
 }
 
@@ -47,7 +47,7 @@ impl Application {
         Self {
             channels,
             ctx: ctx.clone(),
-            runtime: Arc::new(runtime::Runtime::new(ctx)),
+            runtime: Arc::new(rt::Runtime::new(ctx)),
             state: state.into(),
         }
     }
@@ -61,7 +61,7 @@ impl Application {
         Ok(self)
     }
     /// Application runtime
-    pub fn runtime(&self) -> &runtime::Runtime {
+    pub fn runtime(&self) -> &rt::Runtime {
         self.runtime.as_ref()
     }
 }
