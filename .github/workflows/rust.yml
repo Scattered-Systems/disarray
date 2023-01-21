@@ -55,11 +55,12 @@ jobs:
         with:
           key: ${{ env.cache-name }}
           path: |
+            ~/target/CACHEDIR.TAG
             ~/target/release/disarray*
             ~/target/release/*.rlib
             ~/target/release/*.so
   features:
-    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
+    if: ${{ github.event.inputs.publish }}
     name: Features
     runs-on: ubuntu-latest
     strategy:
@@ -75,7 +76,7 @@ jobs:
       - name: Publish (${{matrix.package}})
         run: cargo publish --all-features -v -p ${{ matrix.package }} --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   sdk:
-    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
+    if: ${{ github.event.inputs.publish }}
     name: Publish
     needs: features
     runs-on: ubuntu-latest
@@ -84,7 +85,7 @@ jobs:
       - name: Publish (disarray-sdk)
         run: cargo publish --all-features -v -p disarray-sdk --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   publish:
-    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
+    if: ${{ github.event.inputs.publish }}
     name: Publish
     needs: [ features, sdk ]
     runs-on: ubuntu-latest
