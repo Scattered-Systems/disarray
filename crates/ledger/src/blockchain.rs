@@ -9,12 +9,11 @@ use crate::{
     BlockData, BlockStore, ChainMMR, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position,
 };
 use ckb_merkle_mountain_range::MMR;
-use decanter::prelude::{Hash, Hashable, H256};
+use decanter::prelude::{hasher, Hashable, H256};
 use rand::Rng;
 use scsys::prelude::Timestamp;
 use std::collections::HashMap;
 
-#[derive(Hash)]
 /// Formally implements the ledger powering the network
 pub struct Blockchain {
     pub chain: HashMap<H256, BlockData>,
@@ -269,6 +268,12 @@ impl std::convert::From<i64> for Blockchain {
             genesis.header.timestamp,
         );
         Self::new(data, hash, timestamp)
+    }
+}
+
+impl Hashable for Blockchain {
+    fn hash(&self) -> H256 {
+        hasher(&self).into()
     }
 }
 

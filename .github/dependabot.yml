@@ -13,11 +13,11 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /bin/api
+    directory: /disarray
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /bin/disarray
+    directory: /bin/api
     schedule:
       interval: daily
   - package-ecosystem: cargo

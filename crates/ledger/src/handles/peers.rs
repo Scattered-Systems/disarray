@@ -7,7 +7,7 @@ use log::{trace, warn};
 use mio;
 use mio_extras::channel;
 use scsys::prelude::Message;
-use std::convert::TryInto;
+
 use std::io::{Read, Write};
 use std::sync::mpsc;
 

@@ -6,7 +6,7 @@
 use crate::procs::Processable;
 
 use async_trait::async_trait;
-use scsys::prelude::{BoxResult, Timestamp};
+use scsys::prelude::{AsyncResult, Timestamp};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
@@ -14,7 +14,7 @@ pub struct SimpleProc;
 
 #[async_trait]
 impl Processable for SimpleProc {
-    async fn spawn(&self) -> BoxResult {
+    async fn spawn(&self) -> AsyncResult {
         simple_proc().await;
         Ok(())
     }

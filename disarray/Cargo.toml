@@ -23,10 +23,11 @@ acme = { features = ["net"], git = "https://github.com/FL03/acme", branch = "v0.
 decanter = { features = ["derive"], version = "0.1.2" }
 scsys = { features = ["full"], version = "0.1.40" }
 
+# SDK
+disarray-sdk = { features = [], path = "../crates/sdk", version = "0.1.21" }
+
 # Standard dependencies
 async-trait = "0.1"
-axum = { features = ["headers", "http2", "macros"], version = "0.6" }
-axum-core = "0.3"
 clap = { features = ["cargo", "derive", "env"], version = "4" }
 futures = "0.3.25"
 http = "0.2.8"
@@ -47,11 +48,6 @@ tracing-subscriber = { features = ["env-filter"], version = "0.3.16" }
 
 # Runtime
 wasmer = { features = [], version = "3.1.0" }
-
-[dependencies.disarray-sdk]
-features = []
-path = "../../crates/sdk"
-version = "0.1.21"
 
 [dev-dependencies]
 

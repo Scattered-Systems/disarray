@@ -39,4 +39,3 @@ EXPOSE 80
 EXPOSE ${MAINNET_PORT}
 
 ENTRYPOINT [ "disarray" ]
-CMD [ "-h" ]

@@ -1,14 +1,14 @@
 [workspace]
 default-members = [
-    "bin/disarray"
+    "disarray"
 ]
 exclude = [
     "examples/*",
     "xtask"
 ]
 members = [
+    "disarray",
     "bin/api",
-    "bin/disarray",
     "crates/ledger",
     "crates/minis",
     "crates/network",

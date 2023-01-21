@@ -4,10 +4,11 @@
     Description:
 */
 use crate::BlockTs;
-use decanter::prelude::{Hash, Hashable};
+use decanter::prelude::{hasher, H256, Hashable};
+use scsys::prelude::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct Epoch {
     pub size: u128,
     pub time: BlockTs,
@@ -25,9 +26,9 @@ impl Default for Epoch {
     }
 }
 
-impl std::fmt::Display for Epoch {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
+impl Hashable for Epoch {
+    fn hash(&self) -> H256 {
+        hasher(&self).into()
     }
 }
 

@@ -7,12 +7,12 @@ let
 
   rustVersion = "1.66.0";
   wasmUnknownUknown = "wasm32-unknown-unknown";
-  wasm32Wasi = "wasm32-wasi";
+  wasmTarget = "wasm32-wasi";
 
   rustDefaultTarget = rustPkgs.rust-bin.stable.${rustVersion}.default;
 
-  rustWithWasmTarget = rustPkgs.rust-bin.nightly.${rustVersion}.default.override {
-    targets = [ wasmUnknownUknown ];
+  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
+    targets = [ wasmTarget ];
   };
 
   rustPlatform = makeRustPlatform {

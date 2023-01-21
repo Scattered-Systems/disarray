@@ -7,10 +7,11 @@ use crate::{Context, State};
 use scsys::prelude::Locked;
 use tokio::sync::{broadcast, mpsc, oneshot};
 
+/// Type alias for an async broadcast sender / receiver tuple; [broadcast::Sender<T>], [broadcast::Receiver<T>]
 pub type BroadcastChannels<T> = (broadcast::Sender<T>, broadcast::Receiver<T>);
-
+/// Type alias for an async oneshot sender / receiver tuple; [broadcast::Sender<T>], [broadcast::Receiver<T>]
 pub type OneshotChannels<T> = (oneshot::Sender<T>, oneshot::Receiver<T>);
-
+/// Type alias for an async unbounded mpsc sender / receiver tuple; [broadcast::Sender<T>], [broadcast::Receiver<T>]
 pub type UnboundedMPSC<T> = (mpsc::UnboundedSender<T>, mpsc::UnboundedReceiver<T>);
 
 #[derive(Debug)]
