@@ -27,8 +27,6 @@ jobs:
     name: Build and Test
     strategy:
       matrix:
-        toolchain: [ stable, nightly ]
-        target: [ wasm32-unknown-unknown, wasm32-wasi ]
         platform: [ macos-latest, ubuntu-latest, windows-latest ]
     runs-on: ubuntu-latest
     steps:
@@ -39,11 +37,10 @@ jobs:
           sudo apt update -y
           sudo apt install -y protobuf-compiler
       - name: Setup (langspace)
-        if: matrix.toolchain == 'nightly'
         run: |
             rustup update
             rustup default nightly
-            rustup target add ${{ matrix.target }}
+            rustup target add wasm32-unknown-unknown wasm32-wasi --toolchain nightly
       - name: Build
         run: cargo build --release -v
       - name: Test
