@@ -1,9 +1,8 @@
 mode = "development"
-name = "Disarray"
 
 [logger]
 level = "info"
 
 [server]
 host = "0.0.0.0"
-port = 9091
+port = 9999

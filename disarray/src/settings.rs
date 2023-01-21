@@ -35,7 +35,7 @@ impl Settings {
         if let Ok(log) = std::env::var("RUST_LOG") {
             builder = builder.set_override("logger.level", log)?;
         };
-        if let Ok(port) = std::env::var("SERVER_PORT") {
+        if let Ok(port) = std::env::var("MAINNET_PORT") {
             builder = builder.set_override("server.port", port)?;
         };
         // Add in related environment variables
