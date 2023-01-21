@@ -25,17 +25,13 @@ on:
 jobs:
   build:
     name: Build and Test
-    strategy:
-      matrix:
-        platform: [ macos-latest, ubuntu-latest, windows-latest ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Setup
-        if: matrix.platform == 'ubuntu-latest'
         run: |
-          sudo apt update -y
-          sudo apt install -y protobuf-compiler
+          sudo apt update -y && sudo apt upgrade -y
+          sudo apt install -y clang protobuf-compiler
       - name: Setup (langspace)
         run: |
             rustup update
