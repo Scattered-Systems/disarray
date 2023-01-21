@@ -62,11 +62,12 @@ impl TryFrom<u8> for Peer {
     fn try_from(seed: u8) -> Result<Peer, Self::Error> {
         let mut bytes = [0u8; 32];
         bytes[0] = seed;
-        if let Ok(sk) = ed25519::SecretKey::from_bytes(&mut bytes) {
-            let keypair = PeerKp::Ed25519(sk.into());
-            Ok(Peer::from(keypair))
-        } else {
-            panic!("Failed to find a valid keypair from the provided seed...")
+        match ed25519::SecretKey::from_bytes(&mut bytes) {
+            Ok(sk) => {
+                let keypair = PeerKp::Ed25519(sk.into());
+                Ok(Peer::from(keypair))
+            },
+            Err(e) => panic!("Failed to decode the provided seed into a valid keypair: {}", e)
         }
     }
 }
