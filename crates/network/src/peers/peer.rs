@@ -10,6 +10,7 @@ use crate::{
     peers::{PeerSpec, PeerWrapper, PeerWrapperExt},
     PeerId, PeerKp,
 };
+use libp2p::identity::ed25519;
 
 /// Implements the peer structure for the network
 #[derive(Clone, Debug)]
@@ -37,21 +38,36 @@ impl PeerWrapper for Peer {}
 
 impl PeerWrapperExt for Peer {}
 
-impl std::convert::From<&[u8]> for Peer {
+impl From<&[u8]> for Peer {
     fn from(data: &[u8]) -> Self {
         Self::from(PeerKp::from_protobuf_encoding(data).expect(""))
     }
 }
 
-impl std::convert::From<PeerKp> for Peer {
+impl From<PeerKp> for Peer {
     fn from(data: PeerKp) -> Self {
         Self::new(PeerId::from(data.public()), data)
     }
 }
 
-impl std::convert::From<(PeerId, PeerKp)> for Peer {
+impl From<(PeerId, PeerKp)> for Peer {
     fn from(data: (PeerId, PeerKp)) -> Self {
         Self::new(data.0, data.1)
+    }
+}
+
+impl TryFrom<u8> for Peer {
+    type Error = scsys::BoxError;
+
+    fn try_from(seed: u8) -> Result<Peer, Self::Error> {
+        let mut bytes = [0u8; 32];
+        bytes[0] = seed;
+        if let Ok(sk) = ed25519::SecretKey::from_bytes(&mut bytes) {
+            let keypair = PeerKp::Ed25519(sk.into());
+            Ok(Peer::from(keypair))
+        } else {
+            panic!("Failed to find a valid keypair from the provided seed...")
+        }
     }
 }
 

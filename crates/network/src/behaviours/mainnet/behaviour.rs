@@ -30,22 +30,23 @@ impl MainnetBehaviour {
     }
 }
 
-// Simple file exchange protocol
-
 #[derive(Debug, Clone)]
 pub struct MainnetProtocol();
-#[derive(Clone)]
-pub struct MainnetCodec();
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct MainnetRequest(pub(crate) String);
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct MainnetResponse(pub(crate) Vec<u8>);
 
 impl ProtocolName for MainnetProtocol {
     fn protocol_name(&self) -> &[u8] {
         "/disarray/9991".as_bytes()
     }
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MainnetRequest(pub(crate) String);
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MainnetResponse(pub(crate) Vec<u8>);
+
+#[derive(Clone)]
+pub struct MainnetCodec();
 
 #[async_trait]
 impl request_response::RequestResponseCodec for MainnetCodec {

@@ -12,7 +12,7 @@ use strum::{EnumString, EnumVariantNames};
 #[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct Event {
     pub event: Events,
-    pub timestamp: i64
+    pub timestamp: i64,
 }
 
 impl Event {
@@ -46,7 +46,6 @@ pub enum Events {
     #[default]
     Idle = 0,
     Genesis = 1,
-
     Update = 9,
 }
 
@@ -66,7 +65,7 @@ impl Eventful for Event {
     type Event = Events;
 
     fn event(&self) -> Self::Event {
-        self.event.clone()
+        self.event
     }
 }
 

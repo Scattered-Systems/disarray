@@ -3,12 +3,13 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-pub use self::{behaviour::*, client::*, commands::*, events::*};
+pub use self::{behaviour::*, client::*, commands::*, events::*, network::*};
 
 pub(crate) mod behaviour;
 pub(crate) mod client;
 pub(crate) mod commands;
 pub(crate) mod events;
+pub(crate) mod network;
 
 use futures::{channel::mpsc, Stream};
 use libp2p::kad::{record::store::MemoryStore, Kademlia};
