@@ -5,26 +5,27 @@
        ... Summary ...
 */
 use crate::{
-    handles::servers::ServerHandle, miners::Pools, states::State, ControlChannel,
-    Blockchain, Lock, OperatingModes,
+    handles::servers::ServerHandle, miners::Pools, states::State, Blockchain, ControlChannel,
+    OperatingModes,
 };
+use scsys::Locked;
 use std::convert::From;
 
 use super::Channels;
 
 #[derive(Clone)]
 pub struct MinerContext {
-    pub blockchain: Lock<Blockchain>,
+    pub blockchain: Locked<Blockchain>,
     pub channels: Channels,
     pub mode: OperatingModes,
     pub pools: Pools,
     pub server: ServerHandle,
-    pub state: Lock<State>,
+    pub state: Locked<State>,
 }
 
 impl MinerContext {
     pub fn new(
-        blockchain: Lock<Blockchain>,
+        blockchain: Locked<Blockchain>,
         control: ControlChannel,
         mode: OperatingModes,
         pools: Pools,
@@ -32,7 +33,7 @@ impl MinerContext {
         state: &State,
     ) -> Self {
         let channels = Channels::from(control);
-        let state = Lock::from(state);
+        let state = Locked::new(state.clone().into());
         Self {
             blockchain,
             channels,
@@ -53,7 +54,7 @@ impl Default for MinerContext {
         let pools = Pools::default();
         let server = ServerHandle::default();
         let state = State::default();
-        Self::new(Lock::new(chain), cc, mode, pools, server, &state)
+        Self::new(Locked::new(chain.into()), cc, mode, pools, server, &state)
     }
 }
 
@@ -77,7 +78,7 @@ impl From<Blockchain> for MinerContext {
         let pools = Pools::default();
         let server = ServerHandle::default();
         let state = State::default();
-        Self::new(Lock::new(data), cc, mode, pools, server, &state)
+        Self::new(Locked::new(data.into()), cc, mode, pools, server, &state)
     }
 }
 

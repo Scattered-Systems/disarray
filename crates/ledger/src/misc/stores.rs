@@ -9,7 +9,19 @@ use scsys::prelude::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 
 ///
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, SerdeDisplay, Serialize)]
+#[derive(
+    Clone,
+    Debug,
+    Default,
+    Deserialize,
+    Eq,
+    Hash,
+    Ord,
+    PartialEq,
+    PartialOrd,
+    SerdeDisplay,
+    Serialize,
+)]
 pub struct BlockStore<T: Clone = H256>(pub Vec<T>);
 
 impl<T: Clone> MMRStore<T> for BlockStore<T> {

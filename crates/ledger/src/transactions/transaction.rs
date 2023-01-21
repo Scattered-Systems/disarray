@@ -4,8 +4,8 @@
     Description: ... summary ...
 */
 use super::{sign, validate_transaction_signature};
-use ring::signature::{self, Ed25519KeyPair};
 use decanter::prelude::{Hash, Hashable, H160};
+use ring::signature::{self, Ed25519KeyPair};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]

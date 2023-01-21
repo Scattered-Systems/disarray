@@ -9,8 +9,8 @@ pub(crate) mod utils {
         transactions::{generate_random_signed_transaction, SignedTransaction},
     };
     use algae::merkle::{MerkleTree, MerkleTreeWrapper};
-    use rand::Rng;
     use decanter::prelude::generate_random_hash;
+    use rand::Rng;
     use scsys::prelude::Timestamp;
 
     pub fn generate_random_block_content() -> BlockContent {

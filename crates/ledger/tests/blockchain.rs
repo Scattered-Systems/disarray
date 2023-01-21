@@ -1,7 +1,11 @@
 #[cfg(test)]
 mod tests {
-    use disarray_ledger::{blockchains::*, blocks::*};
-    use scsys::prelude::{generate_random_hash, hasher, Timestamp, H256};
+    use decanter::prelude::{generate_random_hash, hasher, H256};
+    use disarray_ledger::blocks::{
+        generate_random_block, generate_random_pos_block, Block, BlockType, CoreBlockWrapperExt,
+    };
+    use disarray_ledger::{Blockchain, ChainWrapper, ChainWrapperExt};
+    use scsys::prelude::Timestamp;
 
     #[test]
     fn test_block_gen_random() {

@@ -9,7 +9,7 @@ use decanter::prelude::{Hashable, H256};
 use scsys::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, SerdeDisplay, Serialize)]
 pub struct BlockContent {
     pub data: Vec<SignedTransaction>,
     pub reference: Vec<H256>,

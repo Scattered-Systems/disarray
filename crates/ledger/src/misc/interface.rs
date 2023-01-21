@@ -4,14 +4,15 @@
     Description:
         ... Summary ...
 */
-use super::{BlockMetadata, Epoch, Position};
-use crate::blocks::*;
 use crate::{
-    blockchains::{BlockStore, Merger},
-    BlockTs,
+    blocks::{
+        generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec, Resistable,
+        Verifiable,
+    },
+    BlockData, BlockStore, BlockTs, Epoch, Merger, Position,
 };
 use ckb_merkle_mountain_range::MMR;
-use decanter::prelude::{Hash, Hashable, H256};
+use decanter::prelude::{Hashable, H256};
 use std::collections::{HashMap, HashSet};
 
 pub trait GenesisBlock {
@@ -21,7 +22,7 @@ pub trait GenesisBlock {
 }
 
 pub trait CoreChainSpec {
-    fn chain(&self) -> &HashMap<H256, BlockMetadata>;
+    fn chain(&self) -> &HashMap<H256, BlockData>;
     fn epoch(&self) -> &Epoch;
     fn tip(&self) -> H256;
     fn lead(&self) -> u128;
@@ -32,7 +33,7 @@ pub trait CoreChainSpec {
 }
 
 pub trait ChainWrapper: CoreChainSpec {
-    fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockMetadata) -> T) -> Option<T> {
+    fn chain_fetch<T>(&self, data: &H256, catalyst: fn(&BlockData) -> T) -> Option<T> {
         self.chain().get(data).map(catalyst)
     }
     fn chain_size(&self) -> usize {
@@ -60,24 +61,24 @@ pub trait ChainWrapper: CoreChainSpec {
 pub trait ChainWrapperExt: ChainWrapper {
     ///
     fn find_one_block(&self, hash: &H256) -> Option<Block> {
-        let catalyst = |v: &BlockMetadata| v.block.clone();
+        let catalyst = |v: &BlockData| v.block.clone();
         self.chain_fetch(hash, catalyst)
     }
     ///
     fn find_one_depth(&self, hash: &H256) -> Option<u128> {
-        let catalyst = |v: &BlockMetadata| v.height;
+        let catalyst = |v: &BlockData| v.height;
         self.chain_fetch(hash, catalyst)
     }
     ///
     fn find_one_header(&self, hash: &H256) -> Option<BlockHeader> {
-        let catalyst = |v: &BlockMetadata| v.block.header().clone();
+        let catalyst = |v: &BlockData| v.block.header().clone();
         self.chain_fetch(hash, catalyst)
     }
     ///
     fn find_one_height(&self, height: u128) -> H256 {
         let mut curhash = self.tip();
         //let parent_hash: H256 = hash.clone();
-        let mut child: BlockMetadata;
+        let mut child: BlockData;
 
         loop {
             child = self.chain().get(&curhash).unwrap().clone();
@@ -88,8 +89,8 @@ pub trait ChainWrapperExt: ChainWrapper {
         }
     }
     ///
-    fn find_one_payload(&self, hash: &H256) -> Option<BlockMetadata> {
-        let catalyst = |v: &BlockMetadata| v.clone();
+    fn find_one_payload(&self, hash: &H256) -> Option<BlockData> {
+        let catalyst = |v: &BlockData| v.clone();
         self.chain_fetch(hash, catalyst)
     }
     /// Create a new blockchain
@@ -124,7 +125,7 @@ pub trait ChainWrapperExt: ChainWrapper {
     fn get_all_blocks_from_longest(&self) -> Vec<H256> {
         let mut blocks: Vec<H256> = vec![];
         let mut current_hash = self.tip();
-        let mut pdata: BlockMetadata;
+        let mut pdata: BlockData;
 
         loop {
             match self.chain().get(&current_hash) {
@@ -144,7 +145,7 @@ pub trait ChainWrapperExt: ChainWrapper {
         let mut blocks: Vec<H256> = vec![];
         let mut current_hash = self.tip();
         //let mut parent_hash;
-        let mut pdata: BlockMetadata;
+        let mut pdata: BlockData;
 
         loop {
             match self.chain().get(&current_hash) {

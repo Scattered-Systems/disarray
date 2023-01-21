@@ -1,6 +1,9 @@
 #[cfg(test)]
 mod tests {
-    use disarray_sdk::ledger::{blockchains::*, blocks::*};
+    use disarray_sdk::ledger::blocks::{
+        generate_random_block, generate_random_pos_block, Block, BlockType, CoreBlockWrapperExt,
+    };
+    use disarray_sdk::ledger::{Blockchain, ChainWrapper, ChainWrapperExt};
     use scsys::prelude::{generate_random_hash, hasher, Timestamp, H256};
 
     #[test]

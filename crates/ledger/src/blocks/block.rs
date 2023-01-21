@@ -3,10 +3,10 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use super::{
+use crate::blocks::{
     BlockContent, BlockHeader, BlockType, CoreBlockSpec, CoreBlockWrapper, CoreBlockWrapperExt,
 };
-use decanter::prelude::{Hash, Hashable,};
+use decanter::prelude::{Hash, Hashable};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 

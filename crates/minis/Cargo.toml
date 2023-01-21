@@ -16,10 +16,14 @@ version = "0.1.21" # TODO - Update cargo package version
 default = ["core", "extras", "wasm"]
 full = ["core", "extras", "wasm"]
 
-core = []
+core = [
+    "tokio/macros"
+]
 extras = []
 wasm = ["wasm-ext"]
-wasm-ext = []
+wasm-ext = [
+    "tokio_wasi/macros"
+]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -28,14 +32,15 @@ test = true
 [build-dependencies]
 
 [dependencies]
-decanter = { features = ["derive"], version = "0.1.2" }
+decanter = { features = ["derive", "wasm"], version = "0.1.2" }
 scsys = { features = ["full"], version = "0.1.40" }
 
 mio = "0.8"
 serde = { features = ["derive"], version = "1" }
 serde_json = "1"
 strum = { features = ["derive"], version = "0.24" }
-tokio = { features = ["macros"], version = "1" }
+tokio = { features = ["macros"], optional = true, version = "1" }
+tokio_wasi = { features = ["macros"], optional = true, version = "1.23" }
 
 [dev-dependencies]
 

@@ -3,11 +3,16 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-pub use self::{block::*, layers::*, misc::*, utils::*};
+pub use self::{
+    block::*, classification::*, difficulty::*, interface::*, justification::*, layers::*, utils::*,
+};
 
 pub(crate) mod block;
+pub(crate) mod classification;
+pub(crate) mod difficulty;
+pub(crate) mod interface;
+pub(crate) mod justification;
 pub(crate) mod layers;
-pub(crate) mod misc;
 
 pub(crate) mod utils {
     #![allow(clippy::too_many_arguments)]

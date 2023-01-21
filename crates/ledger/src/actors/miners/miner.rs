@@ -30,7 +30,8 @@ mod tests {
     use super::*;
     use crate::handles::servers::ServerHandle;
     use crate::miners::Pools;
-    use crate::{states::State, Blockchain, Lock};
+    use crate::{states::State, Blockchain};
+    use scsys::prelude::Locked;
 
     #[test]
     fn test_default() {
@@ -41,7 +42,7 @@ mod tests {
         let pools = Pools::default();
         let server = ServerHandle::default();
         let state = State::default();
-        let ctx = MinerContext::new(Lock::new(chain), cc, mode, pools, server, &state);
+        let ctx = MinerContext::new(Locked::new(chain.into()), cc, mode, pools, server, &state);
         let miner = Miner::new(ctx);
         assert!(miner.valid())
     }

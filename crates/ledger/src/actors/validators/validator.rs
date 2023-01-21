@@ -5,9 +5,11 @@
        ... Summary ...
 */
 use crate::blocks::BlockType;
+use decanter::prelude::{Hash, Hashable};
+use scsys::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct Validator {
     pub class: BlockType,
 }
@@ -15,12 +17,6 @@ pub struct Validator {
 impl Validator {
     pub fn new(class: BlockType) -> Self {
         Self { class }
-    }
-}
-
-impl std::fmt::Display for Validator {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
     }
 }
 

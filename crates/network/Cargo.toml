@@ -11,9 +11,25 @@ repository = "https://github.com/scattered-systems/disarray"
 version = "0.1.21" # TODO - Update the cargo package version
 
 [features]
-default = []
+default = [
+    "async", "minis"
+]
 
+async = [
+    "tokio/macros"
+]
 minis = ["disarray-minis/full"]
+
+wasm = [
+    "decanter/wasm",
+    "wasm-ext"
+]
+wasm-ext = [
+    "libp2p/wasm-bindgen",
+    "libp2p/wasm-ext",
+    "libp2p/wasm-ext-websocket",
+    "tokio_wasi/full"
+]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -22,16 +38,16 @@ test = true
 [build-dependencies]
 
 [dev-dependencies]
-disarray-core = { path = "../core" }
 
 [dependencies]
 algae = { features = ["full"], version = "0.1.15" }
-decanter = { features = ["derive"], version = "0.1.2" }
+decanter = { features = ["derive", "wasm"], version = "0.1.2" }
 scsys = { features = ["full"], version = "0.1.40" }
 
+disarray-ledger = { path = "../ledger", version = "0.1.21" }
+disarray-minis = { optional = true, path = "../minis", version = "0.1.21" }
+
 crossbeam = "0.8.2"
-disarray-ledger = { path = "../ledger", version = "0.1.20" }
-disarray-minis = { optional = true, path = "../minis", version = "0.1.20" }
 log = "0.4.17"
 mio = { features = ["os-ext", "os-poll", "net"], version = "0.8.5" }
 mio-extras = "2.0.6"
@@ -40,7 +56,8 @@ serde_json = "1"
 strum = { features = ["derive"], version = "0.24.1" }
 tracing = "0.1.37"
 tracing-subscriber = "0.3.16"
-tokio = { features = ["macros"], version = "1.22.0" }
+tokio = { features = ["macros"], optional = true, version = "1.24" }
+tokio_wasi = { features = ["full"], optional = true, version = "1.23" }
 
 [dependencies.libp2p]
 features = [
@@ -74,3 +91,7 @@ version = "0.50.0"
 [package.metadata.docs.rs]
 all-features = true
 rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

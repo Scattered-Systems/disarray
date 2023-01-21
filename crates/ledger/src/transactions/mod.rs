@@ -11,12 +11,12 @@ pub(crate) mod transaction;
 
 pub(crate) mod utils {
     use super::{sign, Sign, SignedTransaction, Transaction};
+    use decanter::prelude::{generate_random_hash, random_keypair};
     use rand::{self, Rng};
     use ring::signature::{
         self, Ed25519KeyPair, EdDSAParameters, KeyPair, Signature, UnparsedPublicKey,
         VerificationAlgorithm, ED25519,
     };
-    use decanter::prelude::{generate_random_hash, random_keypair};
 
     /// Validate the authenticity of a transaction's signature
     pub fn validate_transaction_signature(

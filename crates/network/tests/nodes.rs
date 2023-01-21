@@ -1,11 +1,9 @@
 #[cfg(test)]
-mod tests {
-    use disarray_network::nodes::Node;
+use disarray_network::nodes::Node;
 
-    #[test]
-    fn test_default_node() {
-        let a = Node::default();
-        let b = a.clone();
-        assert_eq!(&a.address, &b.address);
-    }
+#[test]
+fn test_default_node() {
+    let a = Node::default();
+    let b = a.clone();
+    assert_eq!(&a.address, &b.address);
 }

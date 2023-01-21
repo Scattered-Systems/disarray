@@ -14,9 +14,9 @@ version = "0.1.21" # TODO - Update the cargo package version
 
 [features]
 default = ["core", "ledger", "network", "runtime"]
-full = ["core", "ledger", "network", "runtime"]
 
-core = ["disarray-core/default", "disarray-core/full"]
+
+core = []
 
 ledger = ["disarray-ledger"]
 network = ["disarray-network"]
@@ -31,26 +31,10 @@ scsys = { features = ["full"], version = "0.1.33" }
 
 [build-dependencies]
 
-[dependencies.disarray-core]
-features = ["full"]
-optional = true
-path = "../core"
-version = "0.1.21"
-
-[dependencies.disarray-ledger]
-optional = true
-path = "../ledger"
-version = "0.1.21"
-
-[dependencies.disarray-network]
-optional = true
-path = "../network"
-version = "0.1.21"
-
-[dependencies.disarray-runtime]
-optional = true
-path = "../runtime"
-version = "0.1.21"
+[dependencies]
+disarray-ledger = { features = [], optional = true, path = "../ledger", version = "0.1.21" }
+disarray-network = { features = [], optional = true, path = "../network", version = "0.1.21" }
+disarray-runtime = { features = [], optional = true, path = "../runtime", version = "0.1.21" }
 
 [package.metadata.docs.rs]
 all-features = true

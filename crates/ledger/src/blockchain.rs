@@ -4,17 +4,15 @@
     Description:
         ... Summary ...
 */
-use super::*;
 use crate::blocks::{generate_genesis_block, Block, BlockHeader, BlockHeaderSpec, CoreBlockSpec};
-
+use crate::{
+    BlockData, BlockStore, ChainMMR, ChainWrapper, ChainWrapperExt, CoreChainSpec, Epoch, Position,
+};
 use ckb_merkle_mountain_range::MMR;
 use decanter::prelude::{Hash, Hashable, H256};
 use rand::Rng;
 use scsys::prelude::Timestamp;
 use std::collections::HashMap;
-
-///
-pub type ChainMMR = MMR<H256, Merger, BlockStore<H256>>;
 
 #[derive(Hash)]
 /// Formally implements the ledger powering the network

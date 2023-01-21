@@ -9,7 +9,9 @@ use scsys::SerdeDisplay;
 use serde::{Deserialize, Serialize};
 
 /// A simple mechanism for merging hashes for compatability with ckb-merkle-mountian-range
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, Serialize, SerdeDisplay, PartialOrd)]
+#[derive(
+    Clone, Copy, Debug, Deserialize, Eq, Hash, Ord, PartialEq, Serialize, SerdeDisplay, PartialOrd,
+)]
 pub struct Merger;
 
 impl Merge for Merger {

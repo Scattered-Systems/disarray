@@ -10,9 +10,7 @@ use std::convert::From;
 // FlyClientQuery is the query sent from verifier to prover,
 // it contains the chain depth of a proposal and a sample of
 // blocks for proof. Note sample points are < query_depth - 1.
-#[derive(
-    Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize,
-)]
+#[derive(Clone, Debug, Default, Deserialize, Eq, Hash, Ord, PartialEq, PartialOrd, Serialize)]
 pub struct Query {
     pub depth: usize,
     pub sample: Vec<usize>,

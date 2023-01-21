@@ -3,7 +3,7 @@
    Contributors: FL03 <jo3mccain@icloud.com>
    Description: ... Summary ...
 */
-use decanter::prelude::{Hash, Hashable,};
+use decanter::prelude::{Hash, Hashable};
 use serde::{Deserialize, Serialize};
 
 pub trait SignatureWrapper {

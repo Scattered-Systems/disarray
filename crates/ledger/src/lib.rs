@@ -8,12 +8,14 @@
 extern crate hex_literal;
 
 #[doc(inline)]
-pub use crate::{actors::*, blockchain::*, core::*, misc::*, utils::*};
+pub use crate::{actors::*, blockchain::*, core::*, misc::*, mnhash::*, primitives::*, utils::*};
 
 pub(crate) mod actors;
 pub(crate) mod blockchain;
 pub(crate) mod core;
 pub(crate) mod misc;
+pub(crate) mod mnhash;
+pub(crate) mod primitives;
 pub(crate) mod utils;
 
 pub mod blocks;

@@ -3,8 +3,8 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-use crate::{Blockchain, ChainWrapperExt, Merger};
 use crate::blocks::BlockHeader;
+use crate::{Blockchain, ChainWrapperExt, Merger};
 use ckb_merkle_mountain_range::MerkleProof;
 use decanter::prelude::{Hashable, H256};
 

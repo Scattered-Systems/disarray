@@ -24,4 +24,3 @@ impl SpamRecorder {
         self.set.insert(t.into())
     }
 }
-

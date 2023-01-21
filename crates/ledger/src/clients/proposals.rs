@@ -3,10 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description:
 */
-use crate::{
-    Blockchain, ChainWrapper, ChainWrapperExt, CoreChainSpec,
-    blocks::BlockHeader,
-};
+use crate::{blocks::BlockHeader, Blockchain, ChainWrapper, ChainWrapperExt, CoreChainSpec};
 use decanter::prelude::{Hash, Hashable};
 use serde::{Deserialize, Serialize};
 

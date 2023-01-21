@@ -10,6 +10,17 @@ name = "disarray-ledger"
 repository = "https://github.com/scattered-systems/disarray"
 version = "0.1.21" # TODO - Update the cargo package version
 
+[features]
+default = [
+    "core"
+]
+core = [
+    "ring/default"
+]
+wasm = [
+    "ring/wasm32_c"
+]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 test = true
@@ -17,7 +28,6 @@ test = true
 [build-dependencies]
 
 [dev-dependencies]
-disarray-core = { path = "../core" }
 
 [dependencies]
 algae = { features = ["full"], version = "0.1.17" }
