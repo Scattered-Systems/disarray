@@ -3,6 +3,6 @@ mode = "development"
 [logger]
 level = "info"
 
-[server]
-host = "0.0.0.0"
+[network]
+mode = "mainnet"
 port = 9999

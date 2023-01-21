@@ -5,6 +5,6 @@
 */
 pub use self::{events::*, runtime::*};
 
-pub mod procs;
 pub(crate) mod events;
+pub mod procs;
 pub(crate) mod runtime;

@@ -7,7 +7,7 @@ use crate::{
     cli::{cmd::Commands, CommandLineInterface},
     Context, Settings,
 };
-use acme::prelude::{AsyncSpawnable, Session};
+use acme::prelude::Session;
 use clap::Parser;
 use scsys::prelude::{AsyncResult, Contextual};
 use std::sync::Arc;

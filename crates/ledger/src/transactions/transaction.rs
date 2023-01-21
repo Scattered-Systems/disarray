@@ -44,7 +44,7 @@ impl std::fmt::Display for Transaction {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use scsys::prelude::random_keypair;
+    use decanter::prelude::random_keypair;
 
     #[test]
     fn test_transaction_default() {

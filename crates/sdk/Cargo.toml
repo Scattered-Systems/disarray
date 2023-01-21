@@ -26,7 +26,8 @@ crate-type = ["cdylib", "rlib"]
 test = true
 
 [dev-dependencies]
-scsys = { features = ["full"], version = "0.1.33" }
+decanter = { features = ["derive"], version = "0.1.3" }
+scsys = { features = [], version = "0.1.41" }
 
 [build-dependencies]
 

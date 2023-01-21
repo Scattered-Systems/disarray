@@ -30,7 +30,6 @@ pub enum Events {
     Update = 9,
 }
 
-
 impl From<Events> for i64 {
     fn from(e: Events) -> i64 {
         e as i64

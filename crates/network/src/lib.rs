@@ -1,14 +1,15 @@
 /*
-   Appellation: disarray-ledger <library>
+   Appellation: disarray-network <library>
    Creator: FL03 <jo3mccain@icloud.com>
    Description:
        Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks.
 */
 #[doc(inline)]
-pub use crate::{primitives::*, results::*, utils::*};
+pub use crate::{primitives::*, results::*, settings::*, utils::*};
 
 pub(crate) mod primitives;
 pub(crate) mod results;
+pub(crate) mod settings;
 pub(crate) mod utils;
 
 pub mod behaviours;

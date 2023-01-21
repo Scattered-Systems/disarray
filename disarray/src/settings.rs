@@ -3,6 +3,8 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
+use disarray_sdk::prelude::NetworkSettings;
+
 use decanter::prelude::{Hash, Hashable};
 use scsys::prelude::config::{Config, Environment};
 use scsys::prelude::{
@@ -14,6 +16,7 @@ use serde::{Deserialize, Serialize};
 pub struct Settings {
     pub logger: Logger,
     pub mode: String,
+    pub network: NetworkSettings,
     pub server: Server,
 }
 
@@ -22,6 +25,7 @@ impl Settings {
         Self {
             logger: Default::default(),
             mode: mode.unwrap_or_else(|| String::from("production")),
+            network: Default::default(),
             server: Server::new("0.0.0.0".to_string(), 9999),
         }
     }
