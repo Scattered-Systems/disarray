@@ -58,7 +58,8 @@ jobs:
             ~/target/release/*.so
   features:
     if: ${{ github.event.inputs.publish }}
-    name: Features
+    name: Publish (features)
+    needs: build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -67,14 +68,13 @@ jobs:
           - disarray-minis
           - disarray-network
           - disarray-runtime
-          - disarray-sdk
     steps:
       - uses: actions/checkout@v3
       - name: Publish (${{matrix.package}})
         run: cargo publish --all-features -v -p ${{ matrix.package }} --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   sdk:
     if: ${{ github.event.inputs.publish }}
-    name: Publish
+    name: Publish (sdk)
     needs: features
     runs-on: ubuntu-latest
     steps:
