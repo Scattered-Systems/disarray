@@ -1,16 +1,15 @@
 [package]
-authors = ["FL03 <jo3mccain@icloud.com> (https://github.com)"]
-categories = []
 description = "acme-minis"
-edition = "2021"
-homepage = "https://github.com/scattered-systems/disarray/wiki/"
-keywords = ["async", "scsys"]
-license = "Apache-2.0"
 name = "disarray-minis"
 publish = true
-readme = "README.md"
-repository = "https://github.com/scattered-systems/disarray"
-version = "0.1.21" # TODO - Update cargo package version
+
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
 
 [features]
 default = ["core", "extras", "wasm"]
@@ -36,9 +35,10 @@ decanter = { features = ["derive", "wasm"], version = "0.1.2" }
 scsys = { features = ["full"], version = "0.1.40" }
 
 mio = "0.8"
-serde = { features = ["derive"], version = "1" }
-serde_json = "1"
-strum = { features = ["derive"], version = "0.24" }
+serde.workspace = true
+serde_json.workspace = true
+smart-default.workspace = true
+strum.workspace = true
 tokio = { features = ["macros"], optional = true, version = "1" }
 tokio_wasi = { features = ["macros"], optional = true, version = "1.23" }
 
