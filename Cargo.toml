@@ -24,7 +24,6 @@ exclude = [
 ]
 members = [
     "disarray",
-    "bin/api",
     "crates/ledger",
     "crates/minis",
     "crates/network",

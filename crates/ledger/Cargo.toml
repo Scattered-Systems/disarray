@@ -37,6 +37,7 @@ scsys = { features = ["full"], version = "0.1.41" }
 bincode = "1.3"
 blake3 = "1.3"
 bytes = "1.2"
+chrono = { features = [], version = "0.4" }
 ckb-merkle-mountain-range = "0.5"
 crossbeam = "0.8"
 digest = "0.10"

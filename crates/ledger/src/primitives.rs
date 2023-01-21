@@ -23,7 +23,6 @@ pub(crate) mod types {
     use crate::{BlockStore, Merger};
     use ckb_merkle_mountain_range::MMR;
     use decanter::prelude::{H160, H256};
-    use scsys::prelude::chrono;
     use std::collections::HashMap;
 
     /// Type alias for a block id; [i64]
