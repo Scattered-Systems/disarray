@@ -43,7 +43,7 @@ pub struct MainnetResponse(pub(crate) Vec<u8>);
 
 impl ProtocolName for MainnetProtocol {
     fn protocol_name(&self) -> &[u8] {
-        "/file-exchange/1".as_bytes()
+        "/disarray/9991".as_bytes()
     }
 }
 

@@ -1,5 +1,5 @@
 {
-  description = "A flake for building a Rust workspace using buildRustPackage.";
+  description = "A custom flake enabling consistent environments for Disarray";
 
   inputs = {
     rust-overlay.url = "github:oxalica/rust-overlay";
@@ -14,10 +14,12 @@
         code = pkgs.callPackage ./. { inherit nixpkgs system rust-overlay; };
       in rec {
         packages = {
-          default = pkgs.symlinkJoin {
+          disarray = code.disarray;
+          all = pkgs.symlinkJoin {
             name = "all";
-            paths = with code; [];
+            paths = with code; [ ];
           };
+          default = packages.all;
         };
       }
     );

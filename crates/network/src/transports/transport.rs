@@ -8,6 +8,28 @@ use crate::{AuthNoiseKeys, BoxedTransport, PeerId};
 
 use libp2p::{core::upgrade, mplex, noise, swarm::Swarm, tcp, Transport};
 
+pub fn tokio_transport(delay: bool, dh_keys: AuthNoiseKeys) -> BoxedTransport {
+    libp2p::tcp::tokio::Transport::new(libp2p::tcp::Config::default().nodelay(delay))
+        .upgrade(upgrade::Version::V1)
+        .authenticate(
+            noise::NoiseConfig::xx(dh_keys).into_authenticated()
+        )
+        .multiplex(mplex::MplexConfig::new())
+        .boxed()
+}
+
+pub struct Conduit {
+    pub swarm: Arc<Swarm<MainnetBehaviour>>,
+    pub transport: BoxedTransport
+}
+
+impl Conduit {
+    pub fn new(behaviour: MainnetBehaviour, pid: PeerId, transport: BoxedTransport) -> Self {
+        let swarm = Swarm::<MainnetBehaviour>::with_tokio_executor(transport, behaviour, pid);
+        Self { swarm: Arc::new(swarm), transport }
+    }
+}
+
 /// A functional wrapper for libp2p's Transport mechanism
 #[derive(Clone)]
 pub struct Transporter {
@@ -19,22 +41,11 @@ impl Transporter {
     pub fn new(delay: bool, dh_keys: AuthNoiseKeys) -> Self {
         Self { delay, dh_keys }
     }
-    pub fn setup(&self) -> BoxedTransport {
-        tcp::tokio::Transport::new(tcp::Config::default().nodelay(self.delay))
-            .upgrade(upgrade::Version::V1)
-            .authenticate(noise::NoiseConfig::xx(self.dh_keys.clone()).into_authenticated())
-            .multiplex(mplex::MplexConfig::new())
-            .boxed()
-    }
     pub fn swarm(&self, behaviour: MainnetBehaviour, pid: PeerId) -> Swarm<MainnetBehaviour> {
         Swarm::with_tokio_executor(self.transport(), behaviour, pid)
     }
     pub fn transport(&self) -> BoxedTransport {
-        tcp::tokio::Transport::new(tcp::Config::default().nodelay(self.delay))
-            .upgrade(upgrade::Version::V1)
-            .authenticate(noise::NoiseConfig::xx(self.dh_keys.clone()).into_authenticated())
-            .multiplex(mplex::MplexConfig::new())
-            .boxed()
+        tokio_transport(self.delay.clone(), self.dh_keys.clone())
     }
 }
 
@@ -44,11 +55,11 @@ impl std::convert::From<AuthNoiseKeys> for Transporter {
     }
 }
 
-// impl std::convert::From<BoxedTransport> for Transporter {
-//     fn from(value: BoxedTransport) -> Self {
-//         Self(value)
-//     }
-// }
+impl From<Transporter> for BoxedTransport {
+    fn from(t: Transporter) -> BoxedTransport {
+        self.transport()
+    }
+}
 
 #[cfg(test)]
 mod tests {

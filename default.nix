@@ -6,21 +6,14 @@ let
   };
 
   rustVersion = "1.66.0";
-  wasmUnknownUknown = "wasm32-unknown-unknown";
   wasmTarget = "wasm32-wasi";
 
-  rustDefaultTarget = rustPkgs.rust-bin.stable.${rustVersion}.default;
 
   rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 
   rustPlatform = makeRustPlatform {
-    cargo = rustDefaultTarget;
-    rustc = rustDefaultTarget;
-  };
-
-  rustPlatformWasm = makeRustPlatform {
     cargo = rustWithWasmTarget;
     rustc = rustWithWasmTarget;
   };
@@ -37,7 +30,15 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  workspace = pkgs.rustPlatformWasm.buildRustPackage (common // {
-    cargoBuildFlags = "--release --workspace";
+  disarray = rustPlatform.buildRustPackage (common // {
+    pname = "disarray";
+
+    buildPhase = ''
+      cargo build --release --workspace
+    '';  
+    installPhase = ''
+      mkdir -p $out/lib
+      cp target/release/disarray $out/lib/
+    '';  
   });
 }
