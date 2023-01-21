@@ -4,9 +4,14 @@ env:
   CARGO_TERM_COLOR: always
 
 on:
+  pull_request:
+    branches: [ "main", "master", "prod" ]
+    tags: [ "v*.*.*" ]
   push:
     branches: [ "main", "master", "prod" ]
     tags: [ "v*.*.*" ]
+  release:
+    types: [created, published]
   schedule:
     - cron: "30 9 * * *"
   workflow_dispatch:
@@ -23,21 +28,43 @@ jobs:
     strategy:
       matrix:
         toolchain: [ stable, nightly ]
+        target: [ wasm32-unknown-unknown, wasm32-wasi ]
         platform: [ macos-latest, ubuntu-latest, windows-latest ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: rustup update ${{ matrix.toolchain }} && rustup default ${{ matrix.toolchain }}
-      - run: cargo build -v
-      - run: cargo test --all --all-features -v
+      - name: Setup
+        if: matrix.platform == 'ubuntu-latest'
+        run: |
+          sudo apt update -y
+          sudo apt install -y protobuf-compiler
+      - name: Setup (langspace)
+        if: matrix.toolchain == 'nightly'
+        run: |
+            rustup update
+            rustup default nightly
+            rustup target add ${{ matrix.target }}
+      - name: Build
+        run: cargo build --release -v
+      - name: Test
+        run: cargo test --all --release -v
+      - name: Cache
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-build
+        with:
+          key: ${{ env.cache-name }}
+          path: |
+            ~/target/release/disarray*
+            ~/target/release/*.rlib
+            ~/target/release/*.so
   features:
-    if: ${{ github.event.inputs.publish }}
+    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
     name: Features
     runs-on: ubuntu-latest
     strategy:
       matrix:
         package:
-          - disarray-core
           - disarray-ledger
           - disarray-minis
           - disarray-network
@@ -48,7 +75,7 @@ jobs:
       - name: Publish (${{matrix.package}})
         run: cargo publish --all-features -v -p ${{ matrix.package }} --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   sdk:
-    if: ${{ github.event.inputs.publish }}
+    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
     name: Publish
     needs: features
     runs-on: ubuntu-latest
@@ -57,7 +84,7 @@ jobs:
       - name: Publish (disarray-sdk)
         run: cargo publish --all-features -v -p disarray-sdk --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
   publish:
-    if: ${{ github.event.inputs.publish }}
+    if: ${{ github.event.inputs.publish }} || ${{ github.event.release.published }}
     name: Publish
     needs: [ features, sdk ]
     runs-on: ubuntu-latest
