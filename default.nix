@@ -30,15 +30,7 @@ let
     PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
 in {
-  disarray = rustPlatform.buildRustPackage (common // {
-    pname = "disarray";
-
-    buildPhase = ''
-      cargo build --release --workspace
-    '';  
-    installPhase = ''
-      mkdir -p $out/lib
-      cp target/release/disarray $out/lib/
-    '';  
+  workspace = pkgs.rustPlatform.buildRustPackage (common // {
+    cargoBuildFlags = "--release --workspace";
   });
 }

@@ -3,7 +3,9 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use super::{Command, MainnetBehaviour, MainnetRequest, MainnetResponse};
+use super::{Command, MainnetBehaviour};
+use crate::protocol::reqres::{MainnetRequest, MainnetResponse};
+
 use futures::channel::{mpsc, oneshot};
 use futures::StreamExt;
 use libp2p::core::{either::EitherError, PeerId};

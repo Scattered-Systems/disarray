@@ -14,7 +14,7 @@
         code = pkgs.callPackage ./. { inherit nixpkgs system rust-overlay; };
       in rec {
         packages = {
-          disarray = code.disarray;
+          workspace = code.workspace;
           all = pkgs.symlinkJoin {
             name = "all";
             paths = with code; [ ];

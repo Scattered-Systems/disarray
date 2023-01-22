@@ -66,8 +66,10 @@ impl TryFrom<u8> for Peer {
             Ok(sk) => {
                 let keypair = PeerKp::Ed25519(sk.into());
                 Ok(Peer::from(keypair))
-            },
-            Err(e) => panic!("Failed to decode the provided seed into a valid keypair: {}", e)
+            }
+            Err(e) => panic!(
+                "Failed to decode the provided seed into a valid keypair: {e}"
+            ),
         }
     }
 }

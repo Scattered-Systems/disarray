@@ -17,6 +17,7 @@ pub mod contexts;
 pub mod messages;
 pub mod nodes;
 pub mod peers;
+pub mod protocol;
 pub mod providers;
 pub mod signals;
 pub mod states;

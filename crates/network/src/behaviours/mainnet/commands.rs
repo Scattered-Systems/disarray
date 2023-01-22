@@ -3,7 +3,8 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use super::MainnetResponse;
+use crate::protocol::reqres::MainnetResponse;
+
 use futures::channel::oneshot;
 use libp2p::core::{Multiaddr, PeerId};
 use libp2p::request_response::ResponseChannel;
