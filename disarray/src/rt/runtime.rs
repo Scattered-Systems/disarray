@@ -13,13 +13,17 @@ use scsys::prelude::{AsyncResult, Contextual};
 use std::sync::Arc;
 use tokio::task::JoinHandle;
 
+use disarray_sdk::ledger::Blockchain;
+use disarray_sdk::net::Network;
+
 pub async fn handle() -> JoinHandle<AsyncResult> {
     tokio::spawn(async move { Ok(()) })
 }
 
-#[derive(Clone, Debug)]
+#[derive()]
 pub struct Runtime {
     pub cli: Arc<CommandLineInterface>,
+    pub chain: Arc<Blockchain>,
     pub ctx: Arc<Context>,
     pub session: Session,
 }
@@ -27,23 +31,32 @@ pub struct Runtime {
 impl Runtime {
     pub fn new(ctx: Arc<Context>) -> Self {
         let cli = Arc::new(CommandLineInterface::parse());
+        let chain = Arc::new(Blockchain::default());
         let session = Session::default();
-        Self { cli, ctx, session }
+        Self {
+            cli,
+            chain,
+            ctx,
+            session,
+        }
     }
-    pub async fn handler(&self) -> AsyncResult<&Self> {
+    pub async fn handler(&self) -> AsyncResult {
         let cli = self.cli.clone();
+        let chain = self.chain.clone();
+        let net = Arc::new(Network::default());
 
         if let Some(cmd) = cli.command() {
             match cmd {
                 Commands::System(sys) => {
                     if sys.up {
                         tracing::info!("Message Recieved: System initializing...");
+                        net.spawn().await?;
                     }
                 }
             }
         }
 
-        Ok(self)
+        Ok(())
     }
 }
 

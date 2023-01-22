@@ -10,14 +10,14 @@ use crate::protocol::{
 use async_trait::async_trait;
 use futures::prelude::*;
 use libp2p::core::upgrade::{read_length_prefixed, write_length_prefixed};
-use libp2p::request_response;
+use libp2p::request_response::RequestResponseCodec;
 use tokio::io;
 
 #[derive(Clone)]
 pub struct MainnetCodec();
 
 #[async_trait]
-impl request_response::RequestResponseCodec for MainnetCodec {
+impl RequestResponseCodec for MainnetCodec {
     type Protocol = MainnetProtocol;
     type Request = MainnetRequest;
     type Response = MainnetResponse;

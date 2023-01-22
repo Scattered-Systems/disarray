@@ -5,8 +5,9 @@
        Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks.
 */
 #[doc(inline)]
-pub use crate::{behaviour::*, primitives::*, settings::*, utils::*};
+pub use crate::{address::*, behaviour::*, primitives::*, settings::*, utils::*};
 
+pub(crate) mod address;
 pub(crate) mod behaviour;
 pub(crate) mod primitives;
 pub(crate) mod settings;
@@ -93,12 +94,12 @@ impl Network {
         tokio::spawn(network_event_loop.run());
 
         netclient
-            .start_listening(self.addr.clone())
+            .start_listening(self.addr.clone().into())
             .await
             .expect("Listening not to fail.");
 
         netclient
-            .dial(self.peer.id, self.addr.clone())
+            .dial(self.peer.id, self.addr.clone().into())
             .await
             .expect("Dial to succeed");
         Ok(())
@@ -116,7 +117,6 @@ impl Default for Network {
 
 impl From<Peer> for Network {
     fn from(data: Peer) -> Network {
-        let addr = "/ip4/0.0.0.0/tcp/9999".parse().unwrap();
-        Network::new(addr, data)
+        Network::new(Default::default(), data)
     }
 }

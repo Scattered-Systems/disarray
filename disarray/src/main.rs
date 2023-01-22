@@ -28,7 +28,7 @@ async fn main() -> AsyncResult {
     Ok(())
 }
 
-#[derive(Debug)]
+#[derive()]
 pub struct Application {
     pub channels: AppChannels,
     pub ctx: Arc<Context>,
