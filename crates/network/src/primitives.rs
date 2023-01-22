@@ -6,6 +6,18 @@
 */
 pub use self::{constants::*, types::*};
 
+pub enum ReadResult {
+    Continue,
+    Message(Vec<u8>),
+    EOF,
+}
+
+pub enum WriteResult {
+    Complete,
+    EOF,
+    ChanClosed,
+}
+
 pub(crate) mod constants {
     ///
     pub const MAX_INCOMING_CLIENT: usize = 256;

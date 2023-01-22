@@ -11,6 +11,18 @@ use decanter::prelude::{Hash, Hashable, H256};
 use scsys::prelude::fnl_remove;
 use serde::{Deserialize, Serialize};
 
+#[derive(Clone, Debug)]
+pub enum ControlSignal {
+    ConnectNewPeer(ConnectRequest),
+    BroadcastMessage(Message),
+}
+
+#[derive(Clone, Debug)]
+pub struct ConnectRequest {
+    pub addr: std::net::SocketAddr,
+    // pub result_chan: crossbeam::channel::Sender<std::io::Result<BaseHandle>>,
+}
+
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub enum Message {
     Ping(String),

@@ -4,8 +4,16 @@
    Description:
        ... Summary ...
 */
-use crate::{AuthNoiseKeys, BoxedTransport, PeerKp};
+use crate::{AuthNoiseKeys, BoxedTransport, NoiseKeys, NoiseResult, PeerKp};
 use libp2p::{core::upgrade, mplex, noise, tcp, Transport};
+
+pub fn authorize_peer(noise_keys: NoiseKeys, kp: PeerKp) -> NoiseResult {
+    noise_keys.into_authentic(&kp)
+}
+
+pub fn generate_noise_keys() -> NoiseKeys {
+    NoiseKeys::new()
+}
 
 pub fn tokio_transport_noise(delay: bool, dh_keys: AuthNoiseKeys) -> BoxedTransport {
     tcp::tokio::Transport::new(tcp::Config::default().nodelay(delay))

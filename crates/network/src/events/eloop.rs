@@ -3,27 +3,20 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use super::{Command, MainnetBehaviour};
+use crate::events::{Event, MainnetEvent};
 use crate::protocol::reqres::{MainnetRequest, MainnetResponse};
+use crate::{clients::Command, MainnetBehaviour};
 
 use futures::channel::{mpsc, oneshot};
 use futures::StreamExt;
 use libp2p::core::{either::EitherError, PeerId};
 use libp2p::kad::{GetProvidersOk, KademliaEvent, QueryId, QueryResult};
 use libp2p::multiaddr::Protocol;
-use libp2p::request_response::{self, RequestId, ResponseChannel};
+use libp2p::request_response::{self, RequestId};
 use libp2p::swarm::{ConnectionHandlerUpgrErr, Swarm, SwarmEvent};
 use std::collections::{hash_map, HashMap, HashSet};
 use std::error::Error;
 use tokio::io;
-
-#[derive(Debug)]
-pub enum Event {
-    InboundRequest {
-        request: String,
-        channel: ResponseChannel<MainnetResponse>,
-    },
-}
 
 pub struct EventLoop {
     swarm: Swarm<MainnetBehaviour>,
@@ -258,27 +251,5 @@ impl EventLoop {
                     .expect("Connection to peer to be still open.");
             }
         }
-    }
-}
-
-#[derive(Debug)]
-pub enum MainnetEvent {
-    RequestResponse(request_response::RequestResponseEvent<MainnetRequest, MainnetResponse>),
-    Kademlia(KademliaEvent),
-}
-
-impl From<request_response::RequestResponseEvent<MainnetRequest, MainnetResponse>>
-    for MainnetEvent
-{
-    fn from(
-        event: request_response::RequestResponseEvent<MainnetRequest, MainnetResponse>,
-    ) -> Self {
-        MainnetEvent::RequestResponse(event)
-    }
-}
-
-impl From<KademliaEvent> for MainnetEvent {
-    fn from(event: KademliaEvent) -> Self {
-        MainnetEvent::Kademlia(event)
     }
 }

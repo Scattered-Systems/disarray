@@ -6,10 +6,8 @@
     TODO:
         - Peer { id, keypair } Find a more convienent type aliases for storing and operability
 */
-use crate::{
-    peers::{PeerSpec, PeerWrapper, PeerWrapperExt},
-    PeerId, PeerKp,
-};
+use super::PeerWrapper;
+use crate::{PeerId, PeerKp};
 use libp2p::identity::ed25519;
 
 /// Implements the peer structure for the network
@@ -25,7 +23,7 @@ impl Peer {
     }
 }
 
-impl PeerSpec for Peer {
+impl PeerWrapper for Peer {
     fn id(&self) -> PeerId {
         self.id
     }
@@ -33,10 +31,6 @@ impl PeerSpec for Peer {
         self.keypair.clone()
     }
 }
-
-impl PeerWrapper for Peer {}
-
-impl PeerWrapperExt for Peer {}
 
 impl From<&[u8]> for Peer {
     fn from(data: &[u8]) -> Self {

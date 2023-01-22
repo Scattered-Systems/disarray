@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use super::MainnetEvent;
+use crate::events::MainnetEvent;
 use crate::protocol::codec::MainnetCodec;
 use libp2p::kad::{record::store::MemoryStore, Kademlia};
 use libp2p::request_response;
