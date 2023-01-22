@@ -4,8 +4,8 @@
     Description: ... summary ...
 */
 use crate::events::{Event, MainnetEvent};
-use crate::protocol::reqres::{MainnetRequest, MainnetResponse};
-use crate::{clients::Command, MainnetBehaviour};
+use crate::minis::reqres::{MainnetRequest, MainnetResponse};
+use crate::{clients::cmds::Command, MainnetBehaviour};
 
 use futures::channel::{mpsc, oneshot};
 use futures::StreamExt;

@@ -8,7 +8,7 @@ pub use self::{eloop::*, event::*};
 pub(crate) mod eloop;
 pub(crate) mod event;
 
-use crate::protocol::reqres::{MainnetRequest, MainnetResponse};
+use crate::minis::reqres::{MainnetRequest, MainnetResponse};
 
 use libp2p::kad::KademliaEvent;
 use libp2p::request_response;
