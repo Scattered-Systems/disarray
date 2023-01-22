@@ -214,24 +214,24 @@ impl EventLoop {
                     todo!("Already dialing peer.");
                 }
             }
-            Command::StartProviding(provider) => {
+            Command::StartProviding(actor) => {
                 let query_id = self
                     .swarm
                     .behaviour_mut()
                     .kademlia
-                    .start_providing(provider.fname.into_bytes().into())
+                    .start_providing(actor.fname.into_bytes().into())
                     .expect("No store error.");
                 self.pending
                     .start_providing
-                    .insert(query_id, provider.sender);
+                    .insert(query_id, actor.sender);
             }
-            Command::GetProviders(provider) => {
+            Command::GetProviders(actor) => {
                 let query_id = self
                     .swarm
                     .behaviour_mut()
                     .kademlia
-                    .get_providers(provider.fname.into_bytes().into());
-                self.pending.get_providers.insert(query_id, provider.sender);
+                    .get_providers(actor.fname.into_bytes().into());
+                self.pending.get_providers.insert(query_id, actor.sender);
             }
             Command::RequestFile(actor) => {
                 let request_id = self
