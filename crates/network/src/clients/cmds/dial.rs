@@ -8,7 +8,6 @@ use clap::Args;
 use libp2p::{Multiaddr, PeerId};
 use serde::{Deserialize, Serialize};
 
-
 #[derive(Args, Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 pub struct Dial {
     #[arg(long, short)]

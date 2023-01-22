@@ -9,7 +9,5 @@ pub use self::agent::Handshake;
 pub(crate) mod agent;
 
 pub(crate) mod state {
-    pub enum State {
-        
-    }
+    pub enum State {}
 }

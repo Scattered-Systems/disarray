@@ -49,15 +49,8 @@ tokio_wasi = { features = ["macros"], optional = true, version = "1.23" }
 
 [dependencies.libp2p]
 features = [
-    "autonat",
-    "dns",
-    "ecdsa",
-    "floodsub", 
-    "identify",
+    "floodsub",
     "kad",
-    "macros",
-    "mdns",
-    "metrics",
     "mplex",
     "ping",
     "pnet",

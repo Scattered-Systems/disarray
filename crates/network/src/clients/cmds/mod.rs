@@ -3,10 +3,12 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-pub use self::{dial::*, listen::*};
+pub use self::{dial::*, files::*, listen::*, provide::*};
 
 pub(crate) mod dial;
+pub(crate) mod files;
 pub(crate) mod listen;
+pub(crate) mod provide;
 
 use crate::minis::reqres::MainnetResponse;
 
@@ -21,13 +23,14 @@ pub type SendError = Box<dyn std::error::Error + Send>;
 pub type SendResult<T = ()> = Result<T, SendError>;
 pub type OneshotSender<T = SendResult> = oneshot::Sender<T>;
 
-
 #[derive(Clone, Debug, Subcommand)]
 pub enum Action {
     Dial(Dial),
-    Listen(Listen)
+    FileRequest(FileRequest),
+    FileResponse(FileResponse),
+    Listen(Listen),
+    Provide(Provide),
 }
-
 
 #[derive(Debug)]
 pub enum Command {

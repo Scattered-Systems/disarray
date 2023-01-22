@@ -5,9 +5,9 @@
        Disarray is a complete toolkit for building efficient EVM compatible Multi-Chain Networks.
 */
 #[doc(inline)]
-pub use disarray_minis as minis;
-#[doc(inline)]
 pub use crate::{address::*, behaviour::*, primitives::*, settings::*, utils::*};
+#[doc(inline)]
+pub use disarray_minis as minis;
 
 pub(crate) mod address;
 pub(crate) mod behaviour;
@@ -26,8 +26,8 @@ pub mod transports;
 
 use clients::Client;
 use events::{Event, EventLoop};
-use peers::Peer;
 use minis::{codec::MainnetCodec, MainnetProtocol};
+use peers::Peer;
 
 use futures::{channel::mpsc, Stream};
 use libp2p::kad::{record::store::MemoryStore, Kademlia};

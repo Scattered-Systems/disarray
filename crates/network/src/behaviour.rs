@@ -17,10 +17,7 @@ pub struct MainnetBehaviour {
 }
 
 impl MainnetBehaviour {
-    pub fn new(
-        reqres: RequestResponse<MainnetCodec>,
-        kademlia: Kademlia<MemoryStore>,
-    ) -> Self {
+    pub fn new(reqres: RequestResponse<MainnetCodec>, kademlia: Kademlia<MemoryStore>) -> Self {
         Self { reqres, kademlia }
     }
     // Get an owned instance of the Kademlia agents
