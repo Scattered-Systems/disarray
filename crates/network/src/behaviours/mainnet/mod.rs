@@ -30,31 +30,27 @@ use std::iter;
 pub async fn new(
     secret_key_seed: Option<u8>,
 ) -> Result<(Client, impl Stream<Item = Event>, EventLoop), Box<dyn std::error::Error>> {
+    // Initialize a new peer from the optional seed provided
     let peer = match secret_key_seed {
         Some(v) => crate::peers::Peer::try_from(v)?,
-        None => crate::peers::Peer::default()
+        None => crate::peers::Peer::default(),
     };
-    
-
-
-    let transport = crate::transports::tokio_transport(true, peer.clone().keypair);
-
-    // Build the Swarm, connecting the lower layer transport logic with the
-    // higher layer network behaviour logic.
-    let swarm = Swarm::with_threadpool_executor(
-        transport,
-        MainnetBehaviour {
-            kademlia: Kademlia::new(peer.clone().id, MemoryStore::new(peer.clone().id)),
-            reqres: request_response::RequestResponse::new(
-                MainnetCodec(),
-                iter::once((MainnetProtocol(), ProtocolSupport::Full)),
-                Default::default(),
-            ),
-        },
-        peer.id,
+    // Setup a transport using the initialized peer
+    let transport = crate::tokio_transport(true, peer.clone().keypair);
+    // Initialize the network behaviour
+    let behaviour = MainnetBehaviour::new(
+        request_response::RequestResponse::new(
+            MainnetCodec(),
+            iter::once((MainnetProtocol(), ProtocolSupport::Full)),
+            Default::default(),
+        ),
+        Kademlia::new(peer.clone().id, MemoryStore::new(peer.clone().id)),
     );
-
+    // Setup the Swarm; links the lower layer transport logic with the higher layer network behaviour logic
+    let swarm = Swarm::with_threadpool_executor(transport, behaviour, peer.id);
+    // Initialize a Sender / Receiver pair for the commands
     let (command_sender, command_receiver) = mpsc::channel(0);
+    // Initialize a Sender / Receiver pair for the events
     let (event_sender, event_receiver) = mpsc::channel(0);
 
     Ok((

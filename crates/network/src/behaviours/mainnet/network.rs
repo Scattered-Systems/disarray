@@ -24,6 +24,6 @@ impl Network {
         Self { peer }
     }
     pub fn transport(&self) -> BoxedTransport {
-        crate::transports::tokio_transport(true, self.peer.keypair.clone())
+        crate::tokio_transport(true, self.peer.keypair.clone())
     }
 }

@@ -17,5 +17,3 @@ impl ProtocolName for MainnetProtocol {
         "/disarray/9991".as_bytes()
     }
 }
-
-

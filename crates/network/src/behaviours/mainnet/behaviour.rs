@@ -9,7 +9,6 @@ use libp2p::kad::{record::store::MemoryStore, Kademlia};
 use libp2p::request_response;
 use libp2p::swarm::NetworkBehaviour;
 
-
 #[derive(NetworkBehaviour)]
 #[behaviour(out_event = "MainnetEvent")]
 pub struct MainnetBehaviour {
@@ -18,6 +17,12 @@ pub struct MainnetBehaviour {
 }
 
 impl MainnetBehaviour {
+    pub fn new(
+        reqres: request_response::RequestResponse<MainnetCodec>,
+        kademlia: Kademlia<MemoryStore>,
+    ) -> Self {
+        Self { reqres, kademlia }
+    }
     // Get an owned instance of the Kademlia agents
     pub fn kademlia(&self) -> &Kademlia<MemoryStore> {
         &self.kademlia
@@ -27,5 +32,3 @@ impl MainnetBehaviour {
         &self.reqres
     }
 }
-
-

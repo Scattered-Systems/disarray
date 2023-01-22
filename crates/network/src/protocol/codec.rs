@@ -3,7 +3,10 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use crate::protocol::{reqres::{MainnetRequest, MainnetResponse}, MainnetProtocol};
+use crate::protocol::{
+    reqres::{MainnetRequest, MainnetResponse},
+    MainnetProtocol,
+};
 use async_trait::async_trait;
 use futures::prelude::*;
 use libp2p::core::upgrade::{read_length_prefixed, write_length_prefixed};
