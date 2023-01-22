@@ -11,53 +11,49 @@ pub(crate) mod listen;
 pub(crate) mod provide;
 
 use crate::minis::reqres::MainnetResponse;
-
-use clap::Subcommand;
 use futures::channel::oneshot;
-use libp2p::core::{Multiaddr, PeerId};
 use libp2p::request_response::ResponseChannel;
-use scsys::AsyncResult;
+use libp2p::{Multiaddr, PeerId};
 use std::collections::HashSet;
 
+///
 pub type SendError = Box<dyn std::error::Error + Send>;
+///
 pub type SendResult<T = ()> = Result<T, SendError>;
+///
 pub type OneshotSender<T = SendResult> = oneshot::Sender<T>;
-
-#[derive(Clone, Debug, Subcommand)]
-pub enum Action {
-    Dial(Dial),
-    FileRequest(FileRequest),
-    FileResponse(FileResponse),
-    Listen(Listen),
-    Provide(Provide),
-}
 
 #[derive(Debug)]
 pub enum Command {
-    StartListening {
-        addr: Multiaddr,
-        sender: OneshotSender,
-    },
-    Dial {
-        peer_id: PeerId,
-        peer_addr: Multiaddr,
-        sender: OneshotSender,
-    },
-    StartProviding {
-        file_name: String,
-        sender: OneshotSender<()>,
-    },
-    GetProviders {
-        file_name: String,
-        sender: OneshotSender<HashSet<PeerId>>,
-    },
-    RequestFile {
-        file_name: String,
-        peer: PeerId,
+    StartListening(Listen),
+    Dial(Dial),
+    StartProviding(StartProvider),
+    GetProviders(GetProvider),
+    RequestFile(FileRequest),
+    RespondFile(FileResponse),
+}
+
+impl Command {
+    pub fn dial(addr: Multiaddr, pid: PeerId, sender: OneshotSender) -> Self {
+        Self::Dial(Dial::new(addr, pid, sender))
+    }
+    pub fn listen(addr: Multiaddr, sender: OneshotSender) -> Self {
+        Self::StartListening(Listen::new(addr, sender))
+    }
+    pub fn start_providing(fname: String, sender: OneshotSender<()>) -> Self {
+        Self::StartProviding(StartProvider::new(fname, sender))
+    }
+    pub fn get_providers(fname: String, sender: OneshotSender<HashSet<PeerId>>) -> Self {
+        Self::GetProviders(GetProvider::new(fname, sender))
+    }
+    pub fn request_file(
+        addr: String,
+        pid: PeerId,
         sender: OneshotSender<SendResult<Vec<u8>>>,
-    },
-    RespondFile {
-        file: Vec<u8>,
-        channel: ResponseChannel<MainnetResponse>,
-    },
+    ) -> Self {
+        Self::RequestFile(FileRequest::new(addr, pid, sender))
+    }
+    pub fn respond_file(file: Vec<u8>, channel: ResponseChannel<MainnetResponse>) -> Self {
+        Self::RespondFile(FileResponse::new(file, channel))
+    }
 }

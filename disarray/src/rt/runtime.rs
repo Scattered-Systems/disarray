@@ -14,10 +14,15 @@ use std::sync::Arc;
 use tokio::task::JoinHandle;
 
 use disarray_sdk::ledger::Blockchain;
-use disarray_sdk::net::Network;
+use disarray_sdk::net::{clients::cmds, Network};
 
 pub async fn handle() -> JoinHandle<AsyncResult> {
     tokio::spawn(async move { Ok(()) })
+}
+
+/// The runtime fabric encapsulates all of the active layers of the system
+pub struct Fabric {
+    pub network: Arc<cmds::Command>,
 }
 
 #[derive()]
@@ -42,7 +47,7 @@ impl Runtime {
     }
     pub async fn handler(&self) -> AsyncResult {
         let cli = self.cli.clone();
-        let chain = self.chain.clone();
+        let _chain = self.chain.clone();
         let net = Arc::new(Network::default());
 
         if let Some(cmd) = cli.command() {

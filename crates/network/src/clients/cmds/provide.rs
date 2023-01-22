@@ -4,28 +4,29 @@
     Description: ... summary ...
 */
 use super::OneshotSender;
-use clap::Args;
+
 use libp2p::PeerId;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
-#[derive(Args, Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
-pub struct Provide {
-    #[arg(long, short)]
+#[derive(Debug)]
+pub struct GetProvider {
     pub fname: String,
+    pub sender: OneshotSender<HashSet<PeerId>>,
 }
 
-impl Provide {
-    pub fn file_name(&self) -> String {
-        self.fname.clone()
+impl GetProvider {
+    pub fn new(fname: String, sender: OneshotSender<HashSet<PeerId>>) -> Self {
+        Self { fname, sender }
     }
-    pub fn get(
-        &self,
-        sender: OneshotSender<HashSet<PeerId>>,
-    ) -> (String, OneshotSender<HashSet<PeerId>>) {
-        (self.file_name(), sender)
-    }
-    pub fn start(&self, sender: OneshotSender<()>) -> (String, OneshotSender<()>) {
-        (self.file_name(), sender)
+}
+#[derive(Debug)]
+pub struct StartProvider {
+    pub fname: String,
+    pub sender: OneshotSender<()>,
+}
+
+impl StartProvider {
+    pub fn new(fname: String, sender: OneshotSender<()>) -> Self {
+        Self { fname, sender }
     }
 }

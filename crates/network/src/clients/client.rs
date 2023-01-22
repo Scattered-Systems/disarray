@@ -24,7 +24,7 @@ impl Client {
     pub async fn start_listening(&mut self, addr: Multiaddr) -> Result<(), Box<dyn Error + Send>> {
         let (sender, receiver) = oneshot::channel();
         self.sender
-            .try_send(Command::StartListening { addr, sender })
+            .try_send(Command::listen(addr, sender))
             .expect("Command receiver not to be dropped.");
         receiver.await.expect("Sender not to be dropped.")
     }
@@ -37,11 +37,7 @@ impl Client {
     ) -> Result<(), Box<dyn Error + Send>> {
         let (sender, receiver) = oneshot::channel();
         self.sender
-            .try_send(Command::Dial {
-                peer_id,
-                peer_addr,
-                sender,
-            })
+            .try_send(Command::dial(peer_addr, peer_id, sender))
             .expect("Command receiver not to be dropped.");
         receiver.await.expect("Sender not to be dropped.")
     }
@@ -50,7 +46,7 @@ impl Client {
     pub async fn start_providing(&mut self, file_name: String) {
         let (sender, receiver) = oneshot::channel();
         self.sender
-            .try_send(Command::StartProviding { file_name, sender })
+            .try_send(Command::start_providing(file_name, sender))
             .expect("Command receiver not to be dropped.");
         receiver.await.expect("Sender not to be dropped.");
     }
@@ -59,7 +55,7 @@ impl Client {
     pub async fn get_providers(&mut self, file_name: String) -> HashSet<PeerId> {
         let (sender, receiver) = oneshot::channel();
         self.sender
-            .try_send(Command::GetProviders { file_name, sender })
+            .try_send(Command::get_providers(file_name, sender))
             .expect("Command receiver not to be dropped.");
         receiver.await.expect("Sender not to be dropped.")
     }
@@ -72,11 +68,7 @@ impl Client {
     ) -> Result<Vec<u8>, Box<dyn Error + Send>> {
         let (sender, receiver) = oneshot::channel();
         self.sender
-            .try_send(Command::RequestFile {
-                file_name,
-                peer,
-                sender,
-            })
+            .try_send(Command::request_file(file_name, peer, sender))
             .expect("Command receiver not to be dropped.");
         receiver.await.expect("Sender not be dropped.")
     }
@@ -84,7 +76,7 @@ impl Client {
     /// Respond with the provided file content to the given request.
     pub async fn respond_file(&mut self, file: Vec<u8>, channel: ResponseChannel<MainnetResponse>) {
         self.sender
-            .try_send(Command::RespondFile { file, channel })
+            .try_send(Command::respond_file(file, channel))
             .expect("Command receiver not to be dropped.");
     }
 }

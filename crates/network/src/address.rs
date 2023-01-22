@@ -51,7 +51,7 @@ impl TryFrom<String> for NetworkAddress {
     type Error = libp2p::multiaddr::Error;
 
     fn try_from(value: String) -> Result<Self, Self::Error> {
-        let addr: libp2p::Multiaddr = value.to_string().parse()?;
+        let addr: libp2p::Multiaddr = value.parse()?;
         Ok(Self::from(addr))
     }
 }

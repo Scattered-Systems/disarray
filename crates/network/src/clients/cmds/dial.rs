@@ -4,20 +4,21 @@
     Description: ... summary ...
 */
 use super::OneshotSender;
-use clap::Args;
 use libp2p::{Multiaddr, PeerId};
-use serde::{Deserialize, Serialize};
 
-#[derive(Args, Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Debug)]
 pub struct Dial {
-    #[arg(long, short)]
     pub addr: Multiaddr,
-    #[arg(long, short)]
     pub peer_id: PeerId,
+    pub sender: OneshotSender,
 }
 
 impl Dial {
-    pub fn dial(&self, sender: OneshotSender) -> (Multiaddr, PeerId, OneshotSender) {
-        (self.addr.clone(), self.peer_id.clone(), sender)
+    pub fn new(addr: Multiaddr, peer_id: PeerId, sender: OneshotSender) -> Self {
+        Self {
+            addr,
+            peer_id,
+            sender,
+        }
     }
 }
