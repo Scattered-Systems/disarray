@@ -18,15 +18,19 @@ use std::collections::{hash_map, HashMap, HashSet};
 use std::error::Error;
 use tokio::io;
 
+#[derive(Default)]
+pub struct Pending {
+    dial: HashMap<PeerId, oneshot::Sender<Result<(), Box<dyn Error + Send>>>>,
+    start_providing: HashMap<QueryId, oneshot::Sender<()>>,
+    get_providers: HashMap<QueryId, oneshot::Sender<HashSet<PeerId>>>,
+    request_file: HashMap<RequestId, oneshot::Sender<Result<Vec<u8>, Box<dyn Error + Send>>>>,
+}
+
 pub struct EventLoop {
     swarm: Swarm<MainnetBehaviour>,
     command_receiver: mpsc::Receiver<Command>,
     event_sender: mpsc::Sender<Event>,
-    pending_dial: HashMap<PeerId, oneshot::Sender<Result<(), Box<dyn Error + Send>>>>,
-    pending_start_providing: HashMap<QueryId, oneshot::Sender<()>>,
-    pending_get_providers: HashMap<QueryId, oneshot::Sender<HashSet<PeerId>>>,
-    pending_request_file:
-        HashMap<RequestId, oneshot::Sender<Result<Vec<u8>, Box<dyn Error + Send>>>>,
+    pending: Pending,
 }
 
 impl EventLoop {
@@ -39,10 +43,7 @@ impl EventLoop {
             swarm,
             command_receiver,
             event_sender,
-            pending_dial: Default::default(),
-            pending_start_providing: Default::default(),
-            pending_get_providers: Default::default(),
-            pending_request_file: Default::default(),
+            pending: Default::default(),
         }
     }
 
@@ -75,7 +76,8 @@ impl EventLoop {
                 },
             )) => {
                 let sender: oneshot::Sender<()> = self
-                    .pending_start_providing
+                    .pending
+                    .start_providing
                     .remove(&id)
                     .expect("Completed query to be previously pending.");
                 let _ = sender.send(());
@@ -90,7 +92,7 @@ impl EventLoop {
                     ..
                 },
             )) => {
-                if let Some(sender) = self.pending_get_providers.remove(&id) {
+                if let Some(sender) = self.pending.get_providers.remove(&id) {
                     sender.send(providers).expect("Receiver not to be dropped");
 
                     // Finish the query. We are only interested in the first result.
@@ -130,7 +132,8 @@ impl EventLoop {
                     response,
                 } => {
                     let _ = self
-                        .pending_request_file
+                        .pending
+                        .request_file
                         .remove(&request_id)
                         .expect("Request to still be pending.")
                         .send(Ok(response.0));
@@ -142,7 +145,8 @@ impl EventLoop {
                 },
             )) => {
                 let _ = self
-                    .pending_request_file
+                    .pending
+                    .request_file
                     .remove(&request_id)
                     .expect("Request to still be pending.")
                     .send(Err(Box::new(error)));
@@ -162,7 +166,7 @@ impl EventLoop {
                 peer_id, endpoint, ..
             } => {
                 if endpoint.is_dialer() {
-                    if let Some(sender) = self.pending_dial.remove(&peer_id) {
+                    if let Some(sender) = self.pending.dial.remove(&peer_id) {
                         let _ = sender.send(Ok(()));
                     }
                 }
@@ -170,7 +174,7 @@ impl EventLoop {
             SwarmEvent::ConnectionClosed { .. } => {}
             SwarmEvent::OutgoingConnectionError { peer_id, error, .. } => {
                 if let Some(peer_id) = peer_id {
-                    if let Some(sender) = self.pending_dial.remove(&peer_id) {
+                    if let Some(sender) = self.pending.dial.remove(&peer_id) {
                         let _ = sender.send(Err(Box::new(error)));
                     }
                 }
@@ -194,7 +198,7 @@ impl EventLoop {
                 peer_addr,
                 sender,
             } => {
-                if let hash_map::Entry::Vacant(e) = self.pending_dial.entry(peer_id) {
+                if let hash_map::Entry::Vacant(e) = self.pending.dial.entry(peer_id) {
                     self.swarm
                         .behaviour_mut()
                         .kademlia
@@ -221,7 +225,7 @@ impl EventLoop {
                     .kademlia
                     .start_providing(file_name.into_bytes().into())
                     .expect("No store error.");
-                self.pending_start_providing.insert(query_id, sender);
+                self.pending.start_providing.insert(query_id, sender);
             }
             Command::GetProviders { file_name, sender } => {
                 let query_id = self
@@ -229,7 +233,7 @@ impl EventLoop {
                     .behaviour_mut()
                     .kademlia
                     .get_providers(file_name.into_bytes().into());
-                self.pending_get_providers.insert(query_id, sender);
+                self.pending.get_providers.insert(query_id, sender);
             }
             Command::RequestFile {
                 file_name,
@@ -241,7 +245,7 @@ impl EventLoop {
                     .behaviour_mut()
                     .reqres
                     .send_request(&peer, MainnetRequest(file_name));
-                self.pending_request_file.insert(request_id, sender);
+                self.pending.request_file.insert(request_id, sender);
             }
             Command::RespondFile { file, channel } => {
                 self.swarm

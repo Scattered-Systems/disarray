@@ -52,8 +52,6 @@ pub(crate) mod types {
     pub type BoxedTransport = Boxed<(PeerId, StreamMuxerBox)>;
     /// Type alias for [libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>]
     pub type KademliaMS = libp2p::kad::Kademlia<libp2p::kad::store::MemoryStore>;
-    /// Type alias for [libp2p::Multiaddr]
-    pub type NetworkAddress = libp2p::Multiaddr;
     /// Type alias for [libp2p::noise::Keypair<libp2p::noise::X25519Spec>]
     pub type NoiseKeys = libp2p::noise::Keypair<NoiseSpec>;
     ///
