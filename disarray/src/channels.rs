@@ -14,6 +14,15 @@ pub type OneshotChannels<T> = (oneshot::Sender<T>, oneshot::Receiver<T>);
 /// Type alias for an async unbounded mpsc sender / receiver tuple; [broadcast::Sender<T>], [broadcast::Receiver<T>]
 pub type UnboundedMPSC<T> = (mpsc::UnboundedSender<T>, mpsc::UnboundedReceiver<T>);
 
+trait ChannelPack<T> {
+    type Receiver;
+    type Sender;
+
+    fn message(&self) -> T;
+    fn receiver(&self) -> Self::Receiver;
+    fn sender(&self) -> Self::Sender;
+}
+
 #[derive(Debug)]
 pub struct AppChannels {
     pub ctx: BroadcastChannels<Context>,

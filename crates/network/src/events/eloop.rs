@@ -4,8 +4,8 @@
     Description: ... summary ...
 */
 use crate::events::{Event, MainnetEvent};
-use crate::protocol::reqres::{MainnetRequest, MainnetResponse};
-use crate::{clients::Command, MainnetBehaviour};
+use crate::minis::reqres::{MainnetRequest, MainnetResponse};
+use crate::{clients::cmds::Command, MainnetBehaviour};
 
 use futures::channel::{mpsc, oneshot};
 use futures::StreamExt;
@@ -187,71 +187,65 @@ impl EventLoop {
 
     async fn handle_command(&mut self, command: Command) {
         match command {
-            Command::StartListening { addr, sender } => {
-                let _ = match self.swarm.listen_on(addr) {
-                    Ok(_) => sender.send(Ok(())),
-                    Err(e) => sender.send(Err(Box::new(e))),
+            Command::StartListening(actor) => {
+                let _ = match self.swarm.listen_on(actor.addr) {
+                    Ok(_) => actor.sender.send(Ok(())),
+                    Err(e) => actor.sender.send(Err(Box::new(e))),
                 };
             }
-            Command::Dial {
-                peer_id,
-                peer_addr,
-                sender,
-            } => {
-                if let hash_map::Entry::Vacant(e) = self.pending.dial.entry(peer_id) {
+            Command::Dial(actor) => {
+                if let hash_map::Entry::Vacant(e) = self.pending.dial.entry(actor.peer_id) {
                     self.swarm
                         .behaviour_mut()
                         .kademlia
-                        .add_address(&peer_id, peer_addr.clone());
+                        .add_address(&actor.peer_id, actor.addr.clone());
                     match self
                         .swarm
-                        .dial(peer_addr.with(Protocol::P2p(peer_id.into())))
+                        .dial(actor.addr.with(Protocol::P2p(actor.peer_id.into())))
                     {
                         Ok(()) => {
-                            e.insert(sender);
+                            e.insert(actor.sender);
                         }
                         Err(e) => {
-                            let _ = sender.send(Err(Box::new(e)));
+                            let _ = actor.sender.send(Err(Box::new(e)));
                         }
                     }
                 } else {
                     todo!("Already dialing peer.");
                 }
             }
-            Command::StartProviding { file_name, sender } => {
+            Command::StartProviding(actor) => {
                 let query_id = self
                     .swarm
                     .behaviour_mut()
                     .kademlia
-                    .start_providing(file_name.into_bytes().into())
+                    .start_providing(actor.fname.into_bytes().into())
                     .expect("No store error.");
-                self.pending.start_providing.insert(query_id, sender);
+                self.pending
+                    .start_providing
+                    .insert(query_id, actor.sender);
             }
-            Command::GetProviders { file_name, sender } => {
+            Command::GetProviders(actor) => {
                 let query_id = self
                     .swarm
                     .behaviour_mut()
                     .kademlia
-                    .get_providers(file_name.into_bytes().into());
-                self.pending.get_providers.insert(query_id, sender);
+                    .get_providers(actor.fname.into_bytes().into());
+                self.pending.get_providers.insert(query_id, actor.sender);
             }
-            Command::RequestFile {
-                file_name,
-                peer,
-                sender,
-            } => {
+            Command::RequestFile(actor) => {
                 let request_id = self
                     .swarm
                     .behaviour_mut()
                     .reqres
-                    .send_request(&peer, MainnetRequest(file_name));
-                self.pending.request_file.insert(request_id, sender);
+                    .send_request(&actor.pid, MainnetRequest(actor.fname));
+                self.pending.request_file.insert(request_id, actor.sender);
             }
-            Command::RespondFile { file, channel } => {
+            Command::RespondFile(actor) => {
                 self.swarm
                     .behaviour_mut()
                     .reqres
-                    .send_response(channel, MainnetResponse(file))
+                    .send_response(actor.channel, MainnetResponse(actor.file))
                     .expect("Connection to peer to be still open.");
             }
         }

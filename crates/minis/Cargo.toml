@@ -12,15 +12,19 @@ repository.workspace = true
 version.workspace = true
 
 [features]
-default = ["core", "extras", "wasm"]
-full = ["core", "extras", "wasm"]
+default = ["core"]
 
 core = [
+    "decanter/derive",
     "tokio/macros"
 ]
-extras = []
-wasm = ["wasm-ext"]
+wasm = [
+    "decanter/wasm",
+    "wasm-ext"
+]
 wasm-ext = [
+    "libp2p/wasm-bindgen",
+    "libp2p/wasm-ext",
     "tokio_wasi/macros"
 ]
 
@@ -31,16 +35,31 @@ test = true
 [build-dependencies]
 
 [dependencies]
-decanter = { features = ["derive", "wasm"], version = "0.1.2" }
-scsys = { features = ["full"], version = "0.1.40" }
+decanter.workspace = true
+scsys.workspace = true
 
-mio = "0.8"
+async-trait = "0.1"
+futures = "0.3"
 serde.workspace = true
 serde_json.workspace = true
 smart-default.workspace = true
 strum.workspace = true
 tokio = { features = ["macros"], optional = true, version = "1" }
 tokio_wasi = { features = ["macros"], optional = true, version = "1.23" }
+
+[dependencies.libp2p]
+features = [
+    "floodsub",
+    "kad",
+    "mplex",
+    "ping",
+    "pnet",
+    "request-response",
+    "serde",
+    "wasm-bindgen",
+    "wasm-ext",
+]
+version = "0.50.0"
 
 [dev-dependencies]
 

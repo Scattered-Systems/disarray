@@ -6,6 +6,8 @@
 */
 #[doc(inline)]
 pub use crate::{address::*, behaviour::*, primitives::*, settings::*, utils::*};
+#[doc(inline)]
+pub use disarray_minis as minis;
 
 pub(crate) mod address;
 pub(crate) mod behaviour;
@@ -18,15 +20,14 @@ pub mod events;
 pub mod messages;
 pub mod nodes;
 pub mod peers;
-pub mod protocol;
 pub mod states;
 pub mod status;
 pub mod transports;
 
 use clients::Client;
 use events::{Event, EventLoop};
+use minis::{codec::MainnetCodec, MainnetProtocol};
 use peers::Peer;
-use protocol::{codec::MainnetCodec, MainnetProtocol};
 
 use futures::{channel::mpsc, Stream};
 use libp2p::kad::{record::store::MemoryStore, Kademlia};

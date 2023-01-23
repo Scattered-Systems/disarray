@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use crate::protocol::reqres::MainnetResponse;
+use crate::minis::reqres::MainnetResponse;
 
 use libp2p::request_response::ResponseChannel;
 

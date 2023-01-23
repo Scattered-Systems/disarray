@@ -31,7 +31,7 @@ impl Conduit {
 }
 impl From<TransportBuilder> for BoxedTransport {
     fn from(value: TransportBuilder) -> Self {
-        tokio_transport(value.delay, value.peer.keypair.clone())
+        tokio_transport(value.delay, value.peer.keypair)
     }
 }
 

@@ -3,7 +3,7 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
-use crate::protocol::{
+use crate::{
     reqres::{MainnetRequest, MainnetResponse},
     MainnetProtocol,
 };
