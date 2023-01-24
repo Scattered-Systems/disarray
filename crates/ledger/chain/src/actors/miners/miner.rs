@@ -28,7 +28,7 @@ impl Miner {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::handles::servers::ServerHandle;
+    use crate::ServerHandle;
     use crate::miners::Pools;
     use crate::{states::State, Blockchain};
     use scsys::prelude::Locked;

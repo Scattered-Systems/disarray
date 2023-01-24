@@ -19,8 +19,6 @@ pub(crate) mod primitives;
 pub(crate) mod utils;
 
 pub mod blocks;
-pub mod clients;
-pub mod handles;
 pub mod proofs;
 pub mod states;
 pub mod transactions;

@@ -4,13 +4,19 @@
    Description:
        ... Summary ...
 */
-pub use self::misc::*;
+pub use self::{misc::*, proposals::*, queries::*};
+
+pub(crate) mod proposals;
+pub(crate) mod queries;
 
 pub mod miners;
 pub mod stakers;
 pub mod validators;
 
 pub type ControlChannel = crossbeam::channel::Receiver<ControlSignal>;
+
+#[derive(Clone, Debug, Default)]
+pub struct ServerHandle;
 
 pub(crate) mod misc {
     use decanter::prelude::{Hash, Hashable};
