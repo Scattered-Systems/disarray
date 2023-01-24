@@ -21,23 +21,19 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /bin/api
+    directory: /crates/ledger/chain
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /crates/core
+    directory: /crates/ledger/consensus
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /crates/ledger
+    directory: /crates/net/minis
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /crates/minis
-    schedule:
-      interval: daily
-  - package-ecosystem: cargo
-    directory: /crates/network
+    directory: /crates/net/network
     schedule:
       interval: daily
   - package-ecosystem: cargo
