@@ -30,7 +30,7 @@ crossbeam = "0.8.2"
 digest = "0.10.5"
 itertools = "0.10.5"
 hex = "0.4.3"
-hex-literal = "0.3.4"
+hex-literal = "0.4.0"
 log = "0.4.17"
 mio = { features = ["net"], version = "0.8.5"}
 mio-extras = "2.0.6"
