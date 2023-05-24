@@ -28,7 +28,7 @@ tokio = { features = ["full"], version = "1.21.2" }
 tower = "0.4.13"
 tower-http = { features = ["full"], version = "0.3.4" }
 tracing = "0.1.36"
-tracing-opentelemetry = "0.18.0"
+tracing-opentelemetry = "0.19.0"
 tracing-subscriber = { features = ["env-filter"], version = "0.3.15" }
 
 [dependencies.disarray-sdk]
