@@ -3,9 +3,9 @@
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... Summary ...
 */
-extern crate disarray_ledger;
+extern crate disarray_chain;
 
-use disarray_ledger::{blocks::Block, transactions::SignedTransaction};
+use disarray_chain::{blocks::Block, transactions::SignedTransaction};
 
 use decanter::prelude::{Hash, Hashable, H256};
 use scsys::prelude::fnl_remove;

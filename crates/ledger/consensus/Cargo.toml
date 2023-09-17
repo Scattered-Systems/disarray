@@ -1,0 +1,49 @@
+[package]
+description = "This crate services our hybrid multi-chain directly implementing several critical structures from blocks to chains and transactions"
+name = "disarray-consensus"
+
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = [
+    "core"
+]
+core = [
+
+]
+wasm = [
+
+]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+test = true
+
+[build-dependencies]
+
+[dev-dependencies]
+
+[dependencies]
+algae = { features = ["full"], version = "0.1.17" }
+decanter.workspace = true
+scsys.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
+smart-default.workspace = true
+strum.workspace = true
+
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

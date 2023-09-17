@@ -8,7 +8,7 @@
        according to the active Flow module.
 */
 #[cfg(feature = "ledger")]
-pub use disarray_ledger as ledger;
+pub use disarray_chain as ledger;
 #[cfg(feature = "network")]
 pub use disarray_network as net;
 

@@ -5,8 +5,8 @@
        ... Summary ...
 */
 use crate::{
-    handles::servers::ServerHandle, miners::Pools, states::State, Blockchain, ControlChannel,
-    OperatingModes,
+    miners::Pools, states::State, Blockchain, ControlChannel,
+    OperatingModes, ServerHandle
 };
 use scsys::Locked;
 use std::convert::From;

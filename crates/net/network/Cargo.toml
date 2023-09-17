@@ -43,7 +43,7 @@ algae = { features = ["full"], version = "0.1.17" }
 decanter.workspace = true
 scsys.workspace = true
 
-disarray-ledger = { path = "../ledger", version = "0.1.21" }
+disarray-chain = { path = "../../ledger/chain", version = "0.1.21" }
 disarray-minis = { path = "../minis", version = "0.1.21" }
 
 async-trait = "0.1"

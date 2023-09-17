@@ -18,7 +18,9 @@ default = ["core", "ledger", "network"]
 
 core = []
 
-ledger = ["disarray-ledger"]
+ledger = [
+    "disarray-chain/default",
+]
 network = ["disarray-network"]
 
 [lib]
@@ -32,8 +34,8 @@ scsys = { features = [], version = "0.1.41" }
 [build-dependencies]
 
 [dependencies]
-disarray-ledger = { features = [], optional = true, path = "../ledger", version = "0.1.21" }
-disarray-network = { features = [], optional = true, path = "../network", version = "0.1.21" }
+disarray-chain = { features = [], optional = true, path = "../ledger/chain", version = "0.1.21" }
+disarray-network = { features = [], optional = true, path = "../net/network", version = "0.1.21" }
 
 [package.metadata.docs.rs]
 all-features = true

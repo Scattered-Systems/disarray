@@ -1,6 +1,6 @@
 #[cfg(test)]
 
-use disarray_sdk::ledger::transactions::{Sign, SignedTransaction, Transaction};
+use disarray_chain::transactions::{Sign, SignedTransaction, Transaction};
 
 #[test]
 fn test_default_transaction() {

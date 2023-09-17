@@ -1,9 +1,9 @@
 #[cfg(test)]
 use decanter::prelude::{generate_random_hash, hasher, H256};
-use disarray_sdk::ledger::blocks::{
+use disarray_chain::blocks::{
     generate_random_block, generate_random_pos_block, Block, BlockType, CoreBlockWrapperExt,
 };
-use disarray_sdk::ledger::{Blockchain, ChainWrapper, ChainWrapperExt};
+use disarray_chain::{Blockchain, ChainWrapper, ChainWrapperExt};
 use scsys::prelude::Timestamp;
 
 #[test]

@@ -7,6 +7,8 @@
 // #[cfg(test)]
 extern crate hex_literal;
 
+pub use disarray_consensus as consensus;
+
 #[doc(inline)]
 pub use crate::{actors::*, blockchain::*, misc::*, primitives::*, utils::*};
 
@@ -17,9 +19,6 @@ pub(crate) mod primitives;
 pub(crate) mod utils;
 
 pub mod blocks;
-pub mod clients;
-pub mod consensus;
-pub mod handles;
 pub mod proofs;
 pub mod states;
 pub mod transactions;
