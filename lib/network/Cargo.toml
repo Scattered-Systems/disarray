@@ -36,7 +36,7 @@ mio-extras = "2.0.6"
 scsys = { features = ["full"], version = "0.1.36" }
 serde = { features = ["derive"], version = "1.0.149" }
 serde_json = "1.0.89"
-strum = { features = ["derive"], version = "0.24.1" }
+strum = { features = ["derive"], version = "0.25.0" }
 tracing = "0.1.37"
 tracing-subscriber = "0.3.16"
 tokio = { features = ["macros"], version = "1.22.0" }
