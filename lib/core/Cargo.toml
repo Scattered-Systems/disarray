@@ -27,4 +27,4 @@ test = true
 scsys = { features = ["full"], version = "0.1.33" }
 serde = { features = ["derive"], version = "1.0.147" }
 serde_json = "1.0.87"
-strum = { features = ["derive"], version = "0.24.1" }
+strum = { features = ["derive"], version = "0.25.0" }
