@@ -27,7 +27,7 @@ strum = { features = ["derive"], version = "0.24.1" }
 tokio = { features = ["full"], version = "1.21.2" }
 tracing = "0.1.37"
 tracing-subscriber = "0.3.16"
-wasmer = "3.0.0"
+wasmer = "4.2.2"
 
 [dev-dependencies]
 env_logger = "0.10.0"
