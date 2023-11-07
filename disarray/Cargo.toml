@@ -16,7 +16,7 @@ clap = { features = ["derive"], version = "4.0.22" }
 futures = "0.3.25"
 hex = "0.4.3"
 opentelemetry = { features = ["rt-tokio"], version = "0.19.0" }
-opentelemetry-jaeger = { features = ["full"], version = "0.17.0" }
+opentelemetry-jaeger = { features = ["full"], version = "0.20.0" }
 rand = { features = [], version = "0.8.5" }
 ring = { features = ["wasm32_c"], version = "0.16.20" }
 scsys = { features = ["full"], version = "0.1.36" }
