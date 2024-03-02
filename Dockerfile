@@ -23,21 +23,19 @@ RUN apt-get update -y && apt-get upgrade -y
 RUN apt-get install -y \
     protobuf-compiler
 
-RUN mkdir config
-VOLUME [ "/config" ]
-
 FROM runner-base as runner
 
-COPY --chown=55 Disarray.toml /config/Disarray.toml
+COPY --chown=55 .config /config
+VOLUME [ "/config" ]
+
 COPY --from=builder /workspace/target/release/disarray /bin/disarray
 
 FROM runner
 
-ENV MAINNET_PORT=9090 \
+ENV MAINNET_PORT=9999 \
     RUST_LOG="info"
 
 EXPOSE 80
 EXPOSE ${MAINNET_PORT}
 
 ENTRYPOINT [ "disarray" ]
-CMD [ "-h" ]

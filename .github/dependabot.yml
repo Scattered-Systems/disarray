@@ -1,5 +1,9 @@
 version: 2
 updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: daily
   - package-ecosystem: docker
     directory: /
     schedule:
@@ -9,30 +13,30 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: cargo
+    directory: /xtask
+    schedule:
+      interval: daily
+  - package-ecosystem: cargo
     directory: /disarray
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/core
+    directory: /crates/ledger/chain
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/ledger
+    directory: /crates/ledger/consensus
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/minis
+    directory: /crates/net/minis
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/network
+    directory: /crates/net/network
     schedule:
       interval: daily
   - package-ecosystem: cargo
-    directory: /lib/runtime
-    schedule:
-      interval: daily
-  - package-ecosystem: cargo
-    directory: /lib/sdk
+    directory: /crates/sdk
     schedule:
       interval: daily

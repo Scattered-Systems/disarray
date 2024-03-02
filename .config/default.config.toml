@@ -1,0 +1,8 @@
+mode = "development"
+
+[logger]
+level = "info"
+
+[network]
+mode = "mainnet"
+port = 9999

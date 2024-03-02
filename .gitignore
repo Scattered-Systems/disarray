@@ -12,6 +12,7 @@
 **/.DS_STORE/
 **/.artifacts/data/
 **/.cache/
+**/.direnv/
 **/.docker/data/
 **/.idea/
 **/.pytest_cache/
@@ -58,3 +59,4 @@
 !**/*.env.example
 !**/*.config.js
 !**/*.config.cjs
+!flake.lock

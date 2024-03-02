@@ -1,0 +1,100 @@
+[package]
+description = "This crate implements the networking features required for the hybrid blockchain network, Disarray"
+name = "disarray-network"
+
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = ["core"]
+
+core = [
+    "disarray-minis/default",
+    "tokio/macros"
+]
+
+wasm = [
+    "decanter/wasm",
+    "disarray-minis/wasm",
+    "wasm-ext"
+]
+wasm-ext = [
+    "libp2p/wasm-bindgen",
+    "libp2p/wasm-ext",
+    "libp2p/wasm-ext-websocket",
+    "tokio_wasi/full"
+]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+test = true
+
+[build-dependencies]
+
+[dev-dependencies]
+
+[dependencies]
+algae = { features = ["full"], version = "0.1.17" }
+decanter.workspace = true
+scsys.workspace = true
+
+disarray-chain = { path = "../../ledger/chain", version = "0.1.21" }
+disarray-minis = { path = "../minis", version = "0.1.21" }
+
+async-trait = "0.1"
+clap = { features = ["cargo", "derive", "env"], version = "4.1" }
+crossbeam = "0.8"
+log = "0.4"
+futures = "0.3"
+mio = { features = ["os-ext", "os-poll", "net"], version = "0.8" }
+mio-extras = "2"
+serde.workspace = true
+serde_json.workspace = true
+smart-default.workspace = true
+strum.workspace = true
+tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
+tokio = { features = ["macros"], optional = true, version = "1.24" }
+tokio_wasi = { features = ["full"], optional = true, version = "1.23" }
+
+[dependencies.libp2p]
+features = [
+    "autonat",
+    "dns",
+    "ecdsa",
+    "floodsub", 
+    "identify",
+    "kad",
+    "macros",
+    "mdns",
+    "metrics",
+    "mplex", 
+    "noise",
+    "ping",
+    "pnet",
+    "quic",
+    "request-response",
+    "rsa",
+    "secp256k1",
+    "serde",
+    "tcp",
+    "tokio",
+    "wasm-bindgen",
+    "wasm-ext",
+    "wasm-ext-websocket",
+    "websocket"
+]
+version = "0.50.0"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

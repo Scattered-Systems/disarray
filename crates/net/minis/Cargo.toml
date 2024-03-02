@@ -1,0 +1,72 @@
+[package]
+description = "acme-minis"
+name = "disarray-minis"
+publish = true
+
+authors.workspace = true
+edition.workspace = true
+homepage.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = ["core"]
+
+core = [
+    "decanter/derive",
+    "tokio/macros"
+]
+wasm = [
+    "decanter/wasm",
+    "wasm-ext"
+]
+wasm-ext = [
+    "libp2p/wasm-bindgen",
+    "libp2p/wasm-ext",
+    "tokio_wasi/macros"
+]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+test = true
+
+[build-dependencies]
+
+[dependencies]
+decanter.workspace = true
+scsys.workspace = true
+
+async-trait = "0.1"
+futures = "0.3"
+serde.workspace = true
+serde_json.workspace = true
+smart-default.workspace = true
+strum.workspace = true
+tokio = { features = ["macros"], optional = true, version = "1" }
+tokio_wasi = { features = ["macros"], optional = true, version = "1.23" }
+
+[dependencies.libp2p]
+features = [
+    "floodsub",
+    "kad",
+    "mplex",
+    "ping",
+    "pnet",
+    "request-response",
+    "serde",
+    "wasm-bindgen",
+    "wasm-ext",
+]
+version = "0.50.0"
+
+[dev-dependencies]
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+
+[target.wasm32-unknown-unknown]
+
+[target.wasm32-wasi]

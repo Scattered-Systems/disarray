@@ -1,43 +1,57 @@
 /*
-    Appellation: settings <library>
+    Appellation: settings <module>
     Contrib: FL03 <jo3mccain@icloud.com>
     Description: ... summary ...
 */
+use disarray_sdk::prelude::NetworkSettings;
+
+use decanter::prelude::{Hash, Hashable};
 use scsys::prelude::config::{Config, Environment};
-use scsys::prelude::{try_collect_config_files, ConfigResult, Configurable, Logger, Server};
+use scsys::prelude::{
+    try_collect_config_files, ConfigResult, Configurable, Logger, SerdeDisplay, Server,
+};
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, SerdeDisplay, Serialize)]
 pub struct Settings {
     pub logger: Logger,
+    pub mode: String,
+    pub network: NetworkSettings,
     pub server: Server,
 }
 
 impl Settings {
-    pub fn new(port: Option<u16>) -> Self {
-        let logger = Logger::default();
-        let server = Server::new("127.0.0.1".to_string(), port.unwrap_or(9090));
-        Self { logger, server }
+    pub fn new(mode: Option<String>) -> Self {
+        Self {
+            logger: Default::default(),
+            mode: mode.unwrap_or_else(|| String::from("production")),
+            network: Default::default(),
+            server: Server::new("0.0.0.0".to_string(), 9999),
+        }
     }
     pub fn build() -> ConfigResult<Self> {
-        let mut builder = Config::builder().add_source(Environment::default().separator("__"));
-        // Setup some defaults for the configuration
-        builder = builder
+        let mut builder = Config::builder()
+            .set_default("mode", "production")?
             .set_default("logger.level", "info")?
-            .set_default("server.host", "127.0.0.1")?
-            .set_default("server.port", 9090)?;
+            .set_default("server.host", "0.0.0.0")?
+            .set_default("server.port", 9999)?;
 
-        if let Ok(f) = try_collect_config_files("**/Disarray.toml", false) {
-            builder = builder.add_source(f);
-        }
-
-        if let Ok(lvl) = std::env::var("RUST_LOG") {
-            builder = builder.set_override("logger.level", lvl)?;
-        }
-        if let Ok(port) = std::env::var("SERVER_PORT") {
+        if let Ok(log) = std::env::var("RUST_LOG") {
+            builder = builder.set_override("logger.level", log)?;
+        };
+        if let Ok(port) = std::env::var("MAINNET_PORT") {
             builder = builder.set_override("server.port", port)?;
+        };
+        // Add in related environment variables
+        builder = builder.add_source(
+            Environment::default()
+                .separator("__")
+                .prefix(env!("CARGO_PKG_NAME").to_ascii_uppercase().as_str()),
+        );
+        // Try gathering valid configuration files...
+        if let Ok(files) = try_collect_config_files("**/*.config.*", false) {
+            builder = builder.add_source(files);
         }
-
         builder.build()?.try_deserialize()
     }
 
@@ -60,12 +74,7 @@ impl Configurable for Settings {
 
 impl Default for Settings {
     fn default() -> Self {
-        Self::build().unwrap_or_else(|_| Self::new(None))
-    }
-}
-
-impl std::fmt::Display for Settings {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", serde_json::to_string(&self).unwrap())
+        let d = Self::new(None);
+        Self::build().unwrap_or(d)
     }
 }

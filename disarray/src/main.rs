@@ -1,92 +1,137 @@
 /*
     Appellation: Disarray <binary>
     Contrib: FL03 <jo3mccain@icloud.com>
-    Description:
-        Disarray is a dynamic blockchain network powered by a hybrid consensus protocol and engineered for tomorrow with several post-quantum considerations
+    Description: ... summary ...
 */
-#[doc(inline)]
-pub use self::settings::*;
+pub use self::{channels::*, context::*, settings::*, states::*};
 
-pub mod agents;
-pub mod cli;
-pub mod contexts;
-pub mod rpc;
-pub mod sessions;
-pub mod states;
-
+pub(crate) mod channels;
+pub(crate) mod context;
 pub(crate) mod settings;
+pub(crate) mod states;
 
-use crate::{contexts::Context, rpc::RPCBackend, sessions::Session, states::States};
-use scsys::prelude::{BoxResult, Stateful};
-use std::sync::Arc;
+pub mod cli;
+pub mod rt;
 
-#[tokio::main(flavor = "multi_thread")]
-async fn main() -> BoxResult {
-    let app = Disarray::<contexts::Context>::default();
-    println!("{}", &app);
-    app.with_tracing()?.run().await?;
+use acme::prelude::{AppSpec, AsyncSpawnable};
+use scsys::prelude::{AsyncResult, Locked};
+use std::{convert::From, sync::Arc};
+
+#[tokio::main]
+async fn main() -> AsyncResult {
+    // Create an application instance
+    let mut app = Application::default();
+    // Quickstart the application runtime with the following command
+    app.setup()?;
+    app.spawn().await?;
 
     Ok(())
 }
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
-pub struct Disarray<T: Stateful> {
-    pub ctx: Context,
-    pub session: Session,
-    pub state: Arc<States<T>>,
+#[derive()]
+pub struct Application {
+    pub channels: AppChannels,
+    pub ctx: Arc<Context>,
+    pub runtime: Arc<rt::Runtime>,
+    pub state: Locked<State>,
 }
 
-impl<T: Stateful> Disarray<T> {
-    pub fn new(ctx: Context) -> Self {
-        let session = Session::default();
-        let state = Default::default();
+impl Application {
+    pub fn new(ctx: Arc<Context>) -> Self {
+        let channels = AppChannels::new();
+        let state = States::default();
+
+        channels.ctx.0.send(ctx.as_ref().clone()).unwrap();
+        channels.state.0.send(state.clone().into()).unwrap();
+
         Self {
-            ctx,
-            session,
-            state,
+            channels,
+            ctx: ctx.clone(),
+            runtime: Arc::new(rt::Runtime::new(ctx)),
+            state: state.into(),
         }
     }
-    pub async fn graceful_shutdown(&self) {
-        tokio::signal::ctrl_c()
-            .await
-            .expect("Failed to terminate the runtime...");
-        tracing::info!("Terminating the application and connected services...");
-    }
-    /// Creates a service handle for toggling the tracing systems implemented
-    pub fn with_tracing(&self) -> BoxResult<&Self> {
-        // TODO: Introduce a more refined system of tracing logged events
-        self.ctx.settings.clone().logger.setup(None);
-        tracing_subscriber::fmt::init();
-
-        tracing::info!("Successfully initiated the tracing protocol...");
+    /// Change the application state
+    pub async fn set_state(&mut self, state: States) -> AsyncResult<&Self> {
+        // Update the application state
+        self.state = state.clone().into();
+        // Post the change of state to the according channel(s)
+        self.channels.state.0.send(self.state.clone())?;
+        tracing::info!("Updating the application state to {}", state);
         Ok(self)
     }
-    /// Change the state of the application to the valid parameter
-    pub fn set_state(&mut self, state: States<T>) -> &Self {
-        self.state = Arc::new(state);
-        self
+    /// Application runtime
+    pub fn runtime(&self) -> &rt::Runtime {
+        self.runtime.as_ref()
     }
-    /// Initialize a new backend contexutalized with the proper information
-    pub fn setup_backend(&self) -> RPCBackend {
-        RPCBackend::new(self.ctx.settings.server.clone())
-    }
-    /// A simple runner for the application, initializing a host of included systems
-    pub async fn run(&self) -> BoxResult<&Self> {
-        // Create an instance of the backend
-        let mut backend = self.setup_backend();
-        // Spawn the rpc services
-        backend.spawn().await?;
-        // On exit return self, owned and wrapped with the required tags
+}
+
+#[async_trait::async_trait]
+impl AsyncSpawnable for Application {
+    async fn spawn(&mut self) -> AsyncResult<&Self> {
+        tracing::debug!("Spawning the application and related services...");
+        self.set_state(States::Process).await?;
+        // Fetch the initialized cli and process the results
+        self.runtime().handler().await?;
+        self.set_state(States::Complete).await?;
+        self.set_state(States::Idle).await?;
         Ok(self)
     }
 }
 
-impl<T: Stateful> std::fmt::Display for Disarray<T> {
+impl AppSpec<Settings> for Application {
+    type Ctx = Context;
+
+    type State = State;
+
+    fn init() -> Self {
+        Self::default()
+    }
+
+    fn context(&self) -> Self::Ctx {
+        self.ctx.as_ref().clone()
+    }
+
+    fn name(&self) -> String {
+        env!("CARGO_PKG_NAME").to_string()
+    }
+
+    fn settings(&self) -> Settings {
+        self.ctx.settings().clone()
+    }
+
+    fn setup(&mut self) -> AsyncResult<&Self> {
+        self.settings().logger().clone().setup(None);
+        tracing_subscriber::fmt::init();
+        tracing::debug!("Application initialized; completing setup...");
+        Ok(self)
+    }
+
+    fn state(&self) -> &Locked<State> {
+        &self.state
+    }
+}
+
+impl Default for Application {
+    fn default() -> Self {
+        Self::from(Context::default())
+    }
+}
+
+impl From<Settings> for Application {
+    fn from(data: Settings) -> Self {
+        Self::from(Context::from(data))
+    }
+}
+
+impl From<Context> for Application {
+    fn from(data: Context) -> Self {
+        Self::new(Arc::new(data))
+    }
+}
+
+impl std::fmt::Display for Application {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let data = serde_json::json!({
-            "ctx": self.ctx,
-            "session": self.session
-        });
-        write!(f, "{}", serde_json::to_string(&data).unwrap())
+        write!(f, "{}", serde_json::to_string(&self.ctx.as_ref()).unwrap())
     }
 }
