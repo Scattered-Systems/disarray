@@ -32,7 +32,7 @@ async-trait = "0.1"
 clap = { features = ["cargo", "derive", "env"], version = "4" }
 futures = "0.3"
 http = "0.2.8"
-hyper = { features = [], version = "0.14" }
+hyper = { features = [], version = "1.2" }
 opentelemetry = { features = ["metrics", "rt-tokio", "testing"], version = "0.18.0" }
 opentelemetry-jaeger = { features = ["rt-tokio"], version = "0.17.0" }
 serde.workspace = true
