@@ -52,7 +52,7 @@ mio = { features = ["net"], version = "0.8"}
 mio-extras = "2"
 once_cell = "1"
 rand = { features = [], version = "0.8" }
-ring = { features = ["wasm32_c"], version = "0.16" }
+ring = { features = ["wasm32_c"], version = "0.17" }
 serde.workspace = true
 serde_json.workspace = true
 smart-default.workspace = true
